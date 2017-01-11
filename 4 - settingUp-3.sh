@@ -1,7 +1,7 @@
 #~/bin/bash
 sudo apt-get install nautilus-dropbox -y
 
-echo "Download And install dropbox for your caja/nautilus"
+echo "Installed dropbox for your nautilus. If using different file explorer, change"
 read temp
 
 echo "Download and Install VS Code"

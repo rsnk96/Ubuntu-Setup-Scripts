@@ -1,5 +1,5 @@
-sudo apt-get update -y
-sudo apt-get install amarok -y
+chsh -s /usr/bin/zsh
+source ~/.zshrc
 
 sudo apt-get install libboost-dev -y
 

@@ -15,13 +15,13 @@ ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile
 ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
-chsh -s /usr/bin/zsh
-
-bash Anaconda3-4.2.0-Linux-x86_64.sh
+CONTREPO=https://repo.continuum.io/archive/
+# Stepwise filtering of the html at $CONTREPO
+# Get the topmost line that matches our requirements, extract the file name.
+ANACONDAURL=$(wget -q -O - $CONTREPO index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+wget -O ~/Downloads/anaconda.sh $CONTREPO$ANACONDAURL
+bash ~/Downloads/anaconda.sh
 
 echo "Adding anaconda to path variables in zshrc"
 echo "alias jn=\"jupyter notebook\"" >> ~/.zshrc
 echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.zshrc
-echo "export PATH=/home/rsnk96/anaconda3/bin:\$PATH" >> ~/.zshrc
-source ~/.zshrc
-cat ~/.zshrc
