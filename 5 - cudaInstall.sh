@@ -12,5 +12,18 @@
 chmod +x cuda_8.0.44_linux.run
 ./cuda_8.0.44_linux.run
 echo "export PATH=/usr/local/cuda-8.0/bin:\$PATH" >> ~/.zshrc
-echo "export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:\$LD_LIBRARY_PATH" >> ~/.zshrc
+echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH" >> ~/.zshrc
+echo "export CUDA_HOME=/usr/local/cuda" >> ~/.zshrc
 source ~/.zshrc
+
+pip install tensorflow-gpu
+
+
+# If above doesn't work, then do this
+# export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-0.12.1-cp35-cp35m-linux_x86_64.whl
+
+#If installing on non anaconda
+# pip3 install --upgrade $TF_BINARY_URL
+
+#If installing on anaconda
+# pip install --ignore-installed --upgrade $TF_BINARY_URL
