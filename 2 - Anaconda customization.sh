@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/zsh
 chsh -s /usr/bin/zsh
 source ~/.zshrc
 
