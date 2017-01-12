@@ -25,3 +25,6 @@ bash ~/Downloads/anacondaInstallScript.sh
 echo "Adding anaconda to path variables in zshrc"
 echo "alias jn=\"jupyter notebook\"" >> ~/.zshrc
 echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.zshrc
+echo "The script has finished. The terminal will now exit. Hit [Enter]"
+read temp
+exit
