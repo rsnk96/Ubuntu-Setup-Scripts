@@ -2,8 +2,12 @@ echo  "Press [Enter] to start cmake"
 echo ". Remember dude, both anaconda environemtns (2.7 and 3.5) have to be removed from the path environment before proceeding. If not, take a hike."
 read temp
 
-git clone https://github.com/Itseez/opencv
-git clone https://github.com/Itseez/opencv_contrib
+if [ ! -d "$opencv" ]; then
+    git clone https://github.com/Itseez/opencv
+fi
+if [ ! -d "$opencv_contrib" ]; then
+    git clone https://github.com/Itseez/opencv_contrib
+fi
 mkdir build
 cd build
 
