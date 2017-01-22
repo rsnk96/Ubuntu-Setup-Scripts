@@ -1,6 +1,9 @@
 
 echo "This opencv installation script was created by rsnk, CVG, IIT Madras."
 echo "Usually, if this script doesn't work, it's because the library versions may have been updated (of libvtk, libtiff, libjpeg and other dependencies) or OpenCV might have added new modules to contrib which require you to install additional dependencies"
+echo
+echo "NOTE: Enable Cannonical Partners in your Software Sources. If you have, press [Enter]. Otherwise, [Ctrl+C]"
+read temp
 
 sudo apt-get update
 sudo apt-get upgrade -y

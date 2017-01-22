@@ -33,6 +33,8 @@ read temp
 sudo add-apt-repository ppa:graphics-drivers/ppa -y
 sudo apt-get update
 sudo ubuntu-drivers autoinstall
-echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit Enter. Also, when installing CUDA next, don't install display drivers."
+echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
+echo "Also, when installing CUDA next, ********don't******* install display drivers."
+echo "In case your drivers don't work, purge lightdm and use gdm3 (sudo apt-get purge lightdm && sudo dpkg-reconfigure gdm3)"
 read temp
 sudo reboot
