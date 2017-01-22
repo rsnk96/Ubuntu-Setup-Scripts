@@ -3,7 +3,6 @@ chsh -s /usr/bin/zsh
 source ~/.zshrc
 
 sudo apt-get install libboost-dev -y
-sudo apt-get install lyx -y
 
 sudo apt-get install lyx -y
 

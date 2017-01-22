@@ -18,6 +18,7 @@ sudo mv _pngconf.h pngconf.h
 
 # conda create --name py35 python=3.5 numpy scipy matplotlib
 conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook
+sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 echo "alias ipython=\"ipython3\"" >> ~/.zshrc

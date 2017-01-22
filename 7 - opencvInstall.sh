@@ -1,9 +1,24 @@
+#!/usr/bin/zsh
+
+py2Ex=`which python2`
+py2In=`python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"`
+py2Pack=`python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"`
+py3Ex=`which python3`
+py3In=`python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"`
+py3Pack=`python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"`
+
+#This removes both Anaconda from the path. This is important as anaconda messes up a lot of the dependencies
+export TEMP=$PATH
+export PATH=/usr/local/cuda/bin:$OLDPATH
+
+#Download opencv and contrib from repo if it doesn't exist
 if [ ! -d "$opencv" ]; then
     git clone https://github.com/Itseez/opencv
 fi
 if [ ! -d "$opencv_contrib" ]; then
     git clone https://github.com/Itseez/opencv_contrib
 fi
+cd opencv
 mkdir build
 cd build
 
@@ -16,12 +31,12 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
  -DBUILD_opencv_cvv=OFF \
  -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
  -DBUILD_NEW_PYTHON_SUPPORT=ON \
- -DPYTHON2_EXECUTABLE=$(which python2) \
- -DPYTHON2_INCLUDE_DIR=$(python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
- -DPYTHON2_PACKAGES_PATH=$(python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
- -DPYTHON3_EXECUTABLE=$(which python3) \
- -DPYTHON3_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
- -DPYTHON3_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
+ -DPYTHON2_EXECUTABLE=$py2Ex \
+ -DPYTHON2_INCLUDE_DIR=$py2In \
+ -DPYTHON2_PACKAGES_PATH=$py2Pack \
+ -DPYTHON3_EXECUTABLE=$py3Ex \
+ -DPYTHON3_INCLUDE_DIR=$py3In \
+ -DPYTHON3_PACKAGES_PATH=$py3Pack \
  -DWITH_TBB=ON \
  -DWITH_V4L=ON \
  -DWITH_QT=ON \
@@ -47,5 +62,7 @@ sudo make install
 echo "finishing off installation"
 sudo /bin/bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
+
+export PATH=$TEMP
 
 echo "Congratulations! You have just installed OpenCV. And that's all, folks! :P"

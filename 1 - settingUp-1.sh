@@ -23,6 +23,7 @@ wget -O ~/Downloads/anacondaInstallScript.sh $CONTREPO$ANACONDA_LATEST_NICCCCEEE
 bash ~/Downloads/anacondaInstallScript.sh
 
 echo "Adding anaconda to path variables in zshrc"
+echo "export OLDPATH=\$PATH" >> ~/.zshrc
 echo "alias jn=\"jupyter notebook\"" >> ~/.zshrc
 echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
