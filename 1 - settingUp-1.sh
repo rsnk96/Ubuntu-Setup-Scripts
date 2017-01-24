@@ -26,6 +26,7 @@ echo "Adding anaconda to path variables in zshrc"
 echo "export OLDPATH=\$PATH" >> ~/.zshrc
 echo "alias jn=\"jupyter notebook\"" >> ~/.zshrc
 echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.zshrc
+echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\"" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 echo "The script has finished. The terminal will now exit. Hit [Enter]"
 source ~/.zshrc
