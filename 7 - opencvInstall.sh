@@ -68,4 +68,4 @@ sudo ldconfig
 
 export PATH=$TEMP
 
-echo "Congratulations! You have just installed OpenCV. And that's all, folks! :P"
+echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"

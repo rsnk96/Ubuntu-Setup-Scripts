@@ -11,7 +11,7 @@ conda clean --all
 cd /usr/include/libpng
 sudo mv png.h _png.h
 sudo mv pngconf.h _pngconf.h
-conda install matplotlib scikit-image
+conda install matplotlib scikit-image ipython
 sudo mv _png.h png.h
 sudo mv _pngconf.h pngconf.h
 
@@ -21,7 +21,6 @@ conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-i
 sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
-echo "alias ipython=\"ipython3\"" >> ~/.zshrc
 source ~/.zshrc
 
 conda info --envs

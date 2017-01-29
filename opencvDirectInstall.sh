@@ -56,7 +56,7 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
  -DWITH_V4L=ON \
  -DWITH_QT=ON \
  -DWITH_OPENGL=ON \
- -DWITH_VTK=ON ..
+ -DWITH_VTK=OFF ..
 
 echo "making and installing"
 make -j8
@@ -66,4 +66,4 @@ echo "finishing off installation"
 sudo /bin/bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
 
-echo "Congratulations! You have just installed OpenCV. And that's all, folks! :P"
+echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
