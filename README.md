@@ -14,6 +14,8 @@ These are the scripts that I use to set my Ubuntu up as quick as possible. Feel 
 * `weather` : Will show weather forecast for the next three days
 * `gpom` : Alias for `git push origin master`. Will push your current directory
 * `jn` : Starts a jupyter notebook in that directory
+
+<br>
 **NOTE**: All these aliases are installed in the first script `1 - settingUp-1.sh`. They are installed for zsh, and not bash, which should become your default shell when you run the second script
 
 ## Usage instructions
