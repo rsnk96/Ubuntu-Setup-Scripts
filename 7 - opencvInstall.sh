@@ -7,12 +7,14 @@ py3Ex=`which python3`
 py3In=`python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"`
 py3Pack=`python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"`
 
-echo "Your PATH variable will be changed for the installation. Anaconda will be removed because it messes the linkings and dependencies"
+echo "Your PATH variable will be changed for the installation. Anaconda will be removed from the PATH because it messes the linkings and dependencies"
 sudo echo
 
 #This removes both Anaconda from the path. This is important as anaconda messes up a lot of the dependencies
 export TEMP=$PATH
-export PATH=/usr/local/cuda/bin:$OLDPATH
+if [[ $(echo $PATH | grep conda) ]]; then
+    export PATH=$(echo $PATH | tr ':' '\n' | grep -v "conda[2-9]\?" | uniq | tr '\n' ':')
+fi
 
 #Download opencv and contrib from repo if it doesn't exist
 if [ ! -d "$opencv" ]; then
