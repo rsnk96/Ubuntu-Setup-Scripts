@@ -2,22 +2,23 @@
 chsh -s /usr/bin/zsh
 source ~/.zshrc
 
-conda update conda
+conda update conda -y
 
 
 # Note: These set of lines are done as matplotlib finds older version of libpng at installation time but finds newer version at runtime, and this affects display ability at runtime
-conda uninstall matplotlib
-conda clean --all
+conda uninstall matplotlib -y
+conda clean --all -y
 cd /usr/include/libpng
 sudo mv png.h _png.h
 sudo mv pngconf.h _pngconf.h
-conda install matplotlib scikit-image ipython
+conda install matplotlib scikit-image ipython -y
 sudo mv _png.h png.h
 sudo mv _pngconf.h pngconf.h
 
 
 # conda create --name py35 python=3.5 numpy scipy matplotlib
-conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook
+conda install libgcc -y
+conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook -y
 sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
