@@ -58,7 +58,8 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
 echo "Press [Enter] to configure cmake"
 read temp
 
-ccmake ..
+# De-comment the next line if you would like an interactive cmake menu to check if everything is alright and make some tweaks
+#ccmake ..
 
 echo "making and installing"
 make -j8

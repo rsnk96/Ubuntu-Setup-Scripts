@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/zsh
 
 #REMEMBER TO MAKE THE sudo cp cudnn... to sudo cp -r cudn...
 #NOTE: For symbolic links, that dipshit has reversed the order...put it as below
@@ -17,8 +17,8 @@ echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/
 echo "export CUDA_HOME=/usr/local/cuda" >> ~/.zshrc
 source ~/.zshrc
 
-pip install tensorflow-gpu
-pip install keras
+source activate py35
+pip install tensorflow-gpu keras
 
 
 # If above doesn't work, then do this

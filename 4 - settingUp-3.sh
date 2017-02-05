@@ -48,7 +48,7 @@ sudo apt-get install grub-customizer -y
 #sudo -H pip3 install pep8
 #sudo -H pip3 install autopep8
 
-pip install autopep8
+pip install autopep8 scdl org-e
 
 sudo apt-get install firefox -y
 jupyter notebook --generate-config

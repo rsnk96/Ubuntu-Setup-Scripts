@@ -19,3 +19,5 @@ sudo apt-get install vlc -y
 
 sudo apt-get install chromium-browser -y
 
+#Recommended libraries for Nvidia CUDA
+sudo apt-get install libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libx11-dev-y
