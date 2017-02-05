@@ -47,6 +47,8 @@ Then execute them in the terminal in the sequence of filenames.
 * Tensorflow
 * Keras
 * Autopep8
+* scdl - a soundcloud downloader
+* org-e - An app to sort and declutter folders (like ~/Downloads/)
 
 ## Important points about the OpenCV Installation
 * OpenCV will be linked to Anaconda Python by default, and will be built for that, not the Linux default python. If you would like to compile for that instead, remove all python related flags in the CMAKE command in 7, or even better, simply use `opencvDirectInstall.sh`
