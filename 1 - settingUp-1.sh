@@ -34,6 +34,5 @@ echo "Adding anaconda to path variables in zshrc"
 echo "export OLDPATH=\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 echo "The script has finished. The terminal will now exit. Hit [Enter]"
-source ~/.zshrc
 read temp
 exit
