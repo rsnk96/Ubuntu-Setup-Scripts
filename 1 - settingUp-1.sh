@@ -35,4 +35,5 @@ echo "export OLDPATH=\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 echo "The script has finished. The terminal will now exit. Hit [Enter]"
 read temp
-exit
+kill -9 $PPID
+# Reason this is being done is so that the next time you open a shell emulator, it opens terminator, and the rest of the script continues there
