@@ -7,9 +7,9 @@ echo
 echo
 echo
 echo
-echo "Installed dropbox for your nautilus. If using different file explorer, change"
+echo "Installed dropbox for your nautilus. If using different file explorer (caja,etc), change it"
 
-echo "Download and Install VS Code / Sublime / Atom. I recommend VS Code."
+echo "Download and Install VS Code / Sublime / Atom. I recommend VS Code. If you are using VS Code, note that you have to remove the line which modifies $TMPDIR in your .zprofile."
 read temp
 
 sudo apt-get install htop -y
