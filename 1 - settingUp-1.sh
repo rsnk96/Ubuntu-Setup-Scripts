@@ -22,17 +22,22 @@ ANACONDA_LATEST_NICCCCEEEE_URL=$(wget -q -O - $CONTREPO index.html | grep "Anaco
 wget -O ~/Downloads/anacondaInstallScript.sh $CONTREPO$ANACONDA_LATEST_NICCCCEEEE_URL
 bash ~/Downloads/anacondaInstallScript.sh
 
-echo "Adding aliases to your environment"
-echo "alias jn=\"jupyter notebook\"" >> ~/.zshrc
-echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.zshrc
-echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\"" >> ~/.zshrc
-echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\"" >> ~/.zshrc
-echo "weather() {curl wttr.in/\"\$1\";}" >> ~/.zshrc
-echo "alias gpom=\"git push origin master\"" >> ~/.zshrc
+touch ~/.bash_aliases
+echo "Adding aliases to ~/.bash_aliases"
+echo "alias jn=\"jupyter notebook\"" >> ~/.bash_aliases
+echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\"" >> ~/.bash_aliases
+echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\"" >> ~/.bash_aliases
+echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\"" >> ~/.bash_aliases
+echo "weather() {curl wttr.in/\"\$1\";}" >> ~/.bash_aliases
+echo "alias gpom=\"git push origin master\"" >> ~/.bash_aliases
+echo "alias update=\"sudo apt-get update && sudo apt-get upgrade -y\"" >> ~/.bash_aliases
 
-echo "Adding anaconda to path variables in zshrc"
-echo "export OLDPATH=\$PATH" >> ~/.zshrc
+echo "Adding anaconda to path variables"
+echo "\nexport OLDPATH=\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
+
+echo "if [ -f ~/.bash_aliases ]; then\n  source ~/.bash_aliases\nfi" >> ~/.zshrc
+
 echo "The script has finished. The terminal will now exit. Hit [Enter]"
 read temp
 kill -9 $PPID
