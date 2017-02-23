@@ -14,6 +14,8 @@ sudo apt-get install cmake-curses-gui -y
 
 if [ ! $(echo $PATH | grep conda) ]; then
     sudo apt-get install python3 python3-dev python3-numpy python3-pip python3-scipy python3-matplotlib python-dev python-matplotlib python-numpy python-scipy python-pip python-tk -y
+else
+    pip install numpy scipy matplotlib
 fi
 
 sudo apt-get install libeigen3-dev yasm libfaac-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev sphinx-common texlive-latex-extra libv4l-dev libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev default-jdk ant -y
@@ -88,7 +90,7 @@ fi
 
 # Build tiff on as opencv supports tiff4, which is older version, which ubuntu has dropped
 #  If you get an error, try disabling freetype by adding the following line in between the cmake command
-#  -DBUILD_opencv_freetype=ON \
+#  -DBUILD_opencv_freetype=OFF \
 cmake -DCMAKE_BUILD_TYPE=RELEASE \
  -DCMAKE_INSTALL_PREFIX=/usr/local \
  -DBUILD_opencv_cvv=OFF \
