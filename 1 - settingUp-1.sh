@@ -36,9 +36,12 @@ echo "Adding anaconda to path variables"
 echo "\nexport OLDPATH=\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 
-echo "if [ -f ~/.bash_aliases ]; then\n  source ~/.bash_aliases\nfi" >> ~/.zshrc
+echo "if [ -f ~/.bash_aliases ]; then" >> ~/.zshrc
+echo "  source ~/.bash_aliases" >> ~/.zshrc
+echo "fi" >> ~/.zshrc
 
-echo "The script has finished. The terminal will now exit. Hit [Enter]"
+echo "The script has finished. The terminal will now exit and terminator will open. Continue the other scripts from within that. Hit [Enter]"
 read temp
+terminator &
 kill -9 $PPID
 # Reason this is being done is so that the next time you open a shell emulator, it opens terminator, and the rest of the script continues there
