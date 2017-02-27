@@ -8,12 +8,15 @@ sudo apt-get install tilda -y
 sudo apt-get install zsh -y
 sudo apt-get install git -y
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-ln -s ~/.zprezto/runcoms/zlogin ~/.zlogin
-ln -s ~/.zprezto/runcoms/zlogout ~/.zlogout
-ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc
-ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile
-ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
-ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
+setopt EXTENDED_GLOB
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
+
+currdir=$(pwd)
+cd ~/.zprezto
+git pull && git submodule update --init --recursive
+cd $currdir
 
 CONTREPO=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $CONTREPO
@@ -33,7 +36,8 @@ echo "alias gpom=\"git push origin master\"" >> ~/.bash_aliases
 echo "alias update=\"sudo apt-get update && sudo apt-get upgrade -y\"" >> ~/.bash_aliases
 
 echo "Adding anaconda to path variables"
-echo "\nexport OLDPATH=\$PATH" >> ~/.zshrc
+echo "" >> ~/.zshrc
+echo "export OLDPATH=\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 
 echo "if [ -f ~/.bash_aliases ]; then" >> ~/.zshrc
@@ -42,6 +46,7 @@ echo "fi" >> ~/.zshrc
 
 echo "The script has finished. The terminal will now exit and terminator will open. Continue the other scripts from within that. Hit [Enter]"
 read temp
-terminator &
+nohup terminator &
+sleep 3
 kill -9 $PPID
 # Reason this is being done is so that the next time you open a shell emulator, it opens terminator, and the rest of the script continues there
