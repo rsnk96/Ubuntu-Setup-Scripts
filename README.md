@@ -27,7 +27,6 @@ Then execute them in the terminal in the sequence of filenames.
 * Terminator
 * Tilda
 * Ubuntu-Restricted-Extras
-* Bleeding Edge Nvidia Driver
 * Lyx
 * VLC
 * Chromium and Firefox
@@ -51,3 +50,10 @@ Then execute them in the terminal in the sequence of filenames.
 ## Important points about the OpenCV Installation
 * OpenCV will be linked to Anaconda Python by default, and will be built for that, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
 * If you would like to install with OpenCV for CUDA, change the flag in the file `7 - opencvInstall.sh` for `WITH_CUDA` to `ON`
+* After installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
+  ```bash
+   -DENABLE_SSE=OFF \
+   -DENABLE_SSE2=OFF \
+   -DENABLE_SSE3=OFF ..
+  ```
+  If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
