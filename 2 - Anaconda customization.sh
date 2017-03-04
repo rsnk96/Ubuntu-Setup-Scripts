@@ -25,9 +25,26 @@ echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 source ~/.zshrc
 
+# Uncomment the next set of lines if you want to set up your normal Python too
+#sudo -H pip install jupyter notebook
+#sudo -H pip install cython
+#sudo -H pip install pep8
+#sudo -H pip install autopep8
+#sudo -H pip3 install jupyter notebook
+#sudo -H pip3 install cython
+#sudo -H pip3 install pep8
+#sudo -H pip3 install autopep8
+
+pip install autopep8 scdl org-e
+
+jupyter notebook --generate-config
+echo "\nc.NotebookApp.browser = u'firefox'" >> ~/.jupyter/jupyter_notebook_config.py
+
 conda info --envs
 
 echo "Bro. If you ever mess up your anaconda installation somehow, do \$conda remove anaconda matplotlib mkl mkl-service nomkl openblas, then \$conda clean --all. Do this for each environment as well as your root. Then reinstall all except nomkl. Nvidia will now be installed"
+
+## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
 # echo "Now choose gdm3 as your default display manager. Hit Enter"
 # read temp
 
