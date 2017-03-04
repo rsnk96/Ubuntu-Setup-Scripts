@@ -9,7 +9,7 @@ sudo apt-get install lyx -y
 # Install code editor of your choice
 echo
 echo
-read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. [V/a/s/q]: " tempvar
+read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is VS Code [v/a/s/q]: " tempvar
 tempvar=${tempvar:-v}
 
 if [ $tempvar = "v" ]; then
