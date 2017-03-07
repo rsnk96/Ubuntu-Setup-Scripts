@@ -8,15 +8,23 @@ sudo apt-get install tilda -y
 sudo apt-get install zsh -y
 sudo apt-get install git -y
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-setopt EXTENDED_GLOB
-for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
-  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
-done
 
-currdir=$(pwd)
-cd ~/.zprezto
-git pull && git submodule update --init --recursive
-cd $currdir
+ln -s ~/.zprezto/runcoms/zlogin ~/.zlogin
+ln -s ~/.zprezto/runcoms/zlogout ~/.zlogout
+ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc
+ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile
+ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
+ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
+
+# setopt EXTENDED_GLOB
+# for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+#   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+# done
+
+# currdir=$(pwd)
+# cd ~/.zprezto
+# git pull && git submodule update --init --recursive
+# cd $currdir
 
 CONTREPO=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $CONTREPO
