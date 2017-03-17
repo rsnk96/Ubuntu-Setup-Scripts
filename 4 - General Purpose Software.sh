@@ -1,4 +1,4 @@
-#~/bin/bash
+#!/bin/bash
 if which nautilus > /dev/null; then
     sudo apt-get install nautilus-dropbox -y
 elif which caja > /dev/null; then
@@ -21,8 +21,9 @@ sudo apt-get install shutter -y
 echo 'GRUB Customization'
 echo 'http://www.ostechnix.com/configure-grub-2-boot-loader-settings-ubuntu-16-04/'
 
+# If you want an image for your grub background:
 #sudo cp /etc/default/grub /etc/default/grub.bak
-#sudo cp ~/Dropbox/Linux\ Post\ install\ scripts/grubBg.png /boot/grub
+#sudo cp <location to image> /boot/grub
 #sudo update-grub
 
 sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y

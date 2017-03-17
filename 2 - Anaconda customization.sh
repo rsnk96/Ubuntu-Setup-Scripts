@@ -38,7 +38,10 @@ source ~/.zshrc
 pip install autopep8 scdl org-e
 
 jupyter notebook --generate-config
-echo "\nc.NotebookApp.browser = u'firefox'" >> ~/.jupyter/jupyter_notebook_config.py
+{
+    echo ""
+    echo "c.NotebookApp.browser = u'firefox'"
+} >> ~/.jupyter/jupyter_notebook_config.py
 
 conda info --envs
 
