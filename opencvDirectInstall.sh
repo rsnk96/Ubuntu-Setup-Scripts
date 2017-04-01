@@ -31,7 +31,8 @@ spatialPrint() {
 }
 
 spatialPrint "GUI and openGL extensions"
-sudo apt-get install qt5-default libqt5opengl5-dev libvtk6-dev libvtk6-qt-dev libvtk6.2 libvtk6.2-qt libgtk2.0-dev libgtkglext1 libgtkglext1-dev -y
+sudo apt-get install qt5-default libqt5opengl5-dev libgtk2.0-dev libgtkglext1 libgtkglext1-dev -y
+sudo apt-get install libvtk6-dev libvtk6-qt-dev libvtk6.2 libvtk6.2-qt -y
 
 spatialPrint "Image manipulation libraries"
 sudo apt-get install libpng3 pngtools libpng-dev libpng16-dev libpng16-16 libpng++-dev -y
