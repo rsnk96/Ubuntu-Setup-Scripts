@@ -44,8 +44,8 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "alias update=\"sudo apt-get update && sudo apt-get upgrade -y\""
 } >> ~/.bash_aliases
 
+echo "Adding anaconda to path variables"
 {
-    echo "Adding anaconda to path variables"
     echo ""
     echo "export OLDPATH=\$PATH"
     echo "export PATH=~/anaconda3/bin:\$PATH"
