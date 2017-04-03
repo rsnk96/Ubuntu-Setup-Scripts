@@ -1,10 +1,21 @@
 #!/bin/bash
-sudo add-apt-repository ppa:gnome-terminator -y
+
 sudo apt-get update -y
-sudo apt-get install terminator -y
 sudo apt-get install ubuntu-restricted-extras -y
+
+# My choice for terminal: Tilda+tmux
+# Not guake because tilda is lighter on resources
+# Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
 sudo apt-get install tilda -y
 sudo apt-get install tmux -y
+
+cp config_files/.tmux.conf ~
+
+if [ ! -d "~/.config/tilda" ]; then
+    mkdir ~/.config/tilda
+fi
+
+cp config_files/config_0 ~/.config/tilda/
 
 sudo apt-get install zsh -y
 sudo apt-get install git -y
@@ -55,9 +66,10 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
-echo "The script has finished. The terminal will now exit and terminator will open. Continue the other scripts from within that"
+echo "The script has finished. The terminal will now exit and tilda will open. Continue the other scripts from within that"
+echo "Look out for the shortcut key for maximizing"
 read -p "Press [Enter] to continue..." temp
-nohup terminator &
+nohup tilda &
 sleep 3
 kill -9 $PPID
-# Reason this is being done is so that the next time you open a shell emulator, it opens terminator, and the rest of the script continues there
+# Reason this is being done is so that the next time you open a shell emulator, it opens tilda, and the rest of the script continues there
