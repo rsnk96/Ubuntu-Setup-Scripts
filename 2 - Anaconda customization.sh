@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
+
 chsh -s /usr/bin/zsh
 source ~/.zshrc
 
@@ -45,7 +46,10 @@ jupyter notebook --generate-config
 
 conda info --envs
 
-echo "Bro. If you ever mess up your anaconda installation somehow, do \$conda remove anaconda matplotlib mkl mkl-service nomkl openblas, then \$conda clean --all. Do this for each environment as well as your root. Then reinstall all except nomkl. Nvidia will now be installed"
+echo "Bro. If you ever mess up your anaconda installation somehow, do"
+echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
+echo "\$ conda clean --all"
+echo "Do this for each environment as well as your root. Then reinstall all except nomkl. Nvidia will now be installed"
 
 ## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
 # echo "Now choose gdm3 as your default display manager. Hit Enter"

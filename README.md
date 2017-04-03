@@ -1,17 +1,19 @@
 # Ubuntu-Setup-Scripts
 Every serious coder who has tried to mess around with their Ubuntu distro knows the pain of having to reinstall Ubuntu and set up their environment again
 
-These are the scripts that I use to set my Ubuntu up as quick as possible. Feel free to fork it and create your own version
+These are the scripts that I use to set my Ubuntu up as quick as possible.
+
+Feel free to fork it and create your own version
 
 ## Usage instructions
 Run 
-`chmod +x *.sh` to make all scripts executable
+`chmod u+x *.sh` to make all scripts executable
 Then execute them in the terminal in the sequence of filenames.
 <br><br>
 
 ## Major Alterations
 * Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Another Conda environment called py35 with Python 3.5 will also be set up
-* Default shell is changed to Oh My Zsh!, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete
+* Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete
 
 ## Aliases that are added
 * `maxvol` : Will set your volume to 150%
@@ -24,7 +26,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br>
 
 ## Programs that are installed
-* Terminator
+* Tmux
 * Tilda
 * Ubuntu-Restricted-Extras
 * Lyx
