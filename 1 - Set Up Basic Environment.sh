@@ -66,10 +66,9 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
-echo "The script has finished. The terminal will now exit and tilda will open. Continue the other scripts from within that"
-echo "Look out for the shortcut key for maximizing"
+echo "The script has finished. The System will now reboot so that certain shell changes can take place"
+echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
-nohup tilda &
-sleep 3
-kill -9 $PPID
-# Reason this is being done is so that the next time you open a shell emulator, it opens tilda, and the rest of the script continues there
+
+chsh -s /usr/bin/zsh
+sudo reboot
