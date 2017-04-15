@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 
 echo "NOTE: This File is to be run *************ONLY AFTER YOU HAVE INSTALLED CUDA*******************"
 read -r -p " Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
@@ -8,17 +8,38 @@ read -r -p " Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
     echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
     echo "export CUDA_HOME=/usr/local/cuda"
 } >> ~/.zshrc
-source ~/.zshrc
 
 source activate py35
-pip install tensorflow-gpu keras
+pip install keras
 
+read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
+tempvar=${tempvar:-p}
 
-# If above doesn't work, then do this
-# export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-0.12.1-cp35-cp35m-linux_x86_64.whl
+if [ "$tempvar" = "p" ]; then
+    pip install tensorflow-gpu
+elif [ "$tempvar" = "s" ]; then
+    pip uninstall tensorflow-gpu tensorflow
 
-#If installing on non anaconda
-# pip3 install --upgrade $TF_BINARY_URL
+    sudo apt-get install libcupti-dev
+    git clone https://github.com/tensorflow/tensorflow
+    cd tensorflow
 
-#If installing on anaconda
-# pip install --ignore-installed --upgrade $TF_BINARY_URL
+    echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+    curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+
+    sudo apt-get update && sudo apt-get install bazel
+    sudo apt-get upgrade bazel
+
+    read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
+
+    ./configure
+
+    bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+    bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+
+    pip install /tmp/tensorflow_pkg/*.whl
+elif [ "$tempvar" = "q" ];then
+    echo "Skipping this step"
+fi
+
+echo "This script has finished"
