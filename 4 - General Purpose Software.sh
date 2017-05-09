@@ -2,14 +2,14 @@
 if which nautilus > /dev/null; then
     sudo apt-get install nautilus-dropbox -y
 elif which caja > /dev/null; then
-    sudo apt-get install caja-dropbox -yannubuntu
+    sudo apt-get install caja-dropbox -y
 fi
 
 sudo apt-get install htop -y
 
 sudo apt-get install gparted -y
 
-sudo apt-get install task
+sudo apt-get install task -y
 
 sudo add-apt-repository ppa:yannubuntu/boot-repair -y
 sudo apt-get update
