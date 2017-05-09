@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "NOTE: This File is to be run *************ONLY AFTER YOU HAVE INSTALLED CUDA*******************"
-read -r -p " Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
+echo "NOTE: This File is to be run ***************************ONLY AFTER YOU HAVE INSTALLED CUDA***************************"
+read -r -p "Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
 
 {
     echo "export PATH=/usr/local/cuda-8.0/bin:\$PATH"
@@ -42,10 +42,16 @@ elif [ "$tempvar" = "s" ]; then
 
     ./configure
 
-    bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
-    bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+    echo ""
+    echo "******************************* THE INSTALLATION OF TF FROM SOURCE HAS NOT YET FINISHED *******************************"
+    echo "*************************** NOW RUN THESE COMMANDS BY COPY-PASTING ALL THE LINES BELOW TOGETHER ***************************"
 
-    pip install /tmp/tensorflow_pkg/*.whl
+    echo "bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package"
+    echo "bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg"
+
+    echo "pip install /tmp/tensorflow_pkg/*.whl"
+    echo "cd ../"
+
 elif [ "$tempvar" = "q" ];then
     echo "Skipping this step"
 fi

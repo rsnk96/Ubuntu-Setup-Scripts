@@ -4,17 +4,19 @@ chsh -s /usr/bin/zsh
 source ~/.zshrc
 
 conda update conda -y
+conda clean --all -y
+cond install ipython -y
 
 
 # Note: These set of lines are done as matplotlib finds older version of libpng at installation time but finds newer version at runtime, and this affects display ability at runtime
-conda uninstall matplotlib -y
-conda clean --all -y
-cd /usr/include/libpng
-sudo mv png.h _png.h
-sudo mv pngconf.h _pngconf.h
-conda install matplotlib scikit-image ipython -y
-sudo mv _png.h png.h
-sudo mv _pngconf.h pngconf.h
+# conda uninstall matplotlib -y
+# conda clean --all -y
+# cd /usr/include/libpng
+# sudo mv png.h _png.h
+# sudo mv pngconf.h _pngconf.h
+# conda install matplotlib scikit-image ipython -y
+# sudo mv _png.h png.h
+# sudo mv _pngconf.h pngconf.h
 
 
 # conda create --name py35 python=3.5 numpy scipy matplotlib
@@ -46,10 +48,19 @@ jupyter notebook --generate-config
 
 conda info --envs
 
-echo "Bro. If you ever mess up your anaconda installation somehow, do"
+echo "*************************** NOTICE ***************************"
+echo "If you ever mess up your anaconda installation somehow, do"
 echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
 echo "\$ conda clean --all"
 echo "Do this for each environment as well as your root. Then reinstall all except nomkl. Nvidia will now be installed"
+
+echo ""
+echo ""
+echo "*************************** NOTICE ***************************"
+echo "Python2.7 and 3.5 environments have been created. To activate them hit "
+echo "$ source activate py27"
+echo "or"
+echo "$ source activate py35"
 
 ## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
 # echo "Now choose gdm3 as your default display manager. Hit Enter"
