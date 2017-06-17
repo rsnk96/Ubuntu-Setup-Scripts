@@ -46,6 +46,7 @@ elif [ "$tempvar" = "s" ]; then
     echo "******************************* THE INSTALLATION OF TF FROM SOURCE HAS NOT YET FINISHED *******************************"
     echo "*************************** NOW RUN THESE COMMANDS BY COPY-PASTING ALL THE LINES BELOW TOGETHER ***************************"
 
+	echo "cd tensorflow"
     echo "bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package"
     echo "bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg"
 

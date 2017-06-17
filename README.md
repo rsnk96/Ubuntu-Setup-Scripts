@@ -1,5 +1,5 @@
 # Ubuntu-Setup-Scripts
-Every serious coder who has tried to mess around with their Ubuntu distro knows the pain of having to reinstall Ubuntu and set up their environment again
+Every serious coder who has tried to mess around with their Ubuntu version knows the pain of having to reinstall Ubuntu and set up their environment again
 
 These are the scripts that I use to set my Ubuntu up as quick as possible.
 
@@ -13,7 +13,7 @@ Then execute them in the terminal in the sequence of filenames.
 
 ## Major Alterations
 * Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Another Conda environment called py35 with Python 3.5 will also be set up
-* Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete
+* Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 
 ## Aliases that are added
 * `maxvol` : Will set your volume to 150%
