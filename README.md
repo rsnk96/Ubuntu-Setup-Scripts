@@ -1,5 +1,5 @@
 # Ubuntu-Setup-Scripts
-Every serious coder who has tried to mess around with their Ubuntu version knows the pain of having to reinstall Ubuntu and set up their environment again
+Everyone who has tried to mess around with their Ubuntu distro knows the pain of having to reinstall Ubuntu and set it up to their liking again
 
 These are the scripts that I use to set my Ubuntu up as quick as possible.
 
@@ -22,25 +22,12 @@ Then execute them in the terminal in the sequence of filenames.
 * `weather` : Will show weather forecast for the next three days
 * `gpom` : Alias for `git push origin master`. Will push your current directory
 * `jn` : Starts a jupyter notebook in that directory
+* `ydl "URL"`: Downloads the song at `URL` at 12kbps, 44100Hz in mp4 format with the title and song name automatically set in the metadata
 
 <br>
 
 ## Programs that are installed
-* Tmux
-* Tilda
-* Ubuntu-Restricted-Extras
-* Lyx
-* VLC
-* Chromium and Firefox
-* Dropbox
-* Gparted
-* Boot-Repair
-* Shutter
-* Grub Customizer
-* Ffmpeg
-* Qt5
-* CUDA
-* OpenCV (Python + C++ with VTK, V4L, QT and Optionally CUDA)
+`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `CUDA`, `OpenCV` (Python + C++ with VTK, V4L, QT and Optionally CUDA), `gimp`, `meld`(To be used with `git mergetool`)
 
 ## Python Packages
 * Tensorflow
@@ -48,6 +35,7 @@ Then execute them in the terminal in the sequence of filenames.
 * Autopep8
 * scdl - a soundcloud downloader
 * org-e - An app to sort and declutter folders (like ~/Downloads/)
+* youtube-dl: A youtube downloader
 
 ## Important points about the OpenCV Installation
 * OpenCV will be linked to Anaconda Python by default, and will be built for that, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script

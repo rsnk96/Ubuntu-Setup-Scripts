@@ -6,8 +6,8 @@ sudo apt-get install ubuntu-restricted-extras -y
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
-sudo apt-get install tilda -y
-sudo apt-get install tmux -y
+sudo apt-get install tilda tmux -y
+sudo apt-get install gimp meld -y
 
 cp config_files/.tmux.conf ~
 
@@ -17,9 +17,9 @@ fi
 
 cp config_files/config_0 ~/.config/tilda/
 
-sudo apt-get install zsh -y
 sudo apt-get install git -y
 
+sh -c "$(wget https://gist.githubusercontent.com/nicoulaj/715855/raw/e4e94fd8e6a1680d070ff34f36563a4339710ab4/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
 
 ln -s ~/.zim/templates/zimrc ~/.zimrc
@@ -36,12 +36,13 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 # ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 # ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
-CONTREPO=https://repo.continuum.io/archive/
-# Stepwise filtering of the html at $CONTREPO
+continuum_website=https://repo.continuum.io/archive/
+# Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
-ANACONDA_LATEST_FILE=$(wget -q -O - $CONTREPO index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-wget -O ~/Downloads/anacondaInstallScript.sh "$CONTREPO$ANACONDA_LATEST_FILE"
-bash ~/Downloads/anacondaInstallScript.sh
+latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+wget -O ~/Downloads/anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
+sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
+bash ~/Downloads/anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
 touch ~/.bash_aliases
 echo "Adding aliases to ~/.bash_aliases"
@@ -70,5 +71,5 @@ echo "The script has finished. The System will now reboot so that certain shell 
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
 
-chsh -s /usr/bin/zsh
+chsh -s /bin/zsh
 sudo reboot
