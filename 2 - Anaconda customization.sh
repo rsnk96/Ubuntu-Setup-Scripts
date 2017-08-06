@@ -1,11 +1,11 @@
-#!/usr/bin/zsh
+#!/bin/zsh
 
-chsh -s /usr/bin/zsh
+chsh -s /bin/zsh
 source ~/.zshrc
 
 conda update conda -y
 conda clean --all -y
-cond install ipython -y
+conda install ipython -y
 
 
 # Note: These set of lines are done as matplotlib finds older version of libpng at installation time but finds newer version at runtime, and this affects display ability at runtime
@@ -39,7 +39,8 @@ source ~/.zshrc
 #sudo -H pip3 install pep8
 #sudo -H pip3 install autopep8
 
-pip install autopep8 scdl org-e
+pip install autopep8 scdl org-e youtube-dl
+echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
 
 jupyter notebook --generate-config
 {
