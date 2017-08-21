@@ -19,7 +19,7 @@ cp config_files/config_0 ~/.config/tilda/
 
 sudo apt-get install git -y
 
-sh -c "$(wget https://gist.githubusercontent.com/nicoulaj/715855/raw/e4e94fd8e6a1680d070ff34f36563a4339710ab4/build-zsh.sh -O -)"
+sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/1d9405f33859cc86a6eb194eb627c75a513768b1/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
 
 ln -s ~/.zim/templates/zimrc ~/.zimrc
