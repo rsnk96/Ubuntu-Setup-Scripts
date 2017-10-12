@@ -7,18 +7,6 @@ conda update conda -y
 conda clean --all -y
 conda install ipython -y
 
-
-# Note: These set of lines are done as matplotlib finds older version of libpng at installation time but finds newer version at runtime, and this affects display ability at runtime
-# conda uninstall matplotlib -y
-# conda clean --all -y
-# cd /usr/include/libpng
-# sudo mv png.h _png.h
-# sudo mv pngconf.h _pngconf.h
-# conda install matplotlib scikit-image ipython -y
-# sudo mv _png.h png.h
-# sudo mv _pngconf.h pngconf.h
-
-
 # conda create --name py35 python=3.5 numpy scipy matplotlib
 conda install libgcc -y
 conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
@@ -28,16 +16,6 @@ sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
 source ~/.zshrc
-
-# Uncomment the next set of lines if you want to set up your normal Python too
-#sudo -H pip install jupyter notebook
-#sudo -H pip install cython
-#sudo -H pip install pep8
-#sudo -H pip install autopep8
-#sudo -H pip3 install jupyter notebook
-#sudo -H pip3 install cython
-#sudo -H pip3 install pep8
-#sudo -H pip3 install autopep8
 
 pip install autopep8 scdl org-e youtube-dl
 echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
