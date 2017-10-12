@@ -1,16 +1,8 @@
 #!/bin/bash
 
 sudo apt-get update -y
-sudo apt-get install ubuntu-restricted-extras -y
 
 sudo apt-get install tmux -y
-sudo apt-get install meld -y
-
-cp config_files/.tmux.conf ~
-
-if [ ! -d "~/.config/tilda" ]; then
-    mkdir ~/.config/tilda
-fi
 
 sudo apt-get install git -y
 
@@ -26,9 +18,9 @@ echo "Adding anaconda to path variables"
     echo "export OLDPATH=\$PATH"
     echo "export PATH=/tools/anaconda3/bin:\$PATH"
 
-} >> ~/.bashrc
+} >> /tools/setup.sh
 
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 read -p "Press [Enter] to continue..." temp
 
-sudo reboot
+#sudo reboot
