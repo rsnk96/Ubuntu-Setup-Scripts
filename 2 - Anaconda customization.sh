@@ -1,38 +1,21 @@
-#!/bin/zsh
-
-chsh -s /bin/zsh
-source ~/.zshrc
+#!/bin/bash
 
 conda update conda -y
 conda clean --all -y
 conda install ipython -y
 
-# conda create --name py35 python=3.5 numpy scipy matplotlib
 conda install libgcc -y
 conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
 conda create --name py35 python=3.5 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
 pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py
-sed -i.bak "/anaconda3/d" ~/.zshrc
-echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
-echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.zshrc
-source ~/.zshrc
+sed -i.bak "/anaconda3/d" ~/.bashrc
+echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.bashrc
+echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.bashrc
+source ~/.bashrc
 
-pip install autopep8 scdl org-e youtube-dl
-echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
-
-jupyter notebook --generate-config
-{
-    echo ""
-    echo "c.NotebookApp.browser = u'firefox'"
-} >> ~/.jupyter/jupyter_notebook_config.py
+sudo apt-get install libboost-all-dev clang-format htop -y
 
 conda info --envs
-
-echo "*************************** NOTICE ***************************"
-echo "If you ever mess up your anaconda installation somehow, do"
-echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
-echo "\$ conda clean --all"
-echo "Do this for each environment as well as your root. Then reinstall all except nomkl. Nvidia will now be installed"
 
 echo ""
 echo ""

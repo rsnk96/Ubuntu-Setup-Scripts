@@ -5,10 +5,10 @@ echo "NOTE: This File is to be run ***************************ONLY AFTER YOU HAV
 read -r -p "Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
 
 {
-    echo "export PATH=/usr/local/cuda-8.0/bin:\$PATH"
-    echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
-    echo "export CUDA_HOME=/usr/local/cuda"
-} >> ~/.zshrc
+    echo "export PATH=/tools/cuda/bin:\$PATH"
+    echo "export LD_LIBRARY_PATH=/tools/cuda/lib64:/tools/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
+    echo "export CUDA_HOME=/tools/cuda"
+} >> ~/.bashrc
 
 source activate py35
 pip install keras tabulate python-dateutil gensim "networkx[all]" --upgrade
