@@ -8,7 +8,7 @@ read -r -p "Hit [Enter] if you have, [Ctrl+C] if you have not!" temp
     echo "export PATH=/tools/cuda/bin:\$PATH"
     echo "export LD_LIBRARY_PATH=/tools/cuda/lib64:/tools/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
     echo "export CUDA_HOME=/tools/cuda"
-} >> ~/.bashrc
+} >> /tools/setup.sh
 
 source activate py35
 pip install keras tabulate python-dateutil gensim "networkx[all]" --upgrade

@@ -8,10 +8,10 @@ conda install libgcc -y
 conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
 conda create --name py35 python=3.5 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
 pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py
-sed -i.bak "/anaconda3/d" ~/.bashrc
-echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> ~/.bashrc
-echo "export PATH=~/anaconda3/bin:\$PATH" >> ~/.bashrc
-source ~/.bashrc
+sed -i.bak "/anaconda3/d" /tools/setup.sh
+echo "export PATH=~/anaconda3/envs/py27/bin:\$PATH" >> /tools/setup.sh
+echo "export PATH=~/anaconda3/bin:\$PATH" >> /tools/setup.sh
+source /tools/setup.sh
 
 sudo apt-get install libboost-all-dev clang-format htop -y
 
