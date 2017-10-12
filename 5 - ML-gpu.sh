@@ -63,7 +63,7 @@ export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root direct
 conda install numpy pyyaml mkl setuptools cmake cffi -y
 # Add LAPACK support for the GPU
 conda install -c soumith magma-cuda80 -y # or magma-cuda75 if CUDA 7.5, UPDATE IF CUDA IS UPDATED (assuming soumith has uploaded magma package)
-if [ ! -d "tensorflow" ]; then
+if [ ! -d "pytorch" ]; then
     git clone --recursive https://github.com/pytorch/pytorch
 else
     (
