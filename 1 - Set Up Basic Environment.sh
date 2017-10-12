@@ -60,7 +60,7 @@ echo "Adding anaconda to path variables"
 {
     echo ""
     echo "export OLDPATH=\$PATH"
-    echo "export PATH=~/anaconda3/bin:\$PATH"
+    echo "export PATH=/opt/anaconda3/bin:\$PATH"
 
     echo "if [ -f ~/.bash_aliases ]; then"
     echo "  source ~/.bash_aliases"
