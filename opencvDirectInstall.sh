@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "This is intended to be a universal OpenCV installation script, which supports installing on Anaconda Python too"
 echo "Usually, if this script doesn't work, it's because the library versions may have been updated (of libvtk, libtiff, libjpeg and other dependencies) or OpenCV might have added new modules to contrib which require you to install additional dependencies. In such a scenario, kindly create in issue in the github repository."
 echo
