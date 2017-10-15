@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 sudo apt-get install libboost-all-dev -y
 
 sudo apt-get install clang-format -y

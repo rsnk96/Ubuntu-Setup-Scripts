@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if which nautilus > /dev/null; then
     sudo apt-get install nautilus-dropbox -y
 elif which caja > /dev/null; then
