@@ -11,6 +11,7 @@ elif test -n $(echo $SHELL | grep "ksh") ; then
 else
   exit # Ain't nothing I can do to help you buddy :P
 fi
+SHELLRC=/tools/config.sh #override as config.sh will be shared by all users
 
 echo        "***************************RUN AFTER YOU HAVE INSTALLED CUDA***************************"
 read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!******************** " temp
@@ -18,33 +19,31 @@ read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!
 if ! test -n "$(echo "$PATH" | grep 'cuda')"; then
     echo "Adding Cuda location to PATH"
 {
-    echo "export PATH=/tools/cuda/bin:\$PATH"
-    echo "export LD_LIBRARY_PATH=/tools/cuda/lib64:/tools/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
-    echo "export CUDA_HOME=/tools/cuda"
-} >> /tools/config.sh
-source /tools/config.sh
+    echo "export PATH=/usr/local/cuda-8.0/bin:\$PATH"
+    echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
+    echo "export CUDA_HOME=/usr/local/cuda"
+} >> $SHELLRC
+source $SHELLRC
 fi
 
 echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
+sudo apt-get upgrade -y
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
-sudo apt-get upgrade bazel
 
 if test -n "$(conda info --envs |grep 'py35')"; then
-{
-    echo "inside"
     source activate py35
-    pip install keras tabulate python-dateutil gensim networkx --upgrade
-}
 fi
+
+pip install keras tabulate python-dateutil gensim networkx --upgrade
 
 read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
 tempvar=${tempvar:-p}
 
 if test "$tempvar" = "p"; then
-    pip install tensorflow-gpu --force-reinstall
+    pip install tensorflow-gpu
 elif test "$tempvar" = "s"; then
     if ! test -d "tensorflow"; then
         git clone https://github.com/tensorflow/tensorflow
@@ -63,8 +62,7 @@ elif test "$tempvar" = "s"; then
     read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
 
     ./configure
-
-	cd tensorflow
+    cd tensorflow
     bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
     cd ../
     # cp -r bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/main/* bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/
@@ -95,23 +93,29 @@ else
 )
 fi
 cd pytorch
+python setup.py clean
 python setup.py install
-pip install torchvision --force-reinstall
+echo "Now installing torchvision"
+pip install torchvision
 cd ..
 
 echo ""
 echo "Now installing Caffe"
-conda update conda -y
-sudo apt-get update
-sudo apt-get upgrade
 sudo apt-get install -y build-essential cmake git pkg-config
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev protobuf-compiler
 sudo apt-get install -y libatlas-base-dev 
 sudo apt-get install -y --no-install-recommends libboost-all-dev
 sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
-git clone https://github.com/BVLC/caffe.git
+if ! test -d "caffe"; then
+    git clone https://github.com/BVLC/caffe.git    
+else
+(
+    cd caffe || exit
+    git pull
+)
+fi
 cd caffe
-mkdir build
+mkdir -p build
 cd build
 cmake -D python_version=3 ..
 make all
@@ -131,7 +135,6 @@ conda install theano pygpu -y
 
 echo ""
 echo "Now installing OpenAI Gym"
-sudo apt-get install -y python-numpy python-dev cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
 pip install "gym[all]"
 
 

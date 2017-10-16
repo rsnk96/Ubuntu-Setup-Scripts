@@ -5,7 +5,6 @@ set -e
 sudo apt-get update -y
 
 sudo apt-get install tmux -y
-
 sudo apt-get install git -y
 
 continuum_website=https://repo.continuum.io/archive/
@@ -21,5 +20,6 @@ echo "Adding anaconda to path variables"
     echo "export PATH=/tools/anaconda3/bin:\$PATH"
 
 } >> /tools/config.sh
+
 
 echo "The script has finished. It is recommeneded to reboot the system now"
