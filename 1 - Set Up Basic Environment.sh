@@ -8,18 +8,14 @@ sudo apt-get install ubuntu-restricted-extras -y
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
+sudo apt-get install git -y
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
 
 cp config_files/.tmux.conf ~
-
-if [ ! -d "~/.config/tilda" ]; then
-    mkdir ~/.config/tilda
-fi
-
+mkdir -p ~/.config/tilda
 cp config_files/config_0 ~/.config/tilda/
 
-sudo apt-get install git -y
 
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim

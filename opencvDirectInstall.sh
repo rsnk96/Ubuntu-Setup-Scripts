@@ -81,7 +81,7 @@ else
 fi
 
 cd opencv || exit
-mkdir build
+mkdir -p build
 cd build || exit
 
 
