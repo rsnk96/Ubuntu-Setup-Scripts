@@ -29,22 +29,20 @@ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | 
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
+sudo apt-get upgrade -y
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
-sudo apt-get upgrade bazel
 
 if test -n "$(conda info --envs |grep 'py35')"; then
-{
-    echo "inside"
     source activate py35
-    pip install keras tabulate python-dateutil gensim networkx --upgrade
-}
 fi
+
+pip install keras tabulate python-dateutil gensim networkx --upgrade
 
 read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
 tempvar=${tempvar:-p}
 
 if test "$tempvar" = "p"; then
-    pip install tensorflow-gpu --force-reinstall
+    pip install tensorflow-gpu
 elif test "$tempvar" = "s"; then
     if ! test -d "tensorflow"; then
         git clone https://github.com/tensorflow/tensorflow
@@ -94,23 +92,29 @@ else
 )
 fi
 cd pytorch
+python setup.py clean
 python setup.py install
-pip install torchvision --force-reinstall
+echo "Now installing torchvision"
+pip install torchvision
 cd ..
 
 echo ""
 echo "Now installing Caffe"
-conda update conda -y
-sudo apt-get update
-sudo apt-get upgrade
 sudo apt-get install -y build-essential cmake git pkg-config
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev protobuf-compiler
 sudo apt-get install -y libatlas-base-dev 
 sudo apt-get install -y --no-install-recommends libboost-all-dev
 sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
-git clone https://github.com/BVLC/caffe.git
+if ! test -d "caffe"; then
+    git clone https://github.com/BVLC/caffe.git    
+else
+(
+    cd caffe || exit
+    git pull
+)
+fi
 cd caffe
-mkdir build
+mkdir -p build
 cd build
 cmake -D python_version=3 ..
 make all
