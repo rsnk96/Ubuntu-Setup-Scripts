@@ -55,7 +55,7 @@ elif test "$tempvar" = "s"; then
     
     #Checkout the latest release candidate, as it should be relatively stable
     cd tensorflow
-    latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+")
+    latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+ | head -1")
     git checkout "$latest_rc"
     
     read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp

@@ -34,11 +34,22 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 # ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 # ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
+
+git clone https://github.com/axel-download-accelerator/axel.git
+sudo apt-get install autopoint
+cd axel
+./autogen.sh
+./configure
+make
+sudo make install
+cd ../
+
+
 continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
 latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-wget -O ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
+axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
 sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 

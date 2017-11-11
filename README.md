@@ -27,7 +27,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br>
 
 ## Programs that are installed
-`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `CUDA`, `OpenCV` (Python + C++ with VTK, V4L, QT and Optionally CUDA), `gimp`, `meld`(To be used with `git mergetool`)
+`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `CUDA`, `OpenCV` (Python + C++ with VTK, V4L, QT and Optionally CUDA), `gimp`, `meld`(To be used with `git mergetool`), `axel`
 
 ## Python Packages
 * Machine Learning Libraries: Tensorflow, Caffe and Pytorch built from source, optimized for user hardware. Theano, Keras, Gym installed from pip
