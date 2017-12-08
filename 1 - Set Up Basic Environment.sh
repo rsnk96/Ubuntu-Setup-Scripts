@@ -13,6 +13,7 @@ sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
 
 cp config_files/.tmux.conf ~
+cp config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
 cp config_files/config_0 ~/.config/tilda/
 
@@ -63,6 +64,7 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "weather() {curl wttr.in/\"\$1\";}"
     echo "alias gpom=\"git push origin master\""
     echo "alias update=\"sudo apt-get update && sudo apt-get upgrade -y\""
+    echo "alias tmux=\"tmux -u\""
 } >> ~/.bash_aliases
 
 echo "Adding anaconda to path variables"

@@ -33,7 +33,7 @@ sudo apt-get install grub-customizer -y
 
 sudo apt-add-repository ppa:jtaylor/keepass -y
 sudo apt-get update -y
-sudo apt-get install keepass2 -y
+sudo apt-get install xdotool keepass2 -y
 
 sudo apt-get install vlc -y
 
