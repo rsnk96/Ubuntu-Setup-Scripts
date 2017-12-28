@@ -46,13 +46,13 @@ sudo make install
 cd ../
 
 
-continuum_website=https://repo.continuum.io/archive/
+# continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
-latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
-sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
-bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
+# latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+# axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
+# sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
+# bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
 touch ~/.bash_aliases
 echo "Adding aliases to ~/.bash_aliases"
@@ -67,20 +67,21 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "alias tmux=\"tmux -u\""
 } >> ~/.bash_aliases
 
-echo "Adding anaconda to path variables"
-{
-    echo ""
-    echo "export OLDPATH=\$PATH"
-    echo "export PATH=/opt/anaconda3/bin:\$PATH"
-
-    echo "if [ -f ~/.bash_aliases ]; then"
-    echo "  source ~/.bash_aliases"
-    echo "fi"
-} >> ~/.zshrc
+#echo "Adding anaconda to path variables"
+#{
+#    echo ""
+#    echo "export OLDPATH=\$PATH"
+#    echo "export PATH=/opt/anaconda3/bin:\$PATH"
+#    echo "if [ -f ~/.bash_aliases ]; then"
+#    echo "  source ~/.bash_aliases"
+#    echo "fi"
+#} >> ~/.zshrc
 
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
 
+
+command -v zsh | sudo tee -a /etc/shells
 chsh -s /bin/zsh
 sudo reboot
