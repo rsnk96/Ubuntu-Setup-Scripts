@@ -31,9 +31,13 @@ sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
 sudo apt-get update
 sudo apt-get install grub-customizer -y
 
-sudo apt-add-repository ppa:jtaylor/keepass -y
-sudo apt-get update -y
-sudo apt-get install xdotool keepass2 -y
+#sudo apt-add-repository ppa:jtaylor/keepass -y
+#sudo apt-get update -y
+#sudo apt-get install xdotool keepass2 -y
+
+wget https://go.skype.com/skypeforlinux-64.deb
+sudo dpkg -i skypeforlinux-64.deb
+rm skypeforlinux-64.deb
 
 sudo apt-get install vlc -y
 
@@ -48,14 +52,14 @@ sudo apt-get install adobe-flashplugin -y
 sudo apt-get install firefox -y
 
 ## Install tor
-sudo add-apt-repository ppa:webupd8team/tor-browser -y
-sudo apt-get update -y
+#sudo add-apt-repository ppa:webupd8team/tor-browser -y
+#sudo apt-get update -y
 sudo apt-get install tor-browser -y
 
 ## Install I2P
-sudo apt-add-repository ppa:i2p-maintainers/i2p -y
-sudo apt-get update -y
-sudo apt-get install i2p -y
+#sudo apt-add-repository ppa:i2p-maintainers/i2p -y
+#sudo apt-get update -y
+#sudo apt-get install i2p -y
 
 echo
 echo
