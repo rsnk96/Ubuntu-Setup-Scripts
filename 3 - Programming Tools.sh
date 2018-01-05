@@ -6,12 +6,11 @@ sudo apt-get install libboost-all-dev -y
 
 sudo apt-get install clang-format -y
 
-sudo apt-get install lyx -y
 
 # Install code editor of your choice
 echo
 echo
-read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is VS Code [v/a/s/q]: " tempvar
+read -p "Download and Install VS Code / Atom & Sublime. Press q to skip this. Default is VS Code [v/as/q]: " tempvar
 tempvar=${tempvar:-v}
 
 if [ "$tempvar" = "v" ]; then
@@ -24,10 +23,9 @@ if [ "$tempvar" = "v" ]; then
     echo
     echo
     echo "If you are using VS Code, note that you have to remove the line which modifies \$TMPDIR in your .zprofile."
-elif [ "$tempvar" = "a" ]; then
+elif [ "$tempvar" = "as" ]; then
     sudo add-apt-repository ppa:webupd8team/atom
     sudo apt update; sudo apt install atom
-elif [ "$tempvar" = "s" ]; then
     sudo add-apt-repository ppa:webupd8team/sublime-text-3
     sudo apt-get update
     sudo apt-get install sublime-text-installer

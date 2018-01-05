@@ -11,6 +11,8 @@ sudo apt-get install ubuntu-restricted-extras -y
 sudo apt-get install git -y
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
+sudo apt-get install --assume-yes xclip # this is used for the copying tmux buffer to clipboard buffer
+
 
 cp config_files/.tmux.conf ~
 cp config_files/.tmux.conf.local ~
@@ -21,6 +23,7 @@ cp config_files/config_0 ~/.config/tilda/
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
 
+cp config_files/zsh_config ~/.zim/templates/zimrc
 ln -s ~/.zim/templates/zimrc ~/.zimrc
 ln -s ~/.zim/templates/zlogin ~/.zlogin
 ln -s ~/.zim/templates/zshrc ~/.zshrc
