@@ -47,14 +47,14 @@ sudo apt-get install vlc -y
 #sudo apt-get update  -y
 #sudo apt-get install google-chrome-stable -y
 
-sudo apt-get install chromium-browser -y
+#sudo apt-get install chromium-browser -y
 sudo apt-get install adobe-flashplugin -y
 sudo apt-get install firefox -y
 
 ## Install tor
 #sudo add-apt-repository ppa:webupd8team/tor-browser -y
 #sudo apt-get update -y
-sudo apt-get install tor-browser -y
+#sudo apt-get install tor-browser -y
 
 ## Install I2P
 #sudo apt-add-repository ppa:i2p-maintainers/i2p -y
