@@ -3,6 +3,10 @@
 chsh -s /bin/zsh
 source ~/.zshrc
 
+# Desktop settings
+dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-hide-mode 1 
+dconf write /org/compiz/profiles/unity/plugins/unityshell/icon-size 34
+
 # TLP manager 
 sudo add-apt-repository ppa:linrunner/tlp
 sudo apt-get update 
