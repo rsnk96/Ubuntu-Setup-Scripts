@@ -15,7 +15,7 @@ sudo apt-get install gimp meld -y
 sudo apt-get install --assume-yes xclip # this is used for the copying tmux buffer to clipboard buffer
 sudo apt-get install vim-gui-common
 sudo apt-get install vim-runtime
-cp config_files/.vimrc ~
+cp ./config_files/.vimrc ~
 
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
 cp config_files/.tmux.conf ~
@@ -42,7 +42,17 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 # ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 # ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
+# OpenSSL installation 
+wget https://www.openssl.org/source/openssl-1.0.2g.tar.gz
+tar -xvzf openssl-1.0.2g.tar.gz -C ~/Downloads
+rm openssl-1.0.2g.tar.gz
+cd ~/Downloads/openssl-1.0.2g/ 
+./config --prefix=/usr/local/openssl --openssldir=/local/usr/openssl
+make 
+sudo make install
+cd ~/Ubuntu-install-scripts/
 
+# Axel installation 
 git clone https://github.com/axel-download-accelerator/axel.git
 sudo apt-get install autopoint
 cd axel
