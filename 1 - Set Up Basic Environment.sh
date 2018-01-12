@@ -3,6 +3,7 @@
 set -e
 
 sudo apt-get update -y
+sudo apt-get dist-upgrade -y
 sudo apt-get install ubuntu-restricted-extras -y
 
 # My choice for terminal: Tilda+tmux
@@ -12,6 +13,9 @@ sudo apt-get install git -y
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
 sudo apt-get install --assume-yes xclip # this is used for the copying tmux buffer to clipboard buffer
+sudo apt-get install vim-gui-common
+sudo apt-get install vim-runtime
+cp config_files/.vimrc ~
 
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
 cp config_files/.tmux.conf ~
