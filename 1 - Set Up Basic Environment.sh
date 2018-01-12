@@ -5,6 +5,7 @@ set -e
 sudo apt-get update -y
 sudo apt-get dist-upgrade -y
 sudo apt-get install ubuntu-restricted-extras -y
+sudo ubuntu-drivers autoinstall 
 
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
