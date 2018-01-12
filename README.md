@@ -50,4 +50,4 @@ Then execute them in the terminal in the sequence of filenames.
   If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
 
 ## To Dos 
-[] Fail Proof checks
+- [] Fail Proof checks
