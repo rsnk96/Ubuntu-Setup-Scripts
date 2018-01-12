@@ -43,19 +43,11 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 # ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 # ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
-# OpenSSL installation 
-wget https://www.openssl.org/source/openssl-1.0.2g.tar.gz
-tar -xvzf openssl-1.0.2g.tar.gz -C ~/Downloads
-rm openssl-1.0.2g.tar.gz
-cd ~/Downloads/openssl-1.0.2g/ 
-./config --prefix=/usr/local/openssl --openssldir=/local/usr/openssl
-make 
-sudo make install
-cd ~/Ubuntu-install-scripts/
 
 # Axel installation 
 git clone https://github.com/axel-download-accelerator/axel.git
 sudo apt-get install autopoint
+sudo apt-get instal openssl libssl-dev
 cd axel
 ./autogen.sh
 ./configure
