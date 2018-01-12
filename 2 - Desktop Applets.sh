@@ -11,6 +11,7 @@ dconf write /org/compiz/profiles/unity/plugins/unityshell/icon-size 34
 sudo add-apt-repository ppa:linrunner/tlp
 sudo apt-get update 
 sudo apt-get install tlp tlp-rdw 
+sudo tlp start
 
 pip install autopep8 scdl org-e youtube-dl
 sudo pip install --upgrade youtube_dl
