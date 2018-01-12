@@ -18,16 +18,16 @@ sudo apt-get install vim-runtime
 cp ./config_files/.vimrc ~
 
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
-cp config_files/.tmux.conf ~
-cp config_files/.tmux.conf.local ~
+cp ./config_files/.tmux.conf ~
+cp ./config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
-cp config_files/config_0 ~/.config/tilda/
+cp ./config_files/config_0 ~/.config/tilda/
 
 
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
 
-cp config_files/zsh_config ~/.zim/templates/zimrc
+cp ./config_files/zsh_config ~/.zim/templates/zimrc
 ln -s ~/.zim/templates/zimrc ~/.zimrc
 ln -s ~/.zim/templates/zlogin ~/.zlogin
 ln -s ~/.zim/templates/zshrc ~/.zshrc
