@@ -4,8 +4,8 @@ set -e
 
 sudo apt-get update -y
 sudo apt-get dist-upgrade -y
-sudo apt-get install ubuntu-restricted-extras -y
-sudo ubuntu-drivers autoinstall 
+sudo apt-get install  ubuntu-restricted-extras -y
+#sudo ubuntu-drivers autoinstall 
 
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
@@ -13,9 +13,8 @@ sudo ubuntu-drivers autoinstall
 sudo apt-get install git -y
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
-sudo apt-get install --assume-yes xclip # this is used for the copying tmux buffer to clipboard buffer
-sudo apt-get install vim-gui-common
-sudo apt-get install vim-runtime
+sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
+sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/.vimrc ~
 
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
@@ -46,8 +45,8 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 
 # Axel installation 
 git clone https://github.com/axel-download-accelerator/axel.git
-sudo apt-get install autopoint
-sudo apt-get instal openssl libssl-dev
+sudo apt-get install --assume-yes autopoint
+sudo apt-get install --assume-yes openssl libssl-dev
 cd axel
 ./autogen.sh
 ./configure
@@ -89,7 +88,6 @@ echo "Adding aliases to ~/.bash_aliases"
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
-
 
 command -v zsh | sudo tee -a /etc/shells
 chsh -s /bin/zsh
