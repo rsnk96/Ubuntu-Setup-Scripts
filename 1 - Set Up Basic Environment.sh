@@ -85,6 +85,7 @@ echo "Adding aliases to ~/.bash_aliases"
 #    echo "fi"
 #} >> ~/.zshrc
 
+sudo apt-get autoremove
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
