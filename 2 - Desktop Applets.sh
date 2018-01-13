@@ -13,7 +13,7 @@ sudo apt-get update
 sudo apt-get install tlp tlp-rdw -y
 sudo tlp start
 
-sudo apt-get install pip -y
+sudo apt-get install python-pip -y
 pip install autopep8 scdl youtube-dl
 sudo pip install --upgrade youtube_dl -y
 echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
