@@ -8,25 +8,26 @@ dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-hide-mode 1
 dconf write /org/compiz/profiles/unity/plugins/unityshell/icon-size 34
 
 # TLP manager 
-sudo add-apt-repository ppa:linrunner/tlp
-sudo apt-get update 
-sudo apt-get install tlp tlp-rdw 
+sudo add-apt-repository ppa:linrunner/tlp -y
+sudo apt-get update
+sudo apt-get install tlp tlp-rdw -y
 sudo tlp start
 
-pip install autopep8 scdl org-e youtube-dl
-sudo pip install --upgrade youtube_dl
+sudo apt-get install pip -y
+pip install autopep8 scdl youtube-dl
+sudo pip install --upgrade youtube_dl -y
 echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
 
 # refer :[https://github.com/rg3/youtube-dl/blob/master/README.md#readme] for documentation of youtube downloader 
 
 # Multiload and other sensor applets
-sudo apt-add-repository ppa:sneetsher/copies
+sudo apt-add-repository ppa:sneetsher/copies -y
+sudo apt update 
+sudo apt install indicator-sensors indicator-multiload -y
+sudo apt-add-repository -r ppa:sneetsher/copies -y
 sudo apt update
-sudo apt install indicator-sensors
-sudo apt-add-repository -r ppa:sneetsher/copies
-sudo apt update
-sudo apt-get install indicators-multiload
-sudo apt-get install redshift redshift-gtk
+
+sudo apt-get install redshift redshift-gtk -y
 
 
 ## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
