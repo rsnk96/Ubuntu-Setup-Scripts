@@ -47,7 +47,7 @@ sudo apt-get install vlc -y
 #sudo apt-get update  -y
 #sudo apt-get install google-chrome-stable -y
 
-#sudo apt-get install chromium-browser -y
+sudo apt-get install chromium-browser -y
 sudo apt-get install adobe-flashplugin -y
 sudo apt-get install firefox -y
 
