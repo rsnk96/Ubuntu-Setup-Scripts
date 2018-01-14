@@ -60,6 +60,10 @@ sudo apt-get install -y doxygen
 
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
+sudo -s 
+mkdir /opt/opencvs
+cd /opt/opencvs
+
 if [ ! -d "opencv" ]; then
 	git clone https://github.com/Itseez/opencv
 else
@@ -69,6 +73,9 @@ else
         git pull
     )
 fi
+cd ./opencv
+git checkout tags/3.3.0 
+cd .. 
 if [ ! -d "opencv_contrib" ]; then
 	git clone https://github.com/Itseez/opencv_contrib
 else
@@ -77,7 +84,9 @@ else
         git pull
     )
 fi
-
+cd opencv_contrib
+git checkout tags/3.3.0 
+cd .. 
 cd opencv
 mkdir -p build
 cd build
@@ -121,7 +130,7 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
  -DWITH_OPENGL=ON \
  -DWITH_VTK=ON \
  -DWITH_IPP=OFF \
- -DWITH_CUDA=OFF \
+ -DWITH_CUDA=ON \
  -DBUILD_TESTS=OFF \
  -DBUILD_TIFF=ON \
  -DBUILD_opencv_java=ON \
