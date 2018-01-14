@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-chsh -s /bin/zsh
 source ~/.zshrc
 
 # Desktop settings
