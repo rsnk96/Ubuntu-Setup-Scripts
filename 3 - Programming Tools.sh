@@ -24,9 +24,9 @@ if [ "$tempvar" = "v" ]; then
     echo
     echo "If you are using VS Code, note that you have to remove the line which modifies \$TMPDIR in your .zprofile."
 elif [ "$tempvar" = "as" ]; then
-    sudo add-apt-repository ppa:webupd8team/atom
+    sudo add-apt-repository ppa:webupd8team/atom -y
     sudo apt update; sudo apt install atom
-    sudo add-apt-repository ppa:webupd8team/sublime-text-3
+    sudo add-apt-repository ppa:webupd8team/sublime-text-3 -y
     sudo apt-get update
     sudo apt-get install sublime-text-installer
 elif [ "$tempvar" = "q" ];then
