@@ -51,3 +51,5 @@ Then execute them in the terminal in the sequence of filenames.
 
 ## To Dos 
 - [ ] Fail Proof checks
+- [ ] starting to startup programs 
+- [ ] configuring default wifi settings 
