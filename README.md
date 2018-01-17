@@ -53,3 +53,4 @@ Then execute them in the terminal in the sequence of filenames.
 - [ ] Fail Proof checks
 - [ ] starting to startup programs 
 - [ ] configuring default wifi settings 
+- [ ] lol only
