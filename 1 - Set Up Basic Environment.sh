@@ -9,6 +9,7 @@ sudo apt-get install ubuntu-restricted-extras -y
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
 sudo apt-get install git -y
+rm -rf ~/.z*
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
 
