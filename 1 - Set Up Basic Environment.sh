@@ -36,9 +36,15 @@ ln -s ~/.zim/templates/zshrc ~/.zshrc
 # ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
 # ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
 
-
-git clone https://github.com/axel-download-accelerator/axel.git
-sudo apt-get install autopoint
+if ! test -d "tensorflow"; then
+    git clone https://github.com/axel-download-accelerator/axel.git
+else
+    (
+        cd axel || exit
+        git pull
+    )
+fi
+sudo apt-get install autopoint libssl-dev -y
 cd axel
 ./autogen.sh
 ./configure
@@ -79,9 +85,11 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
+command -v zsh | sudo tee -a /etc/shells
+sudo chsh -s "$(command -v zsh)" "${USER}"
+
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
 
-chsh -s /bin/zsh
 sudo reboot

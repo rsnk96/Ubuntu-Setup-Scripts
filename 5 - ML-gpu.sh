@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 if test -n $(echo $SHELL | grep "zsh") ; then
   SHELLRC=~/.zshrc
@@ -13,12 +13,12 @@ else
 fi
 
 echo        "***************************RUN AFTER YOU HAVE INSTALLED CUDA***************************"
-read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!******************** " temp
+read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
 
 if ! test -n "$(echo "$PATH" | grep 'cuda')"; then
     echo "Adding Cuda location to PATH"
 {
-    echo "export PATH=/usr/local/cuda-8.0/bin:\$PATH"
+    echo "export PATH=/usr/local/cuda/bin:\$PATH"
     echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
     echo "export CUDA_HOME=/usr/local/cuda"
 } >> $SHELLRC
@@ -55,14 +55,15 @@ elif test "$tempvar" = "s"; then
     
     #Checkout the latest release candidate, as it should be relatively stable
     cd tensorflow
-    latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+ | head -1")
-    git checkout "$latest_rc"
+    latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+" | head -1 | sed -e 's/^[ \t]*//' )
+    # git checkout "$latest_rc"
+    git checkout "r1.5"
     
     read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
 
     ./configure
 	cd tensorflow
-    bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+    bazel build --config=opt --config=cuda --incompatible_load_argument_is_label=false //tensorflow/tools/pip_package:build_pip_package
     cd ../
     # cp -r bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/main/* bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
