@@ -9,8 +9,8 @@ rm *.deb
 echo ""
 echo "Adding Paths"
 {
-	echo "export PATH=/usr/local/cuda-9.1/bin${PATH:+:${PATH}}"
-	echo "$ export LD_LIBRARY_PATH=/usr/local/cuda-9.1/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+	echo "export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}"
+	echo "$ export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 } >> ~/.zshrc 
 
 
