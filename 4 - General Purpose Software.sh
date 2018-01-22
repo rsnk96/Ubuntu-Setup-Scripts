@@ -7,14 +7,18 @@ elif which caja > /dev/null; then
 fi
 
 sudo apt-get install htop -y
-
 sudo apt-get install gparted -y
-
 sudo apt-get install task -y
 
 sudo add-apt-repository ppa:yannubuntu/boot-repair -y
 sudo apt-get update
 sudo apt-get install -y boot-repair
+
+# Installation of Docker Community Edition
+wget get.docker.com -O dockerInstall.sh
+chmod +x dockerInstall.sh
+./dockerInstall.sh
+rm dockerInstall.sh
 
 #sudo apt-get install gnome-themes-standard
 sudo apt-get install shutter -y
