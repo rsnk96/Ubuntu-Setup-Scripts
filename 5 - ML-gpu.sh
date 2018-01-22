@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#set -e
-
 if test -n $(echo $SHELL | grep "zsh") ; then
   SHELLRC=~/.zshrc
 elif test -n $(echo $SHELL | grep "bash") ; then
@@ -56,14 +54,13 @@ elif test "$tempvar" = "s"; then
     #Checkout the latest release candidate, as it should be relatively stable
     cd tensorflow
     latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+" | head -1 | sed -e 's/^[ \t]*//' )
-    # git checkout "$latest_rc"
-    git checkout "r1.5"
+    git checkout "$latest_rc"
     
     read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
 
     ./configure
 	cd tensorflow
-    bazel build --config=opt --config=cuda --incompatible_load_argument_is_label=false //tensorflow/tools/pip_package:build_pip_package
+    bazel build --config=opt --config=cuda --incompatible_load_argument_is_label=false --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" //tensorflow/tools/pip_package:build_pip_package
     cd ../
     # cp -r bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/main/* bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg

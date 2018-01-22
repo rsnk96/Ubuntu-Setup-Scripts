@@ -18,25 +18,15 @@ cp config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
 cp config_files/config_0 ~/.config/tilda/
 
-
+# Set up zsh + zim
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
-
 ln -s ~/.zim/templates/zimrc ~/.zimrc
 ln -s ~/.zim/templates/zlogin ~/.zlogin
 ln -s ~/.zim/templates/zshrc ~/.zshrc
 
-# If you prefer Prezto, then uncomment the next few lines. Zim is much faster though
-# git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-
-# ln -s ~/.zprezto/runcoms/zlogin ~/.zlogin
-# ln -s ~/.zprezto/runcoms/zlogout ~/.zlogout
-# ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc
-# ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile
-# ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv
-# ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc
-
-if ! test -d "tensorflow"; then
+# Install axel, a download accelerator
+if ! test -d "axel"; then
     git clone https://github.com/axel-download-accelerator/axel.git
 else
     (
@@ -85,6 +75,7 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
+# Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
