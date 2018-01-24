@@ -26,6 +26,9 @@ sudo apt install indicator-sensors indicator-multiload -y
 sudo apt-add-repository -r ppa:sneetsher/copies -y
 sudo apt update
 
+mkdir ~/.config/autostart 
+cp ./config_files/indicator-multiload.desktop ~/.config/autostart
+cp ./config_files/indicator-sensors.desktop ~/.config/autostart
 sudo apt-get install redshift redshift-gtk -y
 
 
@@ -43,3 +46,7 @@ sudo apt-get install redshift redshift-gtk -y
 # sudo reboot
 
 echo "The script has finished"
+echo "Better to reboot to install applets changes. Press [Enter] to continue or exit by Ctrl + C"
+read -p "Press [Enter] to continue..." temp
+reboot
+
