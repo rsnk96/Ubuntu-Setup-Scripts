@@ -86,10 +86,11 @@ echo "Adding aliases to ~/.bash_aliases"
 #} >> ~/.zshrc
 
 sudo apt-get autoremove -y
+command -v zsh | sudo tee -a /etc/shells
+chsh -s /bin/zsh
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
 read -p "Press [Enter] to continue..." temp
 
-command -v zsh | sudo tee -a /etc/shells
-chsh -s /bin/zsh
+
 sudo reboot
