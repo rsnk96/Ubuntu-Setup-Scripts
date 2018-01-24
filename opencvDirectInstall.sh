@@ -6,7 +6,7 @@ echo
 echo "NOTE: Enable Cannonical Partners in your Software Sources for ffmpeg installation. If you have, press [Enter]. Otherwise, [Ctrl+C], enable it, and re-run this script"
 read -r temp
 
-sudo apt-get update
+#sudo apt-get update
 sudo apt-get upgrade -y
 
 sudo apt-get install build-essential -y
@@ -60,8 +60,9 @@ sudo apt-get install -y doxygen
 
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
-sudo -s 
-mkdir /opt/opencvs
+
+
+mkdir /opt/opencvs -p
 cd /opt/opencvs
 
 if [ ! -d "opencv" ]; then
@@ -85,12 +86,12 @@ else
     )
 fi
 cd opencv_contrib
+
 git checkout tags/3.3.0 
 cd .. 
 cd opencv
 mkdir -p build
 cd build
-
 
 py2Ex=$(which python2)
 py2In=$(python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
@@ -130,7 +131,7 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE \
  -DWITH_OPENGL=ON \
  -DWITH_VTK=ON \
  -DWITH_IPP=OFF \
- -DWITH_CUDA=ON \
+ -DWITH_CUDA=OFF \
  -DBUILD_TESTS=OFF \
  -DBUILD_TIFF=ON \
  -DBUILD_opencv_java=ON \
@@ -152,3 +153,4 @@ sudo ldconfig
 export PATH=$TEMP
 
 echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
+
