@@ -26,11 +26,14 @@ sudo apt install indicator-sensors indicator-multiload -y
 sudo apt-add-repository -r ppa:sneetsher/copies -y
 sudo apt update
 
-mkdir ~/.config/autostart 
-cp ./config_files/indicator-multiload.desktop ~/.config/autostart
-cp ./config_files/indicator-sensors.desktop ~/.config/autostart
 sudo apt-get install redshift redshift-gtk -y
 
+
+mkdir -p ~/.config/autostart 
+cp ./config_files/indicator-multiload.desktop ~/.config/autostart
+cp ./config_files/indicator-sensors.desktop ~/.config/autostart
+cp ./config_files/tilda.desktop ~/.config/autostart
+cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
 ## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
 # echo "Now choose gdm3 as your default display manager. Hit Enter"
