@@ -60,7 +60,7 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
     echo "weather() {curl wttr.in/\"\$1\";}"
     echo "alias gpom=\"git push origin master\""
-    echo "alias update=\"sudo apt-get update && sudo apt-get upgrade -y\""
+    echo "alias update=\"sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y\""
     echo "alias tmux=\"tmux -u\""
 } >> ~/.bash_aliases
 
