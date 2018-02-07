@@ -46,7 +46,7 @@ Then execute them in the terminal in the sequence of filenames.
 ## Notes
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
 * If you would like to install with OpenCV for CUDA, change the flag in the file `7 - opencvInstall.sh` for `WITH_CUDA` to `ON`
-* After installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
+* After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
   ```bash
    -D ENABLE_SSE=OFF \
@@ -66,3 +66,8 @@ Then execute them in the terminal in the sequence of filenames.
 ## Alternatives
 * A [docker image](https://hub.docker.com/r/varun19299/cvi-iitm/) for this set-up (last updated Jan 30th, 2017)
 * A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
+
+## To Dos 
+- [ ] Fail Proof checks
+- [ ] Startup programs 
+- [ ] configuring default wifi settings 
