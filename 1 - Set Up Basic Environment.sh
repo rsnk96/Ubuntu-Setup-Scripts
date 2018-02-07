@@ -3,7 +3,9 @@
 set -e
 
 sudo apt-get update -y
+sudo apt-get dist-upgrade -y
 sudo apt-get install ubuntu-restricted-extras -y
+#sudo ubuntu-drivers autoinstall 
 
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
@@ -12,11 +14,15 @@ sudo apt-get install git -y
 rm -rf ~/.z*
 sudo apt-get install tilda tmux -y
 sudo apt-get install gimp meld -y
+sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
+sudo apt-get install vim-gui-common vim-runtime -y
+cp ./config_files/.vimrc ~
 
-cp config_files/.tmux.conf ~
-cp config_files/.tmux.conf.local ~
+# refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
+cp ./config_files/.tmux.conf ~
+cp ./config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
-cp config_files/config_0 ~/.config/tilda/
+cp ./config_files/config_0 ~/.config/tilda/
 
 # Set up zsh + zim
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
@@ -34,7 +40,7 @@ else
         git pull
     )
 fi
-sudo apt-get install autopoint libssl-dev -y
+sudo apt-get install autopoint openssl libssl-dev -y
 cd axel
 ./autogen.sh
 ./configure

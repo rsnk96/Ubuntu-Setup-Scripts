@@ -6,6 +6,27 @@ elif which caja > /dev/null; then
     sudo apt-get install caja-dropbox -y
 fi
 
+# TLP manager 
+sudo add-apt-repository ppa:linrunner/tlp -y
+sudo apt-get update
+sudo apt-get install tlp tlp-rdw -y
+sudo tlp start
+
+# Multiload and other sensor applets
+sudo apt-add-repository ppa:sneetsher/copies -y
+sudo apt update 
+sudo apt install indicator-sensors indicator-multiload -y
+sudo apt-add-repository -r ppa:sneetsher/copies -y
+sudo apt update
+
+sudo apt-get install redshift redshift-gtk -y
+
+mkdir -p ~/.config/autostart 
+cp ./config_files/indicator-multiload.desktop ~/.config/autostart
+cp ./config_files/indicator-sensors.desktop ~/.config/autostart
+cp ./config_files/tilda.desktop ~/.config/autostart
+cp ./config_files/redshift-gtk.desktop ~/.config/autostart
+
 sudo apt-get install htop -y
 sudo apt-get install gparted -y
 sudo apt-get install task -y
@@ -39,6 +60,10 @@ sudo apt-add-repository ppa:jtaylor/keepass -y
 sudo apt-get update -y
 sudo apt-get install xdotool keepass2 -y
 
+wget https://go.skype.com/skypeforlinux-64.deb
+sudo dpkg -i skypeforlinux-64.deb
+rm skypeforlinux-64.deb
+
 sudo apt-get install vlc -y
 
 ## To install chrome, uncomment the next set of lines
@@ -51,12 +76,12 @@ sudo apt-get install chromium-browser -y
 sudo apt-get install adobe-flashplugin -y
 sudo apt-get install firefox -y
 
-## Install tor
+# Install tor
 sudo add-apt-repository ppa:webupd8team/tor-browser -y
 sudo apt-get update -y
 sudo apt-get install tor-browser -y
 
-## Install I2P
+# Install I2P
 sudo apt-add-repository ppa:i2p-maintainers/i2p -y
 sudo apt-get update -y
 sudo apt-get install i2p -y
