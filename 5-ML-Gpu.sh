@@ -23,16 +23,14 @@ if ! test -n "$(echo "$PATH" | grep 'cuda')"; then
 source $SHELLRC
 fi
 
+sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
+
 echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
-
-if test -n "$(conda info --envs |grep 'py35')"; then
-    source activate py35
-fi
 
 pip install keras tabulate python-dateutil gensim networkx --upgrade
 
@@ -43,18 +41,18 @@ if test "$tempvar" = "p"; then
     pip install tensorflow-gpu
 elif test "$tempvar" = "s"; then
     if ! test -d "tensorflow"; then
-        git clone https://github.com/tensorflow/tensorflow
+        git clone --recurse-submodules https://github.com/tensorflow/tensorflow
     else
     (
         cd tensorflow || exit
-        git pull
+        git checkout master -f
+        git pull origin master
     )
     fi
     
     #Checkout the latest release candidate, as it should be relatively stable
     cd tensorflow
-    latest_rc=$(git branch -av --sort=-committerdate | grep "remotes/origin/r" | head -1 | grep -E -o "r[0-9]+\.[0-9]+" | head -1 | sed -e 's/^[ \t]*//' )
-    git checkout "$latest_rc"
+    git checkout $(git tag | egrep -v '-' | tail -1)
     
     read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
 
@@ -98,11 +96,11 @@ cd ..
 
 echo ""
 echo "Now installing Caffe"
-sudo apt-get install -y build-essential cmake git pkg-config
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev protobuf-compiler
 sudo apt-get install -y libatlas-base-dev 
 sudo apt-get install -y --no-install-recommends libboost-all-dev
 sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
+conda install lmdb leveldb -y
 if ! test -d "caffe"; then
     git clone https://github.com/BVLC/caffe.git    
 else
@@ -132,7 +130,7 @@ conda install theano pygpu -y
 
 echo ""
 echo "Now installing OpenAI Gym"
-pip install "gym[all]"
+pip install "gym"
 
 
 echo "This script has finished"

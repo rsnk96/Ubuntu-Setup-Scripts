@@ -82,8 +82,8 @@ else
 fi
 
 cd opencv
-# Check out that tag(release) with the last commit
-git checkout $(git for-each-ref --sort=-taggerdate --count=1 --format '%(tag)' refs/tags)
+# Check out the latest tag
+git checkout $(git tag | egrep -v '-' | tail -1)
 # rm -rf build
 mkdir -p build
 cd build
