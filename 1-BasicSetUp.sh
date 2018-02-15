@@ -67,7 +67,14 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "weather() {curl wttr.in/\"\$1\";}"
     echo "alias gpom=\"git push origin master\""
     echo "alias update=\"sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y\""
-    echo "alias tmux=\"tmux -u\""
+    echo "alias tmux=\"tmux -u new-session \\; \\
+            neww \\; \\
+              send-keys 'htop' C-m \\; \\
+              split-window -h \\; \\
+              send-keys 'nvidia-smi -l 1' C-m \\; \\
+              rename-window 'performance' \\; \\
+            select-window -l\""
+
 } >> ~/.bash_aliases
 
 echo "Adding anaconda to path variables"
