@@ -8,15 +8,15 @@ conda install ipython -y
 
 # conda create --name py35 python=3.5 numpy scipy matplotlib
 conda install libgcc -y
-conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
-conda create --name py35 python=3.5 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py -y
+conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
+conda create --name py35 python=3.5 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
 pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py
 sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=/opt/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=/opt/anaconda3/bin:\$PATH" >> ~/.zshrc
 source ~/.zshrc
 
-pip install autopep8 scdl org-e youtube-dl
+pip install autopep8 scdl org-e youtube-dl jupyterlab
 echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
 
 jupyter notebook --generate-config

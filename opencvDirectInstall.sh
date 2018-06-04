@@ -84,14 +84,16 @@ fi
 
 cd opencv
 # Check out the latest tag, which has to be the version you check out in contrib too
-latest_tag=$(git tag | egrep -v '-' | tail -1)
-git checkout $(latest_tag)
+latest_tag="$(git tag | egrep -v '-' | tail -1)"
+echo "Installing OpenCV Version: $latest_tag"
+git checkout -f $latest_tag
 cd ../opencv_contrib
-git checkout $(latest_tag)
+git checkout -f $latest_tag
 cd ../opencv
 # rm -rf build
 mkdir -p build
 cd build
+read -p "Done" temp
 
 
 py2Ex=$(which python2)
