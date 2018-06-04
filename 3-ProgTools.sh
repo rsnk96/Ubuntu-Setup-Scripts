@@ -8,6 +8,8 @@ sudo apt-get install clang-format -y
 
 sudo apt-get install lyx -y
 
+pip install cython rebound-cli
+
 # Install code editor of your choice
 echo
 echo
