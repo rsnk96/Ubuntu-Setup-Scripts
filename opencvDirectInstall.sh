@@ -77,13 +77,18 @@ if [ ! -d "opencv_contrib" ]; then
 else
     (
         cd opencv_contrib || exit
-        git pull
+        git checkout master -f
+        git pull origin master
     )
 fi
 
 cd opencv
-# Check out the latest tag
-git checkout $(git tag | egrep -v '-' | tail -1)
+# Check out the latest tag, which has to be the version you check out in contrib too
+latest_tag=$(git tag | egrep -v '-' | tail -1)
+git checkout $(latest_tag)
+cd ../opencv_contrib
+git checkout $(latest_tag)
+cd ../opencv
 # rm -rf build
 mkdir -p build
 cd build
