@@ -61,6 +61,7 @@ touch ~/.bash_aliases
 echo "Adding aliases to ~/.bash_aliases"
 {
     echo "alias jn=\"jupyter notebook\""
+    echo "alias jl=\"jupyter lab\""
     echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\""
     echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""

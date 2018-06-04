@@ -92,41 +92,8 @@ python setup.py clean
 python setup.py install
 echo "Now installing torchvision"
 pip install torchvision
+pip install tensorboardX
 cd ..
-
-echo ""
-echo "Now installing Caffe"
-sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev protobuf-compiler
-sudo apt-get install -y libatlas-base-dev 
-sudo apt-get install -y --no-install-recommends libboost-all-dev
-sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
-conda install lmdb leveldb -y
-if ! test -d "caffe"; then
-    git clone https://github.com/BVLC/caffe.git    
-else
-(
-    cd caffe || exit
-    git pull
-)
-fi
-cd caffe
-mkdir -p build
-cd build
-cmake -D python_version=3 ..
-make all
-make install
-cd ../python
-pip install cython scikit-image ipython h5py nose pandas protobuf pyyaml jupyter
-sed -i -e 's/python-dateutil>=1.4,<2/python-dateutil>=2.0/g' requirements.txt
-for req in $(cat requirements.txt); do pip install $req; done
-cd ../build
-make runtest
-cd ../python
-echo "export PYTHONPATH=`pwd`\${PYTHONPATH:+:\${PYTHONPATH}}" >> $SHELLRC
-
-echo ""
-echo "Now installing Theano"
-conda install theano pygpu -y
 
 echo ""
 echo "Now installing OpenAI Gym"
