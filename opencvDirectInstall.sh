@@ -93,8 +93,6 @@ cd ../opencv
 # rm -rf build
 mkdir -p build
 cd build
-read -p "Done" temp
-
 
 py2Ex=$(which python2)
 py2In=$(python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
