@@ -13,6 +13,7 @@ sudo apt-get install tlp tlp-rdw -y
 sudo tlp start
 
 # Multiload and other sensor applets
+sudo apt-get install lm-sensors
 sudo apt-add-repository ppa:sneetsher/copies -y
 sudo apt update 
 sudo apt install indicator-sensors indicator-multiload -y
