@@ -31,6 +31,10 @@ ln -s ~/.zim/templates/zimrc ~/.zimrc
 ln -s ~/.zim/templates/zlogin ~/.zlogin
 ln -s ~/.zim/templates/zshrc ~/.zshrc
 
+# Change default shell to zsh
+command -v zsh | sudo tee -a /etc/shells
+sudo chsh -s "$(command -v zsh)" "${USER}"
+
 # Install axel, a download accelerator
 if ! test -d "axel"; then
     git clone https://github.com/axel-download-accelerator/axel.git
@@ -65,7 +69,6 @@ echo "Adding aliases to ~/.bash_aliases"
     echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\""
     echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
-    echo "weather() {curl wttr.in/\"\$1\";}"
     echo "alias gpom=\"git push origin master\""
     echo "alias update=\"sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y\""
     echo "alias tsux=\"tmux -u new-session \\; \\
@@ -91,9 +94,46 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
-# Change default shell to zsh
-command -v zsh | sudo tee -a /etc/shells
-sudo chsh -s "$(command -v zsh)" "${USER}"
+
+
+echo ""
+echo ""
+echo ""
+echo "*************************** Now configuring Anaconda ***************************"
+
+/opt/anaconda3/bin/conda update conda -y
+/opt/anaconda3/bin/conda clean --all -y
+/opt/anaconda3/bin/conda ipython -y
+
+/opt/anaconda3/bin/conda install libgcc -y
+/opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
+/opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
+/opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py
+sed -i.bak "/anaconda3/d" ~/.zshrc
+echo "export PATH=/opt/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
+echo "export PATH=/opt/anaconda3/bin:\$PATH" >> ~/.zshrc
+
+/opt/anaconda3/bin/pip install autopep8 scdl org-e youtube-dl jupyterlab
+echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
+
+/opt/anaconda3/bin/conda info --envs
+
+echo "*************************** NOTE *******************************"
+echo "If you ever mess up your anaconda installation somehow, do"
+echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
+echo "\$ conda clean --all"
+echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
+
+## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
+# sudo add-apt-repository ppa:graphics-drivers/ppa -y
+# sudo apt-get update
+# sudo ubuntu-drivers autoinstall
+# echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
+# echo "Also, when installing CUDA next, ********don't******* install display drivers."
+# echo "In case your drivers don't work, purge gdm3 and use lightdm (sudo apt-get purge lightdm && sudo dpkg-reconfigure gdm3)"
+# read temp
+
+
 
 echo "The script has finished. The System will now reboot so that certain shell changes can take place"
 echo "sudo reboot"
