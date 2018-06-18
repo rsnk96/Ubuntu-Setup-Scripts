@@ -10,33 +10,34 @@ Run
 `chmod u+x *.sh` to make all scripts executable
 Then execute them in the terminal in the sequence of filenames.
 * `1-BasicSetUp.sh` - Sets up terminal configuration, a download accelerator, anaconda python, and shell aliases.
-* `2-AnaacondaCustomization.sh` - Sets up a workable python 3.5 and 2.7 Python Environment in Conda
-* `3-ProgTools.sh` - Sets up tools for programming (editor,etc)
-* `4-GenSoftware.sh` - Sets up other general purpose software I use
-* `5-ML-Gpu.sh` - Compiles commonly used ML/DL/RL libraries from source, so that it is optimized to run on your computer
+* `2-GenSoftware.sh` - Sets up tools for programming(editor, etc), and other general purpose software I use
+* `3-ML-Gpu.sh` - Compiles commonly used ML/DL/RL libraries from source, so that it is optimized to run on your computer
 * `opencvDirectInstall.sh` - Compiles the latest tag of OpenCV+Contrib from source on your machine with focus on optimization of execution of OpenCV code.
 <br><br>
 
 ## Major Alterations
-* Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Another Conda environment called py35 with Python 3.5 will also be set up
+* Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Another Conda environment called py36 with Python 3.6 will also be set up
 * Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 
 ## Aliases that are added
 * `maxvol` : Will set your volume to 150%
 * `download <webpage-name>`: Download the webpage and all sub-directories linked to it
 * `server` : Sets up a server for file sharing in your local network. Whatever is in your current directory will be visible on the ip. It will also print the possible set of IP addresses. To access from another computer, shoot up a browser and simply hit `ip_add:port`
-* `weather` : Will show weather forecast for the next three days
 * `gpom` : Alias for `git push origin master`. Will push your current directory
 * `jn` : Starts a jupyter notebook in that directory
+* `jl` : Starts a jupyter lab in that directory
 * `ydl "URL"`: Downloads the song at `URL` at 128kbps, 44.1kHz in m4a format with the title and song name automatically set in the metadata
+* `update`: Runs `sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y`
+* `tsux`: Create a tmux session with `-u` (so that the icons(battery, etc) are properly displayed at the bottom), and with a window with `htop`, `nvidia-smi -l 1` and lm-sensors automatically activated.
+    - Reason for not making this the default tmux: You cannot attach tmux sessions if you alias the `tmux` command itself
 
 <br>
 
 ## Programs that are installed
-`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `CUDA`, `OpenCV` (Python + C++ with VTK, V4L, QT and Optionally CUDA), `gimp`, `meld`(To be used with `git mergetool`), `axel`
+`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `gimp`, `meld`(To be used with `git mergetool`), `axel`, `tor` & `i2p`, `redshift`, `lm-sensors` (might've missed some)
 
 ## Python Packages
-* Machine Learning Libraries: Tensorflow, Caffe and Pytorch built from source, optimized for user hardware. Theano, Keras, Gym installed from pip
+* Machine Learning Libraries: Tensorflow built from source, optimized for user hardware. Theano, Keras, OpenAI Gym and Pytorch installed from pip
 * OpenCV: Compiled from source, multithreaded and optimized to use your hardware
 * Autopep8
 * scdl - a soundcloud downloader
@@ -58,7 +59,7 @@ Then execute them in the terminal in the sequence of filenames.
 * These scripts are written and tested on the following configurations - 
   * Ubuntu 14.04 & 16.04
   * 32-bit and 64-bit Intel Processors
-  * NVIDIA GPUs including but not limited to GeForce GTX 1080, 1070, 940MX, 850M, and Titan X
+  * `ML-GPU.sh` - NVIDIA GPUs including but not limited to GeForce GTX 1080, 1070, 940MX, 850M, and Titan X
   
   Although it should work on other configurations out of the box, I have not tested them
 
@@ -70,4 +71,4 @@ Then execute them in the terminal in the sequence of filenames.
 ## To Dos 
 - [ ] Fail Proof checks
 - [ ] Startup programs 
-- [ ] configuring default wifi settings 
+- [ ] configuring default wifi settings
