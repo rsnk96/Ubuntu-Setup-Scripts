@@ -1,0 +1,23 @@
+# Open File Explorer
+"xdg-open ~"
+    Control+Alt + e
+
+# Open Franz Messenger
+"franz"
+    Control+Shift+Alt + f
+
+# Screenshot with Shutter, which will be saved in /tmp
+"shutter -s -o '/tmp/%y-%m-%d_\$w_\$h.png' -c -e"
+    Control+Shift+Alt + p
+
+# Maximize window
+"wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz"
+    Control+Alt + KP_Up
+
+# Open KeePass2
+"mono /usr/lib/keepass2/KeePass.exe"
+    Control+Alt + k
+
+# KeePass2 Auto-type
+"mono /usr/lib/keepass2/KeePass.exe --auto-type"
+    Control+Alt + j

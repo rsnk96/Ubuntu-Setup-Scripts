@@ -16,7 +16,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br><br>
 
 ## Major Alterations
-* Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Another Conda environment called py36 with Python 3.6 will also be set up
+* Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
 * Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 
 ## Aliases that are added
@@ -46,7 +46,7 @@ Then execute them in the terminal in the sequence of filenames.
 
 ## Notes
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
-* If you would like to install with OpenCV for CUDA, change the flag in the file `7 - opencvInstall.sh` for `WITH_CUDA` to `ON`
+* If you would like to install with OpenCV for CUDA, change the flag in the file `opencvDirectInstall.sh` for `WITH_CUDA` to `ON`
 * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
   ```bash
@@ -70,5 +70,4 @@ Then execute them in the terminal in the sequence of filenames.
 
 ## To Dos 
 - [ ] Fail Proof checks
-- [ ] Startup programs 
 - [ ] configuring default wifi settings

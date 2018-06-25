@@ -53,14 +53,6 @@ sudo make install
 cd ../
 
 
-continuum_website=https://repo.continuum.io/archive/
-# Stepwise filtering of the html at $continuum_website
-# Get the topmost line that matches our requirements, extract the file name.
-latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
-sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
-bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
-
 touch ~/.bash_aliases
 echo "Adding aliases to ~/.bash_aliases"
 {
@@ -94,6 +86,10 @@ echo "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
+# Now create shortcuts
+sudo apt-get install xbindkeys xbindkeys-config wmctrol xdotool -y
+cp ./config_files/.xbindkeysrc ~/
+
 
 
 echo ""
@@ -101,14 +97,23 @@ echo ""
 echo ""
 echo "*************************** Now configuring Anaconda ***************************"
 
+echo "Installing the latest Anaconda Python in /opt/anaconda3"
+continuum_website=https://repo.continuum.io/archive/
+# Stepwise filtering of the html at $continuum_website
+# Get the topmost line that matches our requirements, extract the file name.
+latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
+sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
+bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
+
+echo "Setting up your anaconda"
 /opt/anaconda3/bin/conda update conda -y
 /opt/anaconda3/bin/conda clean --all -y
-/opt/anaconda3/bin/conda ipython -y
+/opt/anaconda3/bin/conda install ipython -y
 
 /opt/anaconda3/bin/conda install libgcc -y
-/opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
-/opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab -y
-/opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py
+/opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab msgpack cython -y
+/opt/anaconda3/bin/pip install msgpack numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython rebound-cli
 sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=/opt/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
 echo "export PATH=/opt/anaconda3/bin:\$PATH" >> ~/.zshrc

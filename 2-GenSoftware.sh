@@ -1,14 +1,7 @@
 #!/bin/bash
 
-set -e
-
 sudo apt-get install libboost-all-dev -y
-
 sudo apt-get install clang-format -y
-
-sudo apt-get install lyx -y
-
-pip install cython rebound-cli
 
 # Install code editor of your choice
 echo
@@ -37,7 +30,7 @@ elif [ "$tempvar" = "q" ];then
     echo "Skipping this step"
 fi
 
-#Recommended libraries for Nvidia CUDA
+# Recommended libraries for Nvidia CUDA
 sudo apt-get install libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libx11-dev -y
 
 
@@ -71,10 +64,9 @@ cp ./config_files/indicator-sensors.desktop ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
-sudo apt-get install htop -y
-sudo apt-get install gparted -y
-sudo apt-get install task -y
+sudo apt-get install htop gparted task -y
 
+# Boot repair
 sudo add-apt-repository ppa:yannubuntu/boot-repair -y
 sudo apt-get update
 sudo apt-get install -y boot-repair
@@ -85,54 +77,51 @@ chmod +x dockerInstall.sh
 ./dockerInstall.sh
 rm dockerInstall.sh
 
-#sudo apt-get install gnome-themes-standard
 sudo apt-get install shutter -y
 
-echo 'GRUB Customization'
-echo 'http://www.ostechnix.com/configure-grub-2-boot-loader-settings-ubuntu-16-04/'
-
-# If you want an image for your grub background:
-#sudo cp /etc/default/grub /etc/default/grub.bak
-#sudo cp <location to image> /boot/grub
-#sudo update-grub
-
+# Grub customization
 sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
 sudo apt-get update
 sudo apt-get install grub-customizer -y
 
+# Keepass 2
 sudo apt-add-repository ppa:jtaylor/keepass -y
 sudo apt-get update -y
 sudo apt-get install xdotool keepass2 -y
 
+# Linux
 wget https://go.skype.com/skypeforlinux-64.deb
 sudo dpkg -i skypeforlinux-64.deb
 rm skypeforlinux-64.deb
 
 sudo apt-get install vlc -y
 
-## To install chrome, uncomment the next set of lines
-#wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-#sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-#sudo apt-get update  -y
-#sudo apt-get install google-chrome-stable -y
-
-sudo apt-get install chromium-browser -y
+# Browsers
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+sudo apt-get update  -y
+sudo apt-get install google-chrome-stable -y
+#sudo apt-get install chromium-browser -y
 sudo apt-get install adobe-flashplugin -y
 sudo apt-get install firefox -y
-
 # Install tor
 sudo add-apt-repository ppa:webupd8team/tor-browser -y
 sudo apt-get update -y
 sudo apt-get install tor-browser -y
-
 # Install I2P
 sudo apt-add-repository ppa:i2p-maintainers/i2p -y
 sudo apt-get update -y
 sudo apt-get install i2p -y
 
-echo
-echo
-echo 'Note: Set shortcuts for Franz and screenshot manually'
-echo "For screenshot, command: shutter -s -o '/tmp/%y-%m-%d_\$w_\$h.png' -c -e"
+# Franz
+wget https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz_5.0.0-beta.18_amd64.deb
+sudo dpkg -i *.deb
+sudo apt-get install -f
+rm -rf *.deb
+
+# Latest nvidia drivers
+sudo add-apt-repository ppa:graphics-drivers/ppa -y
+sudo apt-get update
+sudo ubuntu-drivers autoinstall
 
 echo "Script finished"

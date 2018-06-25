@@ -58,11 +58,15 @@ elif test "$tempvar" = "s"; then
 
     ./configure
 	cd tensorflow
-    bazel build --config=opt --config=cuda --incompatible_load_argument_is_label=false --action_env="LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" //tensorflow/tools/pip_package:build_pip_package
+    if locate intel-mkl > /dev/null; then
+        bazel build --config=opt --config=mkl --config=cuda //tensorflow/tools/pip_package:build_pip_package
+    else
+        bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+    fi
     cd ../
+    
     # cp -r bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/main/* bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
-
     pip install /tmp/tensorflow_pkg/*.whl --force-reinstall
     cd ../
 
