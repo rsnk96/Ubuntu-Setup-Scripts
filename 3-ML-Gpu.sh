@@ -79,9 +79,10 @@ echo ""
 echo "Now installing PyTorch"
 export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root directory]
 # Install basic dependencies
-conda install numpy pyyaml mkl setuptools cmake cffi -y
+conda install numpy pyyaml mkl mkl-include setuptools cmake cffi typing
+conda install -c mingfeima mkldnn
 # Add LAPACK support for the GPU
-conda install -c soumith magma-cuda80 -y # or magma-cuda75 if CUDA 7.5, UPDATE IF CUDA IS UPDATED (assuming soumith has uploaded magma package)
+conda install -c soumith magma-cuda90 -y # or magma-cuda75 if CUDA 7.5, UPDATE IF CUDA IS UPDATED (assuming soumith has uploaded magma package)
 if ! test -d "pytorch"; then
     git clone --recursive https://github.com/pytorch/pytorch
 else
