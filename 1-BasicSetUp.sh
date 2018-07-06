@@ -106,13 +106,14 @@ axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
 sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
-echo "Setting up your anaconda"
+echo "Setting up your anaconda. Two environments created, one named py 27, other py36."
 /opt/anaconda3/bin/conda update conda -y
 /opt/anaconda3/bin/conda clean --all -y
 /opt/anaconda3/bin/conda install ipython -y
 
 /opt/anaconda3/bin/conda install libgcc -y
 /opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab msgpack cython -y
+/opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab msgpack cython pykalman -y
 /opt/anaconda3/bin/pip install msgpack numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython rebound-cli
 sed -i.bak "/anaconda3/d" ~/.zshrc
 echo "export PATH=/opt/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
