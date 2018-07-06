@@ -16,7 +16,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br><br>
 
 ## Major Alterations
-* Default python will be changed to Anaconda, with the latest Python 3, and a conda environment called py27 running Python2.7 will be your alternate Python2 environment. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
+* Default python will be changed to Anaconda, with the latest Python 3, and conda environments called py27 and py36 running Python2.7 and Python3.6 respectively will be your alternate Python2 and Python 3.6 environments. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
 * Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 
 ## Aliases that are added
