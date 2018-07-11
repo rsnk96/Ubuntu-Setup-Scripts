@@ -84,7 +84,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
 } >> ~/.bash_aliases
 
 # Now create shortcuts
-sudo apt-get install xbindkeys xbindkeys-config wmctrol xdotool -y
+sudo apt-get install xbindkeys xbindkeys-config wmctrl xdotool -y
 cp ./config_files/.xbindkeysrc ~/
 
 spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
