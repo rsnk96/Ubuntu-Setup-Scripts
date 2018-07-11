@@ -11,7 +11,7 @@ else
   exit # Ain't nothing I can do to help you buddy :P
 fi
 
-if [[ ! -n $DIRECTINSTALL ]]; then
+if [[ ! -n $CIINSTALL ]]; then
     echo        "*******************RUN AFTER YOU HAVE INSTALLED CUDA IF YOU HAVE A GPU*******************"
     read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
 fi
@@ -33,12 +33,11 @@ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | 
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
-sudo apt-get upgrade -y
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
 
 pip install keras tabulate python-dateutil gensim networkx --upgrade
 
-if [[ ! -n $DIRECTINSTALL ]]; then
+if [[ ! -n $CIINSTALL ]]; then
     read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
 fi
 tempvar=${tempvar:-s}
@@ -60,7 +59,7 @@ elif test "$tempvar" = "s"; then
     cd tensorflow
     git checkout $(git tag | egrep -v '-' | tail -1)
     
-    if [[ ! -n $DIRECTINSTALL ]]; then
+    if [[ ! -n $CIINSTALL ]]; then
         read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
         ./configure
     else

@@ -6,7 +6,7 @@ sudo apt-get install clang-format -y
 # Install code editor of your choice
 echo
 echo
-if [[ ! -n $DIRECTINSTALL ]]; then
+if [[ ! -n $CIINSTALL ]]; then
     read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is VS Code [v/a/s/q]: " tempvar
 fi
 tempvar=${tempvar:-v}
@@ -80,7 +80,6 @@ chmod +x dockerInstall.sh
 rm dockerInstall.sh
 # Adds user to the `docker` group so that docker commands can be run without sudo
 sudo usermod -aG docker ${USER}
-su - ${USER}
 
 # Grub customization
 sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
@@ -123,3 +122,6 @@ sudo apt-get install -f
 rm -rf *.deb
 
 echo "Script finished"
+if [[ ! -n $CIINSTALL ]]; then
+    su - ${USER}  # For docker
+fi
