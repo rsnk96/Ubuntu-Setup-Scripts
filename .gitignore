@@ -3,6 +3,6 @@ opencv_contrib
 tensorflow
 zsh
 pytorch
-caffe
 axel
 anacondaInstallScript.sh
+ffmpeg-build-script/

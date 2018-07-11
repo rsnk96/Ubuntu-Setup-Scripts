@@ -1,12 +1,13 @@
 #!/bin/bash
 
-if test -n $(echo $SHELL | grep "zsh") ; then
+if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
   SHELLRC=~/.zshrc
-elif test -n $(echo $SHELL | grep "bash") ; then
+elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
   SHELLRC=~/.bashrc
-elif test -n $(echo $SHELL | grep "ksh") ; then
+elif [[ -n $(echo $SHELL | grep "ksh") ]] ; then
   SHELLRC=~/.kshrc
 else
+  echo "Unidentified shell $SHELL"
   exit # Ain't nothing I can do to help you buddy :P
 fi
 
@@ -30,7 +31,7 @@ curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
+sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
 
 pip install keras tabulate python-dateutil gensim networkx --upgrade
 
