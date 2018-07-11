@@ -31,7 +31,6 @@ echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | 
 curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 
 sudo apt-get update
-sudo apt-get upgrade -y
 sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
 
 if ! echo "$PATH" | grep -q 'conda' ; then

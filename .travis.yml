@@ -16,7 +16,7 @@ before_install:
 script:
     - echo 'America/Los_Angeles' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-    - DIRECTINSTALL=yes ./1-BasicSetUp.sh
-    - DIRECTINSTALL=yes ./2-GenSoftware.sh
-    - DIRECTINSTALL=yes ./opencvDirectInstall.sh
+    - CIINSTALL=yes ./1-BasicSetUp.sh
+    - CIINSTALL=yes ./2-GenSoftware.sh
+    - CIINSTALL=yes ./opencvDirectInstall.sh
     - ./ML-Basic.sh
