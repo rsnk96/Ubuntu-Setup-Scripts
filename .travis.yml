@@ -1,0 +1,18 @@
+language: c
+
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+
+before_install:
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq build-essential curl; fi
+
+script:
+    - echo 'America/Los_Angeles' | sudo tee /etc/timezone
+    - sudo dpkg-reconfigure --frontend noninteractive tzdata
+    - ./opencvDirectInstall.sh
+    - kill %1
+   
+
