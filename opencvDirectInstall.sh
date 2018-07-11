@@ -1,26 +1,8 @@
 #!/bin/bash
 
 echo "This is intended to be a universal OpenCV installation script, which supports installing on Anaconda Python too"
-echo "Usually, if this script doesn't work, it's because the library versions may have been updated (of libvtk, libtiff, libjpeg and other dependencies) or OpenCV might have added new modules to contrib which require you to install additional dependencies. In such a scenario, kindly create in issue in the github repository."
-echo
-echo "NOTE: Enable Cannonical Partners in your Software Sources for ffmpeg installation. If you have, press [Enter]. Otherwise, [Ctrl+C], enable it, and re-run this script"
+echo "Additionally, FFmpeg will be compiled from source and OpenCV will be linked to this ffmpeg. Press Enter to Continue"
 read -r temp
-
-sudo apt-get update
-sudo apt-get upgrade -y
-
-sudo apt-get install build-essential -y
-sudo apt-get install cmake git pkg-config libavcodec-dev libavformat-dev libswscale-dev -y
-sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
-sudo apt-get install cmake-curses-gui -y
-
-if ! echo "$PATH" | grep -q 'conda' ; then
-    sudo apt-get install python3 python3-dev python3-numpy python3-pip python3-scipy python3-matplotlib python-dev python-matplotlib python-numpy python-scipy python-pip python-tk -y
-else
-    pip install numpy scipy matplotlib
-fi
-
-sudo apt-get install libeigen3-dev yasm libfaac-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev sphinx-common texlive-latex-extra libv4l-dev libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev ant -y
 
 spatialPrint() {
     echo ""
@@ -30,49 +12,110 @@ spatialPrint() {
     echo ""
 }
 
+if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
+  SHELLRC=~/.zshrc
+elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
+  SHELLRC=~/.bashrc
+elif [[ -n $(echo $SHELL | grep "ksh") ]] ; then
+  SHELLRC=~/.kshrc
+else
+  echo "Unidentified shell $SHELL"
+  exit # Ain't nothing I can do to help you buddy :P
+fi
+
+# Speed up the process
+# Env Var NUMJOBS overrides automatic detection
+if [[ -n $NUMJOBS ]]; then
+    MJOBS=$NUMJOBS
+elif [[ -f /proc/cpuinfo ]]; then
+    MJOBS=$(grep -c processor /proc/cpuinfo)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+	MJOBS=$(sysctl -n machdep.cpu.thread_count)
+else
+    MJOBS=4
+fi
+
+
+sudo apt-get update
+sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
+sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
+
+if [[ ! -n $(echo "$PATH" | grep 'conda') ]] ; then
+    sudo apt-get install python3 python3-dev python3-numpy python3-pip python3-scipy python3-matplotlib python-dev python-matplotlib python-numpy python-scipy python-pip python3-pip python-tk -y
+else
+    pip install numpy scipy matplotlib
+fi
+# Also instlaling dlib and moviepy as CV libraries
+pip3 install msgpack cython dlib moviepy -y
+
+if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
+    spatialPrint "Building FFmpeg now"
+    sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
+    sudo apt-get --purge remove libav-tools -y
+    sudo mkdir /opt/ffmpeg-build-script && sudo chmod ugo+w /opt/ffmpeg-build-script
+    (
+        cd /opt/ffmpeg-build-script
+        git clone https://github.com/markus-perl/ffmpeg-build-script.git .
+        # Build libraries with --enable-shared so that they can be used by OpenCV
+        sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
+        sed -i 's/--enable-shared\ \\/--enable-shared\ --cc="gcc -fPIC"\ \\/g' build-ffmpeg
+        AUTOINSTALL=yes ./build-ffmpeg --build
+        echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
+        {
+            echo ""
+            echo "# ffmpeg-build-script"
+            echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/workspace/lib"
+            echo "export PKG_CONFIG_PATH=\$(pkg-config --variable pc_path pkg-config)\${PKG_CONFIG_PATH:+:}$(pwd)/workspace/lib/pkgconfig"
+            echo "export PKG_CONFIG_LIBDIR=\$PKG_CONFIG_LIBDIR:$(pwd)/workspace/lib/"
+
+        } >> $SHELLRC
+    )
+    source $SHELLRC
+fi
+
 spatialPrint "GUI and openGL extensions"
-sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtk2.0-dev libgtkglext1 libgtkglext1-dev -y
-sudo apt-get install libvtk6-dev libvtk6-qt-dev libvtk6.2 libvtk6.2-qt -y
+sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtk2.0-dev libgtkglext1-dev -y
+sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Image manipulation libraries"
-sudo apt-get install libpng3 pngtools libpng-dev libpng16-dev libpng16-16 libpng++-dev -y
-sudo apt-get install libjpeg-dev libjpeg9 libjpeg9-dbg libjpeg-progs libtiff5-dev libtiff5 libtiffxx5 libtiff-tools libjasper-dev libjasper1  libjasper-runtime zlib1g zlib1g-dbg zlib1g-dev -y
+sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev libjasper-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 spatialPrint "Video manipulation libraries"
-sudo apt-get install libavformat-dev libavutil-ffmpeg54 libavutil-dev libxine2-dev libxine2 libswscale-dev libswscale-ffmpeg3 libdc1394-22 libdc1394-22-dev libdc1394-utils -y
+sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev libdc1394-22-dev libdc1394-utils -y
 
 spatialPrint "Codecs"
-sudo apt-get install libavcodec-dev -y
+sudo apt-get install libavcodec-dev yasm -y
 sudo apt-get install libfaac-dev libmp3lame-dev -y
 sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 sudo apt-get install libtheora-dev libvorbis-dev libxvidcore-dev -y
-sudo apt-get install ffmpeg x264 libx264-dev -y
-sudo apt-get install libv4l-0 libv4l v4l-utils -y
+sudo apt-get install libv4l-dev v4l-utils -y
 
 spatialPrint "Java"
 sudo apt-get install -y ant default-jdk
 
-spatialPrint "Multiproccessing library"
-sudo apt-get install libtbb-dev -y
+spatialPrint "Parallelism library"
+sudo apt-get install libeigen3-dev libtbb-dev -y
 
-spatialPrint "Documentation"
-sudo apt-get install -y doxygen
+spatialPrint "Optional Dependencies"
+sudo apt-get install libprotobuf-dev protobuf-compiler -y
+sudo apt-get install libgoogle-glog-dev libgflags-dev -y
+sudo apt-get install libgphoto2-dev libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
+sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
-if [ ! -d "opencv" ]; then
+if [[ ! -d "opencv" ]]; then
 	git clone https://github.com/Itseez/opencv
 else
 # Putting the git pull commands in paranthesis runs it in a subshell and avoids having to do cd ..
     (
         cd opencv || exit
-        # Note: Any changes to the opencv directory, if you're a 
-        # developer developing for opencv, will be lost with the below command
+        # Note: Any changes to the opencv directory, if you're a developer developing for opencv, will be lost with the below command
         git checkout master -f
         git pull origin master
     )
 fi
-if [ ! -d "opencv_contrib" ]; then
+if [[ ! -d "opencv_contrib" ]]; then
 	git clone https://github.com/Itseez/opencv_contrib
 else
     (
@@ -105,7 +148,7 @@ py3Pack=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_
 # Don't worry, your OpenCV WILL STILL BE INSTALLED FOR ANACONDA PYTHON if it is the default python
 # This is important as anaconda has a malformed MKL library
 export TEMP=$PATH
-if echo "$PATH" | grep -q 'conda' ; then
+if [[ -n $(echo "$PATH" | grep 'conda') ]] ; then
     echo "Your PATH variable will be changed for the installation. Anaconda will be removed from the PATH because it messes the linkings and dependencies"
     export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "conda[2-9]\?" | uniq | tr '\n' ':')
 fi
@@ -115,54 +158,44 @@ fi
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
- -D BUILD_opencv_cvv=OFF \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
- -D BUILD_NEW_PYTHON_SUPPORT=ON \
  -D PYTHON2_EXECUTABLE="$py2Ex" \
  -D PYTHON2_INCLUDE_DIR="$py2In" \
  -D PYTHON2_PACKAGES_PATH="$py2Pack" \
  -D PYTHON3_EXECUTABLE="$py3Ex" \
  -D PYTHON3_INCLUDE_DIR="$py3In" \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
- -D WITH_TBB=ON \
- -D WITH_OPENMP=ON \
- -D WITH_IPP=ON \
- -D BUILD_EXAMPLES=OFF \
- -D BUILD_DOCS=OFF \
- -D BUILD_PERF_TESTS=OFF \
- -D BUILD_TESTS=OFF \
- -D WITH_CSTRIPES=ON \
- -D WITH_OPENCL=ON \
- -D WITH_V4L=ON \
- -D WITH_QT=ON \
- -D WITH_OPENGL=ON \
- -D WITH_VTK=ON \
- -D BUILD_TIFF=ON \
- -D BUILD_opencv_java=OFF \
- -D ENABLE_CXX11=ON ..
+ -D PYTHON_DEFAULT_EXECUTABLE="$py3Ex" \
+ -D WITH_TBB=1 \
+ -D WITH_IPP=1 \
+ -D ENABLE_FAST_MATH=1 \
+ -D BUILD_EXAMPLES=0 \
+ -D BUILD_DOCS=0 \
+ -D BUILD_PERF_TESTS=0 \
+ -D BUILD_TESTS=0 \
+ -D WITH_QT=1 \
+ -D WITH_OPENGL=1 \
+ -D WITH_VTK=0 \
+ -D BUILD_opencv_java=0 \
+ -D ENABLE_CXX11=1 \
+ -D WITH_NVCUVID=0 \
+ -D WITH_CUDA=0 \
+ -D WITH_CUBLAS=0 \
+ -D WITH_CUFFT=0 \
+ -D CUDA_FAST_MATH=0 ..
 #  -D BUILD_opencv_freetype=ON \
-#  -D WITH_CUDA=OFF \
-#  -D WITH_NVCUVID=ON
-#  -D ENABLE_FAST_MATH=1 \
-#  -D CUDA_FAST_MATH=1 \
-#  -D WITH_CUBLAS=1 ..
-
-# read -p "Press [Enter] to continue" temp
 
 # De-comment the next line if you would like an interactive cmake menu to check if everything is alright and make some tweaks
 # ccmake ..
 
 spatialPrint "Making and installing"
-make -j8
+make -j $MJOBS
 sudo make install
 
 spatialPrint "Finishing off installation"
-sudo /bin/bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
+sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
 
 export PATH=$TEMP
-
-# Now dlib can be installed directly from pip since it doesn't depend on boost any longer
-pip install dlib
 
 echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
