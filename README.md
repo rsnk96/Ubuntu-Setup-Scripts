@@ -1,7 +1,10 @@
+[![Build Status](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts.svg?branch=master)](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts)
+
 # Ubuntu-Setup-Scripts
 Everyone who has tried to mess around with their Ubuntu distro knows the pain of having to reinstall Ubuntu and set it up to their liking again
 
 These are the scripts that I use to set my Ubuntu up as quick as possible. Feel free to fork it and create your own version, and any contributions are more than welcome :)
+Every commit runs against Ubuntu 14.04,16.04,18.04 with https://travis-ci.org just to make sure everything works as expected.
 
 ## Usage instructions
 First download/clone this repository
@@ -34,7 +37,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br>
 
 ## Programs that are installed
-`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `gimp`, `meld`(To be used with `git mergetool`), `axel`, `tor` & `i2p`, `redshift`, `lm-sensors` (might've missed some)
+`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `gimp`, `meld`(To be used with `git mergetool`), `axel`, `tor` & `i2p`, `redshift`, `lm-sensors`, `ffmpeg`(might've missed some)
 
 ## Python Packages
 * Machine Learning Libraries: Tensorflow built from source, optimized for user hardware. Theano, Keras, OpenAI Gym and Pytorch installed from pip
@@ -45,8 +48,10 @@ Then execute them in the terminal in the sequence of filenames.
 * youtube-dl: A youtube downloader
 
 ## Notes
+* If you are using this script to set up a computer with many users, it is recommended to run these scripts using one user and then to copy paste the `SHELLRC` file (`~/.zshrc` and `~/.bash_aliases`) to other users, so that the variables set for `CUDA`, `FFmpeg` and `anaconda` are carried over
+* OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
-* If you would like to install with OpenCV for CUDA, change the flag in the file `opencvDirectInstall.sh` for `WITH_CUDA` to `ON`
+* If you would like to install with OpenCV for CUDA, change the flags `-D WITH_NVCUVID=0`, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
 * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
   ```bash
@@ -69,5 +74,5 @@ Then execute them in the terminal in the sequence of filenames.
 * A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
 
 ## To Dos 
-- [ ] Fail Proof checks
+- [x] CI
 - [ ] configuring default wifi settings

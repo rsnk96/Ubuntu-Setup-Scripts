@@ -2,6 +2,13 @@
 
 set -e
 
+spatialPrint() {
+    echo ""
+    echo ""
+    echo "$1"
+	echo "================================"
+}
+
 sudo apt-get update -y
 sudo apt-get dist-upgrade -y
 sudo apt-get install ubuntu-restricted-extras -y
@@ -24,13 +31,12 @@ cp ./config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
 cp ./config_files/config_0 ~/.config/tilda/
 
-# Set up zsh + zim
+spatialPrint "Setting up Zsh + Zim now"
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
 ln -s ~/.zim/templates/zimrc ~/.zimrc
 ln -s ~/.zim/templates/zlogin ~/.zlogin
 ln -s ~/.zim/templates/zshrc ~/.zshrc
-
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
@@ -54,7 +60,7 @@ cd ../
 
 
 touch ~/.bash_aliases
-echo "Adding aliases to ~/.bash_aliases"
+spatialPrint "Adding aliases to ~/.bash_aliases"
 {
     echo "alias jn=\"jupyter notebook\""
     echo "alias jl=\"jupyter lab\""
@@ -75,29 +81,11 @@ echo "Adding aliases to ~/.bash_aliases"
 
 } >> ~/.bash_aliases
 
-echo "Adding anaconda to path variables"
-{
-    echo ""
-    echo "export OLDPATH=\$PATH"
-    echo "export PATH=/opt/anaconda3/bin:\$PATH"
-
-    echo "if [ -f ~/.bash_aliases ]; then"
-    echo "  source ~/.bash_aliases"
-    echo "fi"
-} >> ~/.zshrc
-
 # Now create shortcuts
 sudo apt-get install xbindkeys xbindkeys-config wmctrol xdotool -y
 cp ./config_files/.xbindkeysrc ~/
 
-
-
-echo ""
-echo ""
-echo ""
-echo "*************************** Now configuring Anaconda ***************************"
-
-echo "Installing the latest Anaconda Python in /opt/anaconda3"
+spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
 continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
@@ -106,7 +94,7 @@ axel -o ./anacondaInstallScript.sh "$continuum_website$latest_anaconda_steup"
 sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
-echo "Setting up your anaconda. Two environments created, one named py 27, other py36."
+spatialPrint "Setting up your anaconda. Two environments created, one named py 27, other py36."
 /opt/anaconda3/bin/conda update conda -y
 /opt/anaconda3/bin/conda clean --all -y
 /opt/anaconda3/bin/conda install ipython -y
@@ -124,11 +112,22 @@ echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(a
 
 /opt/anaconda3/bin/conda info --envs
 
-echo "*************************** NOTE *******************************"
-echo "If you ever mess up your anaconda installation somehow, do"
-echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
-echo "\$ conda clean --all"
-echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
+spatialPrint "Adding anaconda to path variables"
+{
+    echo ""
+    echo "export OLDPATH=\$PATH"
+    echo "export PATH=/opt/anaconda3/bin:\$PATH"
+
+    echo "if [ -f ~/.bash_aliases ]; then"
+    echo "  source ~/.bash_aliases"
+    echo "fi"
+} >> ~/.zshrc
+
+# echo "*************************** NOTE *******************************"
+# echo "If you ever mess up your anaconda installation somehow, do"
+# echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
+# echo "\$ conda clean --all"
+# echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
 
 ## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
 # sudo add-apt-repository ppa:graphics-drivers/ppa -y
@@ -140,9 +139,8 @@ echo "Do this for each environment as well as your root. Then reinstall all exce
 # read temp
 
 
-
-echo "The script has finished. The System will now reboot so that certain shell changes can take place"
-echo "sudo reboot"
-read -p "Press [Enter] to continue..." temp
-
-sudo reboot
+if [[ ! -n $DIRECTINSTALL ]]; then
+    spatialPrint "The script has finished. The terminal instance will now close so that the shell changes can take place"
+    read -p "Press [Enter] to continue..." temp
+    kill -9 $PPID
+fi
