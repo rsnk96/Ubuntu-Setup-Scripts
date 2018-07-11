@@ -2,7 +2,9 @@
 
 echo "This is intended to be a universal OpenCV installation script, which supports installing on Anaconda Python too"
 echo "Additionally, FFmpeg will be compiled from source and OpenCV will be linked to this ffmpeg. Press Enter to Continue"
-read -r temp
+if [[ ! -n DIRECTINSTALL ]]; then
+    read -r temp
+fi
 
 spatialPrint() {
     echo ""
