@@ -1,10 +1,21 @@
-[![Build Status](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts.svg?branch=master)](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts)
-
 # Ubuntu-Setup-Scripts
 Everyone who has tried to mess around with their Ubuntu distro knows the pain of having to reinstall Ubuntu and set it up to their liking again
 
 These are the scripts that I use to set my Ubuntu up as quick as possible. Feel free to fork it and create your own version, and any contributions are more than welcome :)
+
+## Build Status:
+
 Every commit runs against Ubuntu 14.04,16.04,18.04 with https://travis-ci.org just to make sure everything works as expected.
+
+
+| Ubuntu 14.04            | Ubuntu 16.04            | Ubuntu 18.04            
+|-------------------|-------------------|-------------------|
+| [![Build1][1]][5] | [![Build2][2]][5] | [![Build3][3]][5] |
+
+[1]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/1
+[2]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/2
+[3]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/3
+[5]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
 
 ## Usage instructions
 First download/clone this repository
