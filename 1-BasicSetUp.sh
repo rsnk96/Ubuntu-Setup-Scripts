@@ -10,8 +10,10 @@ spatialPrint() {
 }
 
 sudo apt-get update -y
-sudo apt-get dist-upgrade -y
-sudo apt-get install ubuntu-restricted-extras -y
+if [[ ! -n $CIINSTALL ]]; then
+    sudo apt-get dist-upgrade -y
+    sudo apt-get install ubuntu-restricted-extras -y
+fi
 #sudo ubuntu-drivers autoinstall 
 
 # My choice for terminal: Tilda+tmux
@@ -139,8 +141,9 @@ spatialPrint "Adding anaconda to path variables"
 # read temp
 
 
-if [[ ! -n $DIRECTINSTALL ]]; then
+if [[ ! -n $CIINSTALL ]]; then
     spatialPrint "The script has finished. The terminal instance will now close so that the shell changes can take place"
-    read -p "Press [Enter] to continue..." temp
-    kill -9 $PPID
+    # read -p "Press [Enter] to continue..." temp
+    # kill -9 $PPID
+    su - $USER
 fi
