@@ -2,7 +2,7 @@
 
 echo "This is intended to be a universal OpenCV installation script, which supports installing on Anaconda Python too"
 echo "Additionally, FFmpeg will be compiled from source and OpenCV will be linked to this ffmpeg. Press Enter to Continue"
-if [[ ! -n DIRECTINSTALL ]]; then
+if [[ ! -n $DIRECTINSTALL ]]; then
     read -r temp
 fi
 
@@ -10,8 +10,7 @@ spatialPrint() {
     echo ""
     echo ""
     echo "$1"
-    echo ""
-    echo ""
+	echo "================================"
 }
 
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
@@ -42,13 +41,13 @@ sudo apt-get update
 sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
 sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
-if [[ ! -n $(echo "$PATH" | grep 'conda') ]] ; then
+if [[ ! -n $(echo $PATH | grep 'conda') ]] ; then
     sudo apt-get install python3 python3-dev python3-numpy python3-pip python3-scipy python3-matplotlib python-dev python-matplotlib python-numpy python-scipy python-pip python3-pip python-tk -y
 else
     pip install numpy scipy matplotlib
 fi
 # Also instlaling dlib and moviepy as CV libraries
-pip3 install msgpack cython dlib moviepy -y
+pip3 install msgpack cython dlib moviepy
 
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
@@ -150,7 +149,7 @@ py3Pack=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_
 # Don't worry, your OpenCV WILL STILL BE INSTALLED FOR ANACONDA PYTHON if it is the default python
 # This is important as anaconda has a malformed MKL library
 export TEMP=$PATH
-if [[ -n $(echo "$PATH" | grep 'conda') ]] ; then
+if [[ -n $(echo $PATH | grep 'conda') ]] ; then
     echo "Your PATH variable will be changed for the installation. Anaconda will be removed from the PATH because it messes the linkings and dependencies"
     export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "conda[2-9]\?" | uniq | tr '\n' ':')
 fi

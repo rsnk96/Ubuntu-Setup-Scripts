@@ -6,7 +6,9 @@ sudo apt-get install clang-format -y
 # Install code editor of your choice
 echo
 echo
-read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is VS Code [v/a/s/q]: " tempvar
+if [[ ! -n $DIRECTINSTALL ]]; then
+    read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is VS Code [v/a/s/q]: " tempvar
+fi
 tempvar=${tempvar:-v}
 
 if [ "$tempvar" = "v" ]; then
@@ -56,7 +58,7 @@ sudo apt install indicator-sensors indicator-multiload -y
 sudo apt-add-repository -r ppa:sneetsher/copies -y
 sudo apt update
 
-sudo apt-get install redshift redshift-gtk -y
+sudo apt-get install redshift redshift-gtk shutter -y
 
 mkdir -p ~/.config/autostart 
 cp ./config_files/indicator-multiload.desktop ~/.config/autostart
@@ -64,7 +66,7 @@ cp ./config_files/indicator-sensors.desktop ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
-sudo apt-get install htop gparted task -y
+sudo apt-get install htop gparted task expect -y
 
 # Boot repair
 sudo add-apt-repository ppa:yannubuntu/boot-repair -y
@@ -80,8 +82,6 @@ rm dockerInstall.sh
 sudo usermod -aG docker ${USER}
 su - ${USER}
 
-sudo apt-get install shutter -y
-
 # Grub customization
 sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
 sudo apt-get update
@@ -92,7 +92,7 @@ sudo apt-add-repository ppa:jtaylor/keepass -y
 sudo apt-get update -y
 sudo apt-get install xdotool keepass2 -y
 
-# Linux
+# Skype
 wget https://go.skype.com/skypeforlinux-64.deb
 sudo dpkg -i skypeforlinux-64.deb
 rm skypeforlinux-64.deb
@@ -121,10 +121,5 @@ wget https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz_5
 sudo dpkg -i *.deb
 sudo apt-get install -f
 rm -rf *.deb
-
-# Latest nvidia drivers
-sudo add-apt-repository ppa:graphics-drivers/ppa -y
-sudo apt-get update
-sudo ubuntu-drivers autoinstall
 
 echo "Script finished"

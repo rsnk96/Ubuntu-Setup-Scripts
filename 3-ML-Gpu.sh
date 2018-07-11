@@ -11,17 +11,20 @@ else
   exit # Ain't nothing I can do to help you buddy :P
 fi
 
-echo        "***************************RUN AFTER YOU HAVE INSTALLED CUDA***************************"
-read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
+if [[ ! -n $DIRECTINSTALL ]]; then
+    echo        "*******************RUN AFTER YOU HAVE INSTALLED CUDA IF YOU HAVE A GPU*******************"
+    read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
+fi
 
-if ! test -n "$(echo "$PATH" | grep 'cuda')"; then
+if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     echo "Adding Cuda location to PATH"
-{
-    echo "export PATH=/usr/local/cuda/bin:\$PATH"
-    echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
-    echo "export CUDA_HOME=/usr/local/cuda"
-} >> $SHELLRC
-source $SHELLRC
+    {
+        echo "# Cuda"
+        echo "export PATH=/usr/local/cuda/bin:\$PATH"
+        echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
+        echo "export CUDA_HOME=/usr/local/cuda"
+    } >> $SHELLRC
+    source $SHELLRC
 fi
 
 sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
@@ -35,8 +38,10 @@ sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-ser
 
 pip install keras tabulate python-dateutil gensim networkx --upgrade
 
-read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
-tempvar=${tempvar:-p}
+if [[ ! -n $DIRECTINSTALL ]]; then
+    read -p "Would you like to install tensorflow from source or PyPi (pip)?. Press q to skip this. Default is from PyPi [s/p/q]: " tempvar
+fi
+tempvar=${tempvar:-s}
 
 if test "$tempvar" = "p"; then
     pip install tensorflow-gpu
@@ -55,14 +60,25 @@ elif test "$tempvar" = "s"; then
     cd tensorflow
     git checkout $(git tag | egrep -v '-' | tail -1)
     
-    read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
-
-    ./configure
-	cd tensorflow
-    if locate intel-mkl > /dev/null; then
-        bazel build --config=opt --config=mkl --config=cuda //tensorflow/tools/pip_package:build_pip_package
+    if [[ ! -n $DIRECTINSTALL ]]; then
+        read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
+        ./configure
     else
-        bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+        yes "" | ./configure
+    fi
+	cd tensorflow
+    if [[ ! -n $(echo $PATH | grep 'cuda') ]]; then
+        if locate intel-mkl > /dev/null; then
+            bazel build --config=opt --config=mkl --config=cuda //tensorflow/tools/pip_package:build_pip_package
+        else
+            bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+        fi
+    else
+        if locate intel-mkl > /dev/null; then
+            bazel build --config=opt --config=mkl //tensorflow/tools/pip_package:build_pip_package
+        else
+            bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package
+        fi
     fi
     cd ../
     

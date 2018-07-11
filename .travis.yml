@@ -3,7 +3,11 @@ language: c
 matrix:
   include:
     - os: linux
+      dist: trusty
+    - os: linux
       dist: xenial
+    - os: linux
+      dist: bionic
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
@@ -12,7 +16,7 @@ before_install:
 script:
     - echo 'America/Los_Angeles' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-    - ./opencvDirectInstall.sh
-    - kill %1
-   
-
+    - DIRECTINSTALL=yes ./1-BasicSetUp.sh
+    - DIRECTINSTALL=yes ./2-GenSoftware.sh
+    - DIRECTINSTALL=yes ./opencvDirectInstall.sh
+    - ./ML-Basic.sh
