@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source activate py36
-pip install --upgrade pip
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
   SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
@@ -25,29 +23,20 @@ if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     source $SHELLRC
 fi
 
-sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
+if which nvcc > /dev/null; then GPU_PRESENT="-gpu"; fi
 
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-
-sudo apt-get update
-sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev libhdf5-serial-dev protobuf-compiler libopencv-dev libcupti-dev bazel cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig
-
-if ! echo "$PATH" | grep -q 'conda' ; then
-	if which nvcc > /dev/null; then
-		pip install tensorflow-gpu 
-	else
-		pip install tensorflow
-	fi
-	pip install torch torchvision "gym" keras tabulate python-dateutil gensim networkx --upgrade
+if [[ ! $(echo $PATH | grep -q 'conda') ]] ; then
+    PIP="pip"
 else
-	if which nvcc > /dev/null; then
-		sudo pip3 install tensorflow-gpu 
-	else
-		sudo pip3 install tensorflow
-	fi
-	sudo pip3 install torch torchvision "gym" keras tabulate python-dateutil gensim networkx --upgrade
+    sudo apt-get update
+    sudo apt-get install python3 python3-dev python3-pip python-dev python-pip python-tk -y
+    PIP="sudo pip3"
 fi
+
+$PIP install --upgrade pip setuptools numpy
+$PIP install keras tabulate python-dateutil gensim networkx --upgrade
+$PIP install tensorflow$GPU_PRESENT --upgrade
+$PIP install torch torchvision "gym"--upgrade
 
 echo ""
 echo "This script has finished"
