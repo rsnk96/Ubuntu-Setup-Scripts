@@ -13,6 +13,17 @@ spatialPrint() {
 	echo "================================"
 }
 
+execute () {
+	echo "$ $*"
+	OUTPUT=$($@ 2>&1)
+	if [ $? -ne 0 ]; then
+        echo "$OUTPUT"
+        echo ""
+        echo "Failed to Execute $*" >&2
+        exit 1
+    fi
+}
+
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
   SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
@@ -37,23 +48,27 @@ else
 fi
 
 
-sudo apt-get update
-sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
-sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
+execute sudo apt-get update
+execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
+execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
-if [[ ! -n $(echo $PATH | grep 'conda') ]] ; then
-    sudo apt-get install python3 python3-dev python3-numpy python3-pip python3-scipy python3-matplotlib python-dev python-matplotlib python-numpy python-scipy python-pip python3-pip python-tk -y
+if [[ ! $(echo $PATH | grep -q 'conda') ]] ; then
+    PIP="pip"
 else
-    pip install numpy scipy matplotlib
+    sudo apt-get install python3 python3-dev python3-pip python-dev python-pip python-tk -y
+    PIP="sudo pip3"
 fi
-# Also instlaling dlib and moviepy as CV libraries
-pip3 install msgpack cython dlib moviepy
+execute $PIP install --upgrade setuptools
+execute $PIP install numpy scipy
+# Also instlaling skimage, dlib and moviepy as CV libraries
+execute $PIP install msgpack cython dlib moviepy scikit-image
 
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
-    sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
-    sudo apt-get --purge remove libav-tools -y
-    sudo mkdir /opt/ffmpeg-build-script && sudo chmod ugo+w /opt/ffmpeg-build-script
+    execute sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
+    execute sudo apt-get --purge remove libav-tools -y
+    execute sudo mkdir /opt/ffmpeg-build-script 
+    execute sudo chmod ugo+w /opt/ffmpeg-build-script
     (
         cd /opt/ffmpeg-build-script
         git clone https://github.com/markus-perl/ffmpeg-build-script.git .
@@ -75,33 +90,33 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
 fi
 
 spatialPrint "GUI and openGL extensions"
-sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtk2.0-dev libgtkglext1-dev -y
-sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
+execute sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtk2.0-dev libgtkglext1-dev -y
+execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Image manipulation libraries"
-sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev libjasper-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
+execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev libjasper-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 spatialPrint "Video manipulation libraries"
-sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev libdc1394-22-dev libdc1394-utils -y
+execute sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev libdc1394-22-dev libdc1394-utils -y
 
 spatialPrint "Codecs"
-sudo apt-get install libavcodec-dev yasm -y
-sudo apt-get install libfaac-dev libmp3lame-dev -y
-sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
-sudo apt-get install libtheora-dev libvorbis-dev libxvidcore-dev -y
-sudo apt-get install libv4l-dev v4l-utils -y
+execute sudo apt-get install libavcodec-dev yasm -y
+execute sudo apt-get install libfaac-dev libmp3lame-dev -y
+execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
+execute sudo apt-get install libtheora-dev libvorbis-dev libxvidcore-dev -y
+execute sudo apt-get install libv4l-dev v4l-utils -y
 
 spatialPrint "Java"
-sudo apt-get install -y ant default-jdk
+execute sudo apt-get install -y ant default-jdk
 
 spatialPrint "Parallelism library"
-sudo apt-get install libeigen3-dev libtbb-dev -y
+execute sudo apt-get install libeigen3-dev libtbb-dev -y
 
 spatialPrint "Optional Dependencies"
-sudo apt-get install libprotobuf-dev protobuf-compiler -y
-sudo apt-get install libgoogle-glog-dev libgflags-dev -y
-sudo apt-get install libgphoto2-dev libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
-sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
+execute sudo apt-get install libprotobuf-dev protobuf-compiler -y
+execute sudo apt-get install libgoogle-glog-dev libgflags-dev -y
+execute sudo apt-get install libgphoto2-dev libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
+execute sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
@@ -190,8 +205,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 # ccmake ..
 
 spatialPrint "Making and installing"
-make -j $MJOBS
-sudo make install
+execute make -j $MJOBS
+execute sudo make install
 
 spatialPrint "Finishing off installation"
 sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
