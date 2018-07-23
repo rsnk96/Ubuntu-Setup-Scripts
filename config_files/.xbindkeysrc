@@ -7,7 +7,7 @@
     Control+Shift+Alt + f
 
 # Screenshot with Shutter, which will be saved in /tmp
-"shutter -s -o '/tmp/%y-%m-%d_\$w_\$h.png' -c -e"
+"shutter -s -o '/tmp/%y-%m-%d_$w_$h.png' -c -e"
     Control+Shift+Alt + p
 
 # Maximize window

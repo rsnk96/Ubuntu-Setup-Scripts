@@ -52,16 +52,19 @@ execute sudo apt-get update
 execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
 execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
-if [[ ! $(echo $PATH | grep -q 'conda') ]] ; then
-    PIP="pip"
+if [[ $(command -v conda) || (-n $CIINSTALL) ]] ; then
+    PIP="pip install"
 else
-    sudo apt-get install python3 python3-dev python3-pip python-dev python-pip python-tk -y
-    PIP="sudo pip3"
+    execute sudo apt-get install python3 python3-dev python python-dev -y
+    execute sudo apt-get install python3-tk python-tk -y
+    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip python-pip; fi
+    PIP="sudo pip3 install"
 fi
-execute $PIP install --upgrade setuptools
-execute $PIP install numpy scipy
-# Also instlaling skimage, dlib and moviepy as CV libraries
-execute $PIP install msgpack cython dlib moviepy scikit-image
+execute $PIP --upgrade numpy
+execute $PIP --upgrade setuptools
+spatialPrint "Also instlaling skimage, dlib and moviepy as CV libraries"
+$PIP cython msgpack moviepy scikit-image
+$PIP dlib
 
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
@@ -71,7 +74,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     execute sudo chmod ugo+w /opt/ffmpeg-build-script
     (
         cd /opt/ffmpeg-build-script
-        git clone https://github.com/markus-perl/ffmpeg-build-script.git .
+        git clone --quiet https://github.com/markus-perl/ffmpeg-build-script.git .
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
         sed -i 's/--enable-shared\ \\/--enable-shared\ --cc="gcc -fPIC"\ \\/g' build-ffmpeg
@@ -80,9 +83,9 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         {
             echo ""
             echo "# ffmpeg-build-script"
-            echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(pwd)/workspace/lib"
-            echo "export PKG_CONFIG_PATH=\$(pkg-config --variable pc_path pkg-config)\${PKG_CONFIG_PATH:+:}$(pwd)/workspace/lib/pkgconfig"
-            echo "export PKG_CONFIG_LIBDIR=\$PKG_CONFIG_LIBDIR:$(pwd)/workspace/lib/"
+            echo "export LD_LIBRARY_PATH=$(pwd)/workspace/lib:\$LD_LIBRARY_PATH"
+            echo "export PKG_CONFIG_PATH=$(pwd)/workspace/lib/pkgconfig:\$(pkg-config --variable pc_path pkg-config)"
+            echo "export PKG_CONFIG_LIBDIR=$(pwd)/workspace/lib/:\$PKG_CONFIG_LIBDIR"
 
         } >> $SHELLRC
     )
@@ -97,14 +100,14 @@ spatialPrint "Image manipulation libraries"
 execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev libjasper-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 spatialPrint "Video manipulation libraries"
-execute sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev libdc1394-22-dev libdc1394-utils -y
+execute sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev -y
 
 spatialPrint "Codecs"
 execute sudo apt-get install libavcodec-dev yasm -y
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 execute sudo apt-get install libtheora-dev libvorbis-dev libxvidcore-dev -y
-execute sudo apt-get install libv4l-dev v4l-utils -y
+# execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
 
 spatialPrint "Java"
 execute sudo apt-get install -y ant default-jdk
@@ -115,13 +118,13 @@ execute sudo apt-get install libeigen3-dev libtbb-dev -y
 spatialPrint "Optional Dependencies"
 execute sudo apt-get install libprotobuf-dev protobuf-compiler -y
 execute sudo apt-get install libgoogle-glog-dev libgflags-dev -y
-execute sudo apt-get install libgphoto2-dev libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
+execute sudo apt-get install libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
 execute sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
 if [[ ! -d "opencv" ]]; then
-	git clone https://github.com/Itseez/opencv
+	git clone --quiet https://github.com/Itseez/opencv
 else
 # Putting the git pull commands in paranthesis runs it in a subshell and avoids having to do cd ..
     (
@@ -132,7 +135,7 @@ else
     )
 fi
 if [[ ! -d "opencv_contrib" ]]; then
-	git clone https://github.com/Itseez/opencv_contrib
+	git clone --quiet https://github.com/Itseez/opencv_contrib
 else
     (
         cd opencv_contrib || exit
@@ -146,9 +149,10 @@ cd opencv
 latest_tag="$(git tag | egrep -v '-' | tail -1)"
 echo "Installing OpenCV Version: $latest_tag"
 git checkout -f $latest_tag
-cd ../opencv_contrib
-git checkout -f $latest_tag
-cd ../opencv
+(
+    cd ../opencv_contrib
+    git checkout -f $latest_tag
+)
 # rm -rf build
 mkdir -p build
 cd build
@@ -182,6 +186,13 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D PYTHON3_INCLUDE_DIR="$py3In" \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
  -D PYTHON_DEFAULT_EXECUTABLE="$py3Ex" \
+ -D WITH_FFMPEG=1 \
+ -D WITH_1394=0 \
+ -D WITH_GSTREAMER=0 \
+ -D WITH_V4L=0 \
+ -D WITH_LIBV4L=0 \
+ -D WITH_DSHOW=0 \
+ -D WITH_GPHOTO2=0 \
  -D WITH_TBB=1 \
  -D WITH_IPP=1 \
  -D ENABLE_FAST_MATH=1 \
@@ -205,8 +216,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 # ccmake ..
 
 spatialPrint "Making and installing"
-execute make -j $MJOBS
-execute sudo make install
+make -j $MJOBS
+sudo make install
 
 spatialPrint "Finishing off installation"
 sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
