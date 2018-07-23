@@ -59,18 +59,18 @@ mkdir -p ~/.config/tilda
 cp ./config_files/config_0 ~/.config/tilda/
 
 spatialPrint "Setting up Zsh + Zim now"
-sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)" &>/dev/null
-git clone --recursive https://github.com/Eriner/zim.git ${ZDOTDIR:-${HOME}}/.zim
-ln -s ~/.zim/templates/zimrc ~/.zimrc
-ln -s ~/.zim/templates/zlogin ~/.zlogin
-ln -s ~/.zim/templates/zshrc ~/.zshrc
+sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
+git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zim
+ln -s /opt/.zim/templates/zimrc ~/.zimrc
+ln -s /opt/.zim/templates/zlogin ~/.zlogin
+ln -s /opt/.zim/templates/zshrc ~/.zshrc
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
 spatialPrint "Install axel, a download accelerator"
 if [[ ! -d "axel" ]]; then
-    git clone https://github.com/axel-download-accelerator/axel.git
+    git clone --quiet https://github.com/axel-download-accelerator/axel.git
 else
     (
         cd axel || exit
@@ -121,7 +121,7 @@ execute axel -o ./anacondaInstallScript.sh ${continuum_website}${latest_anaconda
 sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
-spatialPrint "Setting up your anaconda. Two environments created, one named py 27, other py36."
+spatialPrint "Setting up your anaconda. Environments py27 and py36 will be created"
 execute /opt/anaconda3/bin/conda update conda -y
 execute /opt/anaconda3/bin/conda clean --all -y
 execute /opt/anaconda3/bin/conda install ipython -y
@@ -167,8 +167,9 @@ spatialPrint "Adding anaconda to path variables"
 # read temp
 
 
+spatialPrint "The script has finished."
 if [[ ! -n $CIINSTALL ]]; then
-    spatialPrint "The script has finished. The terminal instance will now close so that the shell changes can take place"
+    # echo "The terminal instance will now close so that the shell changes can take place"
     # read -p "Press [Enter] to continue..." temp
     # kill -9 $PPID
     su - $USER

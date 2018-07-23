@@ -11,6 +11,17 @@ else
   exit # Ain't nothing I can do to help you buddy :P
 fi
 
+# To note: the execute() function doesn't handle pipes well
+execute () {
+	echo "$ $*"
+	OUTPUT=$($@ 2>&1)
+	if [ $? -ne 0 ]; then
+        echo "$OUTPUT"
+        echo ""
+        echo "Failed to Execute $*" >&2
+        exit 1
+    fi
+}
 
 if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     echo "Adding Cuda location to PATH"
@@ -25,18 +36,19 @@ fi
 
 if which nvcc > /dev/null; then GPU_PRESENT="-gpu"; fi
 
-if [[ ! $(echo $PATH | grep -q 'conda') ]] ; then
-    PIP="pip"
+if [[ $(command -v conda) || (-n $CIINSTALL) ]]; then
+    PIP="pip install"
 else
-    sudo apt-get update
-    sudo apt-get install python3 python3-dev python3-pip python-dev python-pip python-tk -y
-    PIP="sudo pip3"
+    execute sudo apt-get update
+    execute sudo apt-get install python3 python3-dev python-dev python-tk -y
+    if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip python-pip; fi
+    PIP="sudo pip3 install"
 fi
 
-$PIP install --upgrade pip setuptools numpy
-$PIP install keras tabulate python-dateutil gensim networkx --upgrade
-$PIP install tensorflow$GPU_PRESENT --upgrade
-$PIP install torch torchvision "gym"--upgrade
+$PIP --upgrade numpy tabulate python-dateutil
+execute $PIP keras gensim networkx --upgrade
+execute $PIP tensorflow$GPU_PRESENT --upgrade
+execute $PIP torch torchvision gym --upgrade
 
 echo ""
 echo "This script has finished"
