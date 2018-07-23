@@ -1,22 +1,65 @@
-language: c
-
+language: python
 matrix:
   include:
-    - os: linux
-      dist: trusty
-    - os: linux
+    - name: xenial-basic
+      os: linux
+      sudo: required
       dist: xenial
-    - os: linux
+      script:
+      - CIINSTALL=yes ./1-BasicSetUp.sh
+      - export PATH=/opt/anaconda3/envs/py27/bin:$PATH
+      - export PATH=/opt/anaconda3/bin:$PATH
+      - hash -r  # To reload env vars like PATH
+      - conda info -a
+      - CIINSTALL=yes ./2-GenSoftware.sh
+      python: 3.6
+    - name: xenial-opencv
+      os: linux
+      sudo: required
+      dist: xenial
+      script: CIINSTALL=yes ./opencvDirectInstall.sh
+      python: 3.6
+    - name: xenial-ml
+      os: linux
+      sudo: required
+      dist: xenial
+      script: CIINSTALL=yes ./3-ML-Gpu.sh
+      python: 3.6
+    - name: xenial-ml-basic
+      os: linux
+      sudo: required
+      dist: xenial
+      script: CIINSTALL=yes ./ML-Basic.sh
+      python: 3.6
+    - name: bionic-basic
+      os: linux
+      sudo: required
       dist: bionic
-
+      script:
+      - CIINSTALL=yes ./1-BasicSetUp.sh
+      - export PATH=/opt/anaconda3/envs/py27/bin:$PATH
+      - export PATH=/opt/anaconda3/bin:$PATH
+      - hash -r  # To reload env vars like PATH
+      - conda info -a
+      - CIINSTALL=yes ./2-GenSoftware.sh
+      python: 3.6
+    - name: bionic-ml
+      os: linux
+      sudo: required
+      dist: bionic
+      script: CIINSTALL=yes ./3-ML-Gpu.sh
+      python: 3.6
+    - name: bionic-ml-basic
+      os: linux
+      sudo: required
+      dist: bionic
+      script: CIINSTALL=yes ./ML-Basic.sh
+      python: 3.6
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq build-essential curl; fi
-
-script:
+    - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
+    - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+    - sudo apt-get update -qq
+    - sudo apt-get install -y software-properties-common
+    - sudo apt-get install -qq build-essential curl g++ python-dev python3-dev python-setuptools python3-setuptools
     - echo 'America/Los_Angeles' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
-    - CIINSTALL=yes ./1-BasicSetUp.sh
-    - CIINSTALL=yes ./2-GenSoftware.sh
-    - CIINSTALL=yes ./opencvDirectInstall.sh
-    - ./ML-Basic.sh
