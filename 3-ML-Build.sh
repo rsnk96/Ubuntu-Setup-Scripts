@@ -67,6 +67,19 @@ execute sudo apt-get install software-properties-common swig bazel -y
 
 if which nvcc > /dev/null; then execute sudo apt-get install libcupti-dev -y; fi
 
+
+# Docker NVIDIA Docker
+curl -sSL https://get.docker.com/ | sh
+wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
+sudo dpkg -i /tmp/nvidia-docker*.deb
+echo "Checking NVIDIA SMI"
+nvidia-smi
+
+# Clone and build iitmcvg dockerfiles
+cd ~
+git clone https://github.com/iitmcvg/workstation.git
+docker build -t iitmcvg/workstation workstation
+
 execute $PIP keras tabulate python-dateutil gensim six networkx --upgrade
 
 spatialPrint "Now installing Tensorflow"
