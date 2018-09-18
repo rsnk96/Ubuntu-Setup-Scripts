@@ -38,7 +38,7 @@ elif [ "$tempvar" = "q" ];then
 fi
 
 # Recommended libraries for Nvidia CUDA
-execute sudo apt-get install libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev libx11-dev -y
+execute sudo apt-get install freeglut3 freeglut3-dev libxi-dev libxmu-dev -y
 
 
 # General Software from now on
@@ -70,7 +70,7 @@ mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
-execute sudo apt-get install htop gparted task expect -y
+execute sudo apt-get install htop gparted expect -y
 
 # Boot repair
 execute sudo add-apt-repository ppa:yannubuntu/boot-repair -y
@@ -108,10 +108,10 @@ execute sudo apt-get install firefox -y
 execute sudo add-apt-repository ppa:webupd8team/tor-browser -y
 execute sudo apt-get update -y
 execute sudo apt-get install tor-browser -y
-# Install I2P
-execute sudo apt-add-repository ppa:i2p-maintainers/i2p -y
-execute sudo apt-get update -y
-execute sudo apt-get install i2p -y
+# # Install I2P
+# execute sudo apt-add-repository ppa:i2p-maintainers/i2p -y
+# execute sudo apt-get update -y
+# execute sudo apt-get install i2p -y
 
 if [[ ! -n $CIINSTALL ]]; then
     # Adobe flashplugin doesn't install on travis for some reason

@@ -70,23 +70,7 @@ echo "source /opt/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
-spatialPrint "Install axel, a download accelerator"
-if [[ ! -d "axel" ]]; then
-    git clone --quiet https://github.com/axel-download-accelerator/axel.git
-else
-    (
-        cd axel || exit
-        git pull
-    )
-fi
-execute sudo apt-get install autopoint openssl libssl-dev -y
-cd axel
-execute ./autogen.sh
-execute ./configure
-execute make -j $MJOBS
-execute sudo make install
-cd ../
-
+execute sudo apt-get install aria2
 
 touch ~/.bash_aliases
 spatialPrint "Adding aliases to ~/.bash_aliases"
@@ -98,6 +82,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
     echo "alias gpom=\"git push origin master\""
     echo "alias update=\"sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y\""
+    echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10 -d aria2-downloads\""
     echo "alias tsux=\"tmux -u new-session \\; \\
             neww \\; \\
               send-keys 'htop' C-m \\; \\
@@ -119,7 +104,7 @@ continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
 latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-execute axel -o ./anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
+execute aria2c --file-allocation=none -c -x 10 -s 10 -o ./anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
 sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
