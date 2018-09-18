@@ -60,10 +60,12 @@ cp ./config_files/config_0 ~/.config/tilda/
 
 spatialPrint "Setting up Zsh + Zim now"
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
-git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zim
-ln -s /opt/.zim/templates/zimrc ~/.zimrc
-ln -s /opt/.zim/templates/zlogin ~/.zlogin
-ln -s /opt/.zim/templates/zshrc ~/.zshrc
+sudo mkdir /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
+git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
+ln -s /opt/.zsh/zim/templates/zimrc ~/.zimrc
+ln -s /opt/.zsh/zim/templates/zlogin ~/.zlogin
+ln -s /opt/.zsh/zim/templates/zshrc ~/.zshrc
+echo "source /opt/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
