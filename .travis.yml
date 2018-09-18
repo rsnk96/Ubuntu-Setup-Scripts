@@ -23,7 +23,7 @@ matrix:
       os: linux
       sudo: required
       dist: xenial
-      script: CIINSTALL=yes ./3-ML-Gpu.sh
+      script: CIINSTALL=yes ./3-ML-Build.sh
       python: 3.6
     - name: xenial-ml-basic
       os: linux
@@ -47,7 +47,7 @@ matrix:
       os: linux
       sudo: required
       dist: bionic
-      script: CIINSTALL=yes ./3-ML-Gpu.sh
+      script: CIINSTALL=yes ./3-ML-Build.sh
       python: 3.6
     - name: bionic-ml-basic
       os: linux
