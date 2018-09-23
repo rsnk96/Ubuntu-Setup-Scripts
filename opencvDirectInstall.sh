@@ -70,7 +70,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
     execute sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
     execute sudo apt-get --purge remove libav-tools -y
-    execute sudo mkdir /opt/ffmpeg-build-script 
+    execute sudo mkdir -p /opt/ffmpeg-build-script 
     execute sudo chmod ugo+w /opt/ffmpeg-build-script
     (
         cd /opt/ffmpeg-build-script
