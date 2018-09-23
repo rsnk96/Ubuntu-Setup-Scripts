@@ -16,7 +16,7 @@ execute sudo apt-get install libboost-all-dev curl -y
 
 # Install code editor of your choice
 if [[ ! -n $CIINSTALL ]]; then
-    read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default is skipping [v/a/s/q]: " tempvar
+    read -p "Download and Install VS Code / Atom / Sublime. Press q to skip this. Default: Skip Editor installation [v/a/s/q]: " tempvar
 fi
 tempvar=${tempvar:-q}
 
@@ -27,6 +27,7 @@ if [ "$tempvar" = "v" ]; then
     execute sudo apt-get install apt-transport-https -y
     execute sudo apt-get update
     execute sudo apt-get install code -y # or code-insiders
+    execute rm microsoft.gpg
 elif [ "$tempvar" = "a" ]; then
     execute sudo add-apt-repository ppa:webupd8team/atom
     execute sudo apt-get update; execute sudo apt-get install atom -y
@@ -125,13 +126,18 @@ if [[ ! -n $CIINSTALL ]]; then
     execute sudo apt-get install adobe-flashplugin -y
 
     # Skype - travis doesn't allow dpkg -i for some reason
-    execute aria2c --file-allocation=none -c -x 10 -s 10 -o /tmp/skype.deb https://repo.skype.com/latest/skypeforlinux-64.deb
-    execute sudo dpkg -i /tmp/skype.deb
+    # echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | sudo tee /etc/apt/sources.list.d/skype-stable.list
+    # execute wget https://repo.skype.com/data/SKYPE-GPG-KEY 
+    # execute sudo apt-key add SKYPE-GPG-KEY
+    # execute sudo apt install apt-transport-https
+    # execute sudo apt update
+    # execute sudo apt install skypeforlinux
+    # execute rm SKYPE-GPG-KEY
 
     # Franz
     franz_base_web=https://github.com/meetfranz/franz/releases/
     latest_franz=$(wget -q -O - $franz_base_web index.html | grep ".deb" | head -n 1 | cut -d \" -f 2)
-    execute aria2c --file-allocation=none -c -x 10 -s 10 -o /tmp/franz.deb https://github.com/$latest_franz
+    execute aria2c --file-allocation=none -c -x 10 -s 10 -d /tmp -o franz.deb https://github.com/$latest_franz
     sudo dpkg -i /tmp/franz.deb
     execute sudo apt-get install -f
 

@@ -60,7 +60,7 @@ cp ./config_files/config_0 ~/.config/tilda/
 
 spatialPrint "Setting up Zsh + Zim now"
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
-sudo mkdir /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
+sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
 ln -s /opt/.zsh/zim/templates/zimrc ~/.zimrc
@@ -84,8 +84,8 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
     echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
     echo "alias gpom=\"git push origin master\""
-    echo "alias update=\"sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y\""
-    echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10 -d aria2-downloads\""
+    echo "alias update=\"sudo apt update && sudo apt full-upgrade && sudo apt autoremove -y\""
+    echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10\""
     echo "alias tsux=\"tmux -u new-session \\; \\
             neww \\; \\
               send-keys 'htop' C-m \\; \\
@@ -107,8 +107,8 @@ continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
 latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-execute aria2c --file-allocation=none -c -x 10 -s 10 -o ./anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
-sudo mkdir /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
+execute aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
+sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
 spatialPrint "Setting up your anaconda. Environments py27 and py36 will be created"
