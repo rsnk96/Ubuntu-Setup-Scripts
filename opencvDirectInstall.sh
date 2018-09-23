@@ -60,7 +60,7 @@ else
     if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip python-pip; fi
     PIP="sudo pip3 install"
 fi
-execute $PIP --upgrade numpy
+execute $PIP --upgrade numpy pip
 execute $PIP --upgrade setuptools
 spatialPrint "Also instlaling skimage, dlib and moviepy as CV libraries"
 $PIP cython msgpack moviepy scikit-image
@@ -93,32 +93,33 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
 fi
 
 spatialPrint "GUI and openGL extensions"
-execute sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtk2.0-dev libgtkglext1-dev -y
+execute sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtkglext1-dev -y
 execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Image manipulation libraries"
-execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev libjasper-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
+execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 spatialPrint "Video manipulation libraries"
-execute sudo apt-get install libavformat-dev libavutil-dev libxine2-dev libswscale-dev -y
+execute sudo apt-get install libxine2-dev  -y
 
 spatialPrint "Codecs"
-execute sudo apt-get install libavcodec-dev yasm -y
+# execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev -y
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
-execute sudo apt-get install libtheora-dev libvorbis-dev libxvidcore-dev -y
+execute sudo apt-get install yasm libtheora-dev libvorbis-dev libxvidcore-dev -y
 # execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
 
 spatialPrint "Java"
 execute sudo apt-get install -y ant default-jdk
 
-spatialPrint "Parallelism library"
+spatialPrint "Parallelism libraries"
 execute sudo apt-get install libeigen3-dev libtbb-dev -y
 
 spatialPrint "Optional Dependencies"
 execute sudo apt-get install libprotobuf-dev protobuf-compiler -y
 execute sudo apt-get install libgoogle-glog-dev libgflags-dev -y
-execute sudo apt-get install libhdf5-dev doxygen sphinx-common texlive-latex-extra -y
+execute sudo apt-get install libhdf5-dev -y
+# execute sudo apt-get install doxygen sphinx-common texlive-latex-extra -y
 execute sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 
 spatialPrint "Finally download and install opencv"
@@ -187,12 +188,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
  -D PYTHON_DEFAULT_EXECUTABLE="$py3Ex" \
  -D WITH_FFMPEG=1 \
- -D WITH_1394=0 \
- -D WITH_GSTREAMER=0 \
  -D WITH_V4L=0 \
  -D WITH_LIBV4L=0 \
- -D WITH_DSHOW=0 \
- -D WITH_GPHOTO2=0 \
  -D WITH_TBB=1 \
  -D WITH_IPP=1 \
  -D ENABLE_FAST_MATH=1 \
@@ -202,14 +199,14 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D BUILD_TESTS=0 \
  -D WITH_QT=1 \
  -D WITH_OPENGL=1 \
- -D WITH_VTK=0 \
- -D BUILD_opencv_java=0 \
  -D ENABLE_CXX11=1 \
  -D WITH_NVCUVID=0 \
  -D WITH_CUDA=0 \
  -D WITH_CUBLAS=0 \
  -D WITH_CUFFT=0 \
  -D CUDA_FAST_MATH=0 ..
+#  -D BUILD_opencv_java=0 \
+#  -D WITH_VTK=0 \
 #  -D BUILD_opencv_freetype=ON \
 
 # De-comment the next line if you would like an interactive cmake menu to check if everything is alright and make some tweaks

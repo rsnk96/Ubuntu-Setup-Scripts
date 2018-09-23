@@ -62,9 +62,11 @@ spatialPrint "Setting up Zsh + Zim now"
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 sudo mkdir /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
+ln -s /opt/.zsh/zim/ ~/.zim
 ln -s /opt/.zsh/zim/templates/zimrc ~/.zimrc
 ln -s /opt/.zsh/zim/templates/zlogin ~/.zlogin
 ln -s /opt/.zsh/zim/templates/zshrc ~/.zshrc
+git clone https://github.com/zsh-users/zsh-autosuggestions /opt/.zsh/zsh-autosuggestions
 echo "source /opt/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
@@ -72,7 +74,8 @@ sudo chsh -s "$(command -v zsh)" "${USER}"
 
 execute sudo apt-get install aria2
 
-touch ~/.bash_aliases
+touch /opt/.zsh/bash_aliases
+ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 spatialPrint "Adding aliases to ~/.bash_aliases"
 {
     echo "alias jn=\"jupyter notebook\""
@@ -96,7 +99,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
 } >> ~/.bash_aliases
 
 # Now create shortcuts
-execute sudo apt-get install xbindkeys xbindkeys-config wmctrl xdotool -y
+execute sudo apt-get install run-one xbindkeys xbindkeys-config wmctrl xdotool -y
 cp ./config_files/.xbindkeysrc ~/
 
 spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"

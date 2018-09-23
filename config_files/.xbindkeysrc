@@ -1,6 +1,6 @@
 # Open File Explorer
-"xdg-open ~"
-    Control+Alt + e
+"run-one xdg-open ~"
+    Mod2+Mod4 + e
 
 # Open Franz Messenger
 "franz"
@@ -12,7 +12,14 @@
 
 # Maximize window
 "wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz"
-    Control+Alt + KP_Up
+    Mod2+Mod4 + Up
+
+# Tile window
+"wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 0 y"
+    Mod2+Mod4 + Left
+
+"wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 9999 y"
+    Mod2+Mod4 + Right
 
 # Open KeePass2
 "mono /usr/lib/keepass2/KeePass.exe"
