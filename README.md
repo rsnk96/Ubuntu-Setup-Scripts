@@ -65,19 +65,18 @@ Then execute them in the terminal in the sequence of filenames.
     * You need to run these scripts using only one user, say `first_user`
     * We need to copy the configuration files to the new user, say `new_user`. From `first_user`'s account, run the following
         ```bash
-        cp ~/.zshrc /home/<new_user>
-        cp ~/.bash_aliases /home/<new_user>
+        ln -s /opt/.zsh/zim/ /home/<new_user>/.zim
+        cp /opt/.zsh/bash_aliases /home/<new_user>/.bash_aliases
+        cp -s /opt/.zsh/zim/templates/zimrc /home/<new_user>/.zimrc
+        cp -s /opt/.zsh/zim/templates/zlogin /home/<new_user>/.zlogin
+        cp -s /opt/.zsh/zim/templates/zshrc /home/<new_user>/.zshrc
+
         cp ~/.xbindkeysrc /home/<new_user>
         mkdir -p /home/<new_user>/.config/tilda
         cp ~/.config/tilda/config_0 /home/<new_user>/.config/tilda/config_0
 
-        ln -s /opt/.zim/templates/zimrc /home/<new_user>/.zimrc
-        ln -s /opt/.zim/templates/zlogin /home/<new_user>/.zlogin
-        ln -s /opt/.zim/templates/zshrc /home/<new_user>/.zshrc
-        
         sudo chown <new_user>: /home/<new_user>/*
         ```
-    * Symoblically link the zim files for each new user with the following commands (from the `1-BasicSetUp.sh` script)
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
 * If you would like to install with OpenCV for CUDA, change the flags `-D WITH_NVCUVID=0`, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
