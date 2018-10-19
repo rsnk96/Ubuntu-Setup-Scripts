@@ -8,23 +8,7 @@ elif [[ -n $(echo $SHELL | grep "ksh") ]] ; then
   SHELLRC=~/.kshrc
 else
   echo "Unidentified shell $SHELL"
-  exit # Ain't nothing I can do to help you buddy :P
-fi
-
-if [[ ! -n $CIINSTALL ]]; then
-    echo        "*******************RUN AFTER YOU HAVE INSTALLED CUDA IF YOU HAVE A GPU*******************"
-    read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
-fi
-
-if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
-    echo "Adding Cuda location to PATH"
-    {
-        echo "# Cuda"
-        echo "export PATH=/usr/local/cuda/bin:\$PATH"
-        echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
-        echo "export CUDA_HOME=/usr/local/cuda"
-    } >> $SHELLRC
-    source $SHELLRC
+  exit # Ain't nothing I can do to help you buddy :P. And if you're using FISH shell, just use zsh-autosuggestions instead for heaven's sake!!! xD
 fi
 
 spatialPrint() {
@@ -55,6 +39,26 @@ else
 fi
 if which nvcc > /dev/null; then GPU_PRESENT="-gpu"; fi  #for tensorflow-gpu if gpu is present
 
+
+
+if [[ ! -n $CIINSTALL ]]; then
+    echo        "*******************RUN AFTER YOU HAVE INSTALLED CUDA IF YOU HAVE A GPU*******************"
+    read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
+fi
+
+if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
+    echo "Adding Cuda location to PATH"
+    {
+        echo "# Cuda"
+        echo "export PATH=/usr/local/cuda/bin:\$PATH"
+        echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
+        echo "export CUDA_HOME=/usr/local/cuda"
+    } >> $SHELLRC
+    source $SHELLRC
+else
+    echo "Not adding Cuda to the PATH"
+fi
+
 execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
 
@@ -67,7 +71,7 @@ execute sudo apt-get install software-properties-common swig bazel -y
 
 if which nvcc > /dev/null; then execute sudo apt-get install libcupti-dev -y; fi
 
-execute $PIP keras tabulate python-dateutil gensim six networkx --upgrade
+execute $PIP keras tabulate python-dateutil gensim six networkx keras_applications keras_preprocessing --upgrade
 
 spatialPrint "Now installing Tensorflow"
 if [[ ! -n $CIINSTALL ]]; then
@@ -89,10 +93,8 @@ elif test "$tempvar" = "s"; then
     fi
     
     # Checkout the latest release candidate, as it should be relatively stable
-    echo $(pwd)
     cd tensorflow
-    echo $(pwd)
-    git checkout $(git tag | egrep -v '-' | tail -1)
+    git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
     
     if [[ ! -n $CIINSTALL ]]; then
         read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
@@ -110,7 +112,6 @@ elif test "$tempvar" = "s"; then
     bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
     
-    # cp -r bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/main/* bazel-bin/tensorflow/tools/pip_package/build_pip_package.runfiles/
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
     execute $PIP /tmp/tensorflow_pkg/*.whl --force-reinstall
     cd ../
@@ -124,8 +125,8 @@ spatialPrint "Now installing PyTorch. If you do not have anaconda, it will insta
 if which conda > /dev/null; then
     export CMAKE_PREFIX_PATH="$(dirname $(which conda))/../" # [anaconda root directory]
     # Install basic dependencies
-    execute conda install numpy pyyaml mkl mkl-include setuptools cmake cffi typing
-    execute conda install -c mingfeima mkldnn
+    execute conda install numpy pyyaml mkl mkl-include setuptools cmake cffi typing -y
+    execute conda install -c mingfeima mkldnn -y
     # Add LAPACK support for the GPU
     if which nvcc > /dev/null; then execute conda install -c soumith magma-cuda90 -y; fi
     if ! test -d "pytorch"; then
