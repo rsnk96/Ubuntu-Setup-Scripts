@@ -90,7 +90,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
             neww \\; \\
               send-keys 'htop' C-m \\; \\
               split-window -h \\; \\
-              send-keys 'nvidia-smi -l 1' C-m \\; \\
+              send-keys 'nvtop' C-m \\; \\
               split-window -v \\; \\
               send-keys 'watch sensors' C-m \\; \\
               rename-window 'performance' \\; \\
@@ -122,8 +122,6 @@ execute /opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matpl
 execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython rebound-cli
 execute /opt/anaconda3/bin/pip install msgpack
 sed -i.bak "/anaconda3/d" ~/.zshrc
-echo "export PATH=/opt/anaconda3/envs/py27/bin:\$PATH" >> ~/.zshrc
-echo "export PATH=/opt/anaconda3/bin:\$PATH" >> ~/.zshrc
 
 execute /opt/anaconda3/bin/pip install autopep8 scdl org-e youtube-dl jupyterlab
 echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
@@ -132,9 +130,11 @@ execute /opt/anaconda3/bin/conda info --envs
 
 spatialPrint "Adding anaconda to path variables"
 {
-    echo ""
     echo "export OLDPATH=\$PATH"
-    echo "export PATH=/opt/anaconda3/bin:\$PATH"
+    echo ""
+    echo "# Anaconda Python. Change the \"conda activate base\" to whichever environment you would like to activate by default"
+    echo ". /opt/anaconda3/etc/profile.d/conda.sh"
+    echo "conda activate base"
 
     echo "if [ -f ~/.bash_aliases ]; then"
     echo "  source ~/.bash_aliases"
