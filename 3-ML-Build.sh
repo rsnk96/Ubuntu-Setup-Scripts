@@ -49,6 +49,7 @@ fi
 if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     echo "Adding Cuda location to PATH"
     {
+        echo ""
         echo "# Cuda"
         echo "export PATH=/usr/local/cuda/bin:\$PATH"
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
@@ -58,6 +59,19 @@ if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
 else
     echo "Not adding Cuda to the PATH"
 fi
+
+
+spatialPrint "Installing nvtop"
+execute sudo apt-get install cmake libncurses5-dev git -y
+if [[ ! -d "nvtop" ]]; then
+    execute git clone --quiet https://github.com/Syllo/nvtop.git
+fi
+execute mkdir -p nvtop/build
+cd nvtop/build
+execute cmake -DCMAKE_BUILD_TYPE=Optimized ..
+execute make
+execute sudo make install
+
 
 execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
