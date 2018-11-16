@@ -84,7 +84,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
     echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
     echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
     echo "alias gpom=\"git push origin master\""
-    echo "alias update=\"sudo apt update && sudo apt full-upgrade && sudo apt autoremove -y\""
+    echo "alias update=\"sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y\""
     echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10\""
     echo "alias tsux=\"tmux -u new-session \\; \\
             neww \\; \\

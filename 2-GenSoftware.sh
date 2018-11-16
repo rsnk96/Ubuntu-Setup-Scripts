@@ -134,12 +134,9 @@ if [[ ! -n $CIINSTALL ]]; then
     # execute sudo apt install skypeforlinux
     # execute rm SKYPE-GPG-KEY
 
-    # Franz
-    franz_base_web=https://github.com/meetfranz/franz/releases/
-    latest_franz=$(wget -q -O - $franz_base_web index.html | grep ".deb" | head -n 1 | cut -d \" -f 2)
-    execute aria2c --file-allocation=none -c -x 10 -s 10 -d /tmp -o franz.deb https://github.com/$latest_franz
-    sudo dpkg -i /tmp/franz.deb
-    execute sudo apt-get install -f
+    # Station, an electron app to manage commonly used websites
+    execute sudo aria2c --file-allocation=none -c -x 10 -s 10 -d /opt/ -o station.AppImage "https://dl.getstation.com/download/linux_64?filetype=AppImage"
+    sudo chmod +x /opt/station.AppImage
 
     su - ${USER}  # For user being added to docker group to take effect
 fi
