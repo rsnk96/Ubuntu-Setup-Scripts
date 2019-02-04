@@ -98,6 +98,7 @@ execute sudo apt-get update -y
 execute sudo apt-get install xdotool keepass2 -y
 
 execute sudo apt-get install vlc -y
+execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
 
 # Browsers
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
