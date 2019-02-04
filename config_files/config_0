@@ -1,7 +1,7 @@
 tilda_config_version = ""
 # command = ""
 font = "Monospace 10"
-key = "F2"
+key = "F3"
 addtab_key = "<Shift><Control>t"
 fullscreen_key = "F11"
 toggle_transparency_key = "F12"
