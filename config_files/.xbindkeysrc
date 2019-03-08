@@ -28,3 +28,19 @@
 # KeePass2 Auto-type
 "mono /usr/lib/keepass2/KeePass.exe --auto-type"
     Control+Alt + j
+
+# -- Move to Right Workspace --
+"xdotool set_desktop $(expr $(expr $(xdotool get_desktop) + 1) % $(xdotool get_num_desktops))"
+    Control+Mod2+Mod4 + Right
+
+# -- Move to Left Workspace --
+"xdotool set_desktop $(expr $(expr $(xdotool get_desktop) + $(expr $(xdotool get_num_desktops) - 1)) % $(xdotool get_num_desktops))"
+    Control+Mod2+Mod4 + Left
+
+# Show Desktop using Windows shortcut if on Ubuntu Mate/...
+#"xdotool key --clearmodifiers ctrl+alt+d"
+#    Mod2+Mod4+d
+
+# Screen magnifier
+"vmg &"
+    Mod2+Mod4+KP_Add
