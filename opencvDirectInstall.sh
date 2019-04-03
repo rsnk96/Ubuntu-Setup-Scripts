@@ -79,6 +79,8 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
         sed -i 's/--enable-shared\ \\/--enable-shared\ --cc="gcc -fPIC"\ \\/g' build-ffmpeg
+        # Build libaom with --enable-shared
+        sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
         AUTOINSTALL=yes ./build-ffmpeg --build
         echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
         {
