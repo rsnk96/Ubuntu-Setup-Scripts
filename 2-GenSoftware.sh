@@ -14,8 +14,10 @@ execute () {
 
 execute sudo apt-get install libboost-all-dev curl -y
 
-execute sudo add-apt-repository ppa:noobslab/themes -y
-execute sudo apt-get update
+if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -le 17 ]]; then
+	execute sudo add-apt-repository ppa:noobslab/themes -y
+	execute sudo apt-get update
+fi
 execute sudo apt-get install arc-theme -y
 
 # Install code editor of your choice
