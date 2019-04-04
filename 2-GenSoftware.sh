@@ -13,7 +13,10 @@ execute () {
 }
 
 execute sudo apt-get install libboost-all-dev curl -y
-execute sudo apt-get install arc-theme
+
+execute sudo add-apt-repository ppa:noobslab/themes -y
+execute sudo apt-get update
+execute sudo apt-get install arc-theme -y
 
 # Install code editor of your choice
 if [[ ! -n $CIINSTALL ]]; then
