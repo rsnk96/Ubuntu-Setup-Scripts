@@ -13,6 +13,9 @@ execute () {
 }
 
 execute sudo apt-get install libboost-all-dev curl -y
+
+execute sudo add-apt-repository ppa:noobslab/themes
+execute sudo apt-get update
 execute sudo apt-get install arc-theme
 
 # Install code editor of your choice
