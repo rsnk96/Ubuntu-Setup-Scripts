@@ -110,7 +110,7 @@ spatialPrint "Codecs"
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 execute sudo apt-get install yasm libtheora-dev libvorbis-dev libxvidcore-dev -y
-execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
+# execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
 
 spatialPrint "Java"
 execute sudo apt-get install -y ant default-jdk
@@ -191,8 +191,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
  -D PYTHON_DEFAULT_EXECUTABLE="$py3Ex" \
  -D WITH_FFMPEG=1 \
- -D WITH_V4L=1 \
- -D WITH_LIBV4L=1 \
+ -D WITH_V4L=0 \
+ -D WITH_LIBV4L=0 \
  -D WITH_TBB=1 \
  -D WITH_IPP=1 \
  -D ENABLE_FAST_MATH=1 \
