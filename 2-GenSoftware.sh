@@ -106,7 +106,7 @@ execute sudo apt-get install xdotool keepass2 -y
 execute sudo apt-get install vlc -y
 execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
 
-execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
+# execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
 
 # Browsers
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
