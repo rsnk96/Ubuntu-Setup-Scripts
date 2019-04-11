@@ -120,7 +120,7 @@ execute /opt/anaconda3/bin/conda install libgcc -y
 execute /opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab cython -y
 execute /opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab cython line_profiler -y
 execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython
-execute /opt/anaconda3/bin/conda install line_profiler msgpack
+execute /opt/anaconda3/bin/pip install line_profiler msgpack
 sed -i.bak "/anaconda3/d" ~/.zshrc
 
 execute /opt/anaconda3/bin/pip install autopep8 scdl org-e youtube-dl jupyterlab
