@@ -15,8 +15,12 @@ execute () {
 execute sudo apt-get install libboost-all-dev curl -y
 
 if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -le 17 ]]; then
+    execute sudo apt-get install unity-tweak-tool -y
 	execute sudo add-apt-repository ppa:noobslab/themes -y
 	execute sudo apt-get update
+else
+    execute sudo apt-get install gnome-tweak-tool -y
+    execute sudo apt-get install gnome-shell-extensions -y
 fi
 execute sudo apt-get install arc-theme -y
 
