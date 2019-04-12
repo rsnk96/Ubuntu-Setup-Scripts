@@ -68,7 +68,7 @@ if [[ ! -d "nvtop" ]]; then
 fi
 execute mkdir -p nvtop/build
 cd nvtop/build
-execute cmake -DCMAKE_BUILD_TYPE=Optimized ..
+execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
 execute make
 execute sudo make install
 
