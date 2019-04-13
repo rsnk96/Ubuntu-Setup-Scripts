@@ -79,8 +79,13 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
         sed -i 's/--enable-shared\ \\/--enable-shared\ --cc="gcc -fPIC"\ \\/g' build-ffmpeg
-        # Build libaom with --enable-shared
+        # Build libaom as a shared library
         sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
+        # Build libx265 as a shared library
+        sed -i 's/execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} -DENABLE_SHARED:bool=off ./execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} -DENABLE_SHARED:bool=on ./g' build-ffmpeg
+        # Build vidstab as a shared library. Although by default vidstab is built as a shared library, this is just additional precaution
+        sed -i 's/execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} ./execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} -DBUILD_SHARED_LIBS=1 ./g' build-ffmpeg
+        
         AUTOINSTALL=yes ./build-ffmpeg --build
         echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
         {
