@@ -15,12 +15,16 @@ execute () {
 execute sudo apt-get install libboost-all-dev curl -y
 
 if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -le 17 ]]; then
+    execute sudo add-apt-repository ppa:noobslab/themes -y
+    execute sudo apt-get update
+fi
+if [[ $XDG_CURRENT_DESKTOP = *"Unity"* ]]; then	# To be removed once Unity is phased out
     execute sudo apt-get install unity-tweak-tool -y
-	execute sudo add-apt-repository ppa:noobslab/themes -y
-	execute sudo apt-get update
-else
+elif [[ $XDG_CURRENT_DESKTOP = *"GNOME"* ]]; then
     execute sudo apt-get install gnome-tweak-tool -y
     execute sudo apt-get install gnome-shell-extensions -y
+elif [[ $XDG_CURRENT_DESKTOP = *"MATE"* ]]; then
+    execute sudo apt-get install mate-tweak -y
 fi
 execute sudo apt-get install arc-theme -y
 
