@@ -108,8 +108,7 @@ elif test "$tempvar" = "s"; then
     
     cd tensorflow
 #     Checkout the latest release candidate, as it should be relatively stable
-#     git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
-    git checkout master
+    git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
     
     if [[ ! -n $CIINSTALL ]]; then
         read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
@@ -127,7 +126,7 @@ elif test "$tempvar" = "s"; then
     bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
     
-    execute bazel-bin/tensorflow/tools/pip_package/build_pip_package --nightly_flag /tmp/tensorflow_pkg
+    execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
     execute $PIP /tmp/tensorflow_pkg/*.whl --force-reinstall
     cd ../
 
