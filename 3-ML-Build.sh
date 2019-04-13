@@ -60,18 +60,18 @@ else
     echo "Not adding Cuda to the PATH"
 fi
 
-
-spatialPrint "Installing nvtop"
-execute sudo apt-get install cmake libncurses5-dev git -y
-if [[ ! -d "nvtop" ]]; then
-    execute git clone --quiet https://github.com/Syllo/nvtop.git
+if which nvcc > /dev/null; then
+    spatialPrint "Installing nvtop"
+    execute sudo apt-get install cmake libncurses5-dev git -y
+    if [[ ! -d "nvtop" ]]; then
+        execute git clone --quiet https://github.com/Syllo/nvtop.git
+    fi
+    execute mkdir -p nvtop/build
+    cd nvtop/build
+    execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
+    execute make
+    execute sudo make install
 fi
-execute mkdir -p nvtop/build
-cd nvtop/build
-execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
-execute make
-execute sudo make install
-
 
 execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
