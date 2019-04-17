@@ -76,12 +76,13 @@ fi
 execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
 
-echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+BAZEL_VERSION="0.21.0"
+execute sudo apt-get install -y g++ zlib1g-dev bash-completion
+execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
+sudo dpkg -i bazel_*.deb
 
-execute sudo apt-get update
 execute $PIP wheel
-execute sudo apt-get install software-properties-common swig bazel -y
+execute sudo apt-get install software-properties-common swig -y
 
 if which nvcc > /dev/null; then execute sudo apt-get install libcupti-dev -y; fi
 
