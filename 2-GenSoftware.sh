@@ -108,6 +108,11 @@ execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
 execute sudo apt-get update
 execute sudo apt-get install grub-customizer -y
 
+# Screen Recorder
+execute sudo add-apt-repository ppa:maarten-baert/simplescreenrecorder -y
+execute sudo apt-get update
+execute sudo apt-get install simplescreenrecorder -y
+
 # Keepass 2
 execute sudo apt-add-repository ppa:jtaylor/keepass -y
 execute sudo apt-get update -y
