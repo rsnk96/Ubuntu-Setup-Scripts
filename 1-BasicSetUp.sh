@@ -107,7 +107,7 @@ continuum_website=https://repo.continuum.io/archive/
 # Stepwise filtering of the html at $continuum_website
 # Get the topmost line that matches our requirements, extract the file name.
 latest_anaconda_steup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-execute aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
+aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_steup}
 sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
