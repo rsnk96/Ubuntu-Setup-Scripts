@@ -67,7 +67,7 @@ if which nvcc > /dev/null; then
         execute git clone --quiet https://github.com/Syllo/nvtop.git
     fi
     execute mkdir -p nvtop/build
-    execute cd nvtop/build
+    cd nvtop/build
     execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
     execute make
     execute sudo make install
@@ -112,7 +112,7 @@ elif test "$tempvar" = "s"; then
     )
     fi
     
-    execute cd tensorflow
+    cd tensorflow
 #     Checkout the latest release candidate, as it should be relatively stable
     git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
     
@@ -127,15 +127,15 @@ elif test "$tempvar" = "s"; then
 	CI_OPTIM=" --config=noaws --config=nogcp --config=nohdfs --config=noignite --config=nokafka --config=nonccl"
     fi
 	
-    execute cd tensorflow
+    cd tensorflow
     execute bazel shutdown
     spatialPrint "Now using bazel to build Tensorflow"
     bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
-    execute cd ../
+    cd ../
     
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
     execute $PIP /tmp/tensorflow_pkg/*.whl --force-reinstall
-    execute cd ../
+    cd ../
 
 elif test "$tempvar" = "q";then
     echo "Skipping this step"
