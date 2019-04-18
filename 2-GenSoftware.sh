@@ -46,9 +46,11 @@ elif [ "$tempvar" = "a" ]; then
     execute sudo add-apt-repository ppa:webupd8team/atom
     execute sudo apt-get update; execute sudo apt-get install atom -y
 elif [ "$tempvar" = "s" ]; then
-    execute sudo add-apt-repository ppa:webupd8team/sublime-text-3
+    wget -q -O - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+    execute sudo apt-get install apt-transport-https -y
     execute sudo apt-get update
-    execute sudo apt-get install sublime-text-installer -y
+    execute sudo apt-get install sublime-text -y
 elif [ "$tempvar" = "q" ];then
     echo "Skipping this step"
 fi
