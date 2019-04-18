@@ -77,14 +77,11 @@ execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
 
 # To install the latest Bazel version, which has been commented out as of tensorflow v1.13 because the latest version is not supported yet
+# Uncomment the following lines and comment out the Bazel installation further down below in order to install the latest Bazel release
 # echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 # curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 # execute sudo apt-get update
 # execute sudo apt-get install bazel -y
-BAZEL_VERSION="0.21.0"
-execute sudo apt-get install -y g++ zlib1g-dev bash-completion
-execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
-sudo dpkg -i bazel_*.deb
 
 execute $PIP wheel
 execute sudo apt-get install software-properties-common swig -y
@@ -115,6 +112,14 @@ elif test "$tempvar" = "s"; then
     cd tensorflow
 #     Checkout the latest release candidate, as it should be relatively stable
     git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
+
+    # Install minimum required version of Bazel for the current Tensorflow release
+    BAZEL_VERSION="$(cat configure.py | grep "check_bazel_version('" | grep -o -E "[0-9].[1-9][1-9].[0-9]" | head -1)"
+    execute sudo apt-get install -y g++ zlib1g-dev bash-completion
+    cd ..
+    execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
+    sudo dpkg -i bazel_*.deb
+    cd tensorflow
     
     if [[ ! -n $CIINSTALL ]]; then
         read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
