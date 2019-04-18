@@ -133,7 +133,7 @@ execute sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 spatialPrint "Finally download and install opencv"
 git config --global http.postBuffer 1048576000
 if [[ ! -d "opencv" ]]; then
-	git clone --quiet https://github.com/Itseez/opencv
+	git clone https://github.com/Itseez/opencv
 else
 # Putting the git pull commands in paranthesis runs it in a subshell and avoids having to do cd ..
     (
@@ -144,7 +144,7 @@ else
     )
 fi
 if [[ ! -d "opencv_contrib" ]]; then
-	git clone --quiet https://github.com/Itseez/opencv_contrib
+	git clone https://github.com/Itseez/opencv_contrib
 else
     (
         cd opencv_contrib || exit
