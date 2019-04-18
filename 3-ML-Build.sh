@@ -76,6 +76,11 @@ fi
 execute $PIP numpy
 execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
 
+# To install the latest Bazel version, which has been commented out as of tensorflow v1.13 because the latest version is not supported yet
+# echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+# curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
+# execute sudo apt-get update
+# execute sudo apt-get install bazel -y
 BAZEL_VERSION="0.21.0"
 execute sudo apt-get install -y g++ zlib1g-dev bash-completion
 execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
@@ -118,7 +123,7 @@ elif test "$tempvar" = "s"; then
         if locate intel-mkl > /dev/null; then   MKL_OPTIM=" --config=mkl";   fi
     else
         echo "Configuring script now"
-        PYTHON_BIN_PATH=$(which python) TF_NEED_JEMALLOC=1 TF_NEED_AWS=0 TF_NEED_S3=0 TF_NEED_GCP=0 TF_NEED_KAFKA=0 TF_NEED_CUDA=0 TF_NEED_HDFS=0 TF_NEED_OPENCL_SYCL=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_CUDA_CLANG=0 TF_DOWNLOAD_CLANG=0 TF_NEED_MKL=0 TF_DOWNLOAD_MKL=0 TF_NEED_MPI=0 TF_NEED_GDR=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" ./configure
+        PYTHON_BIN_PATH=$(which python) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" TF_CUDA_CLANG=0 TF_NEED_CUDA=0TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" ./configure
     fi
 	
     cd tensorflow
