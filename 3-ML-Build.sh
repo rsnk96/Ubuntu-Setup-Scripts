@@ -100,7 +100,7 @@ if test "$tempvar" = "p"; then
     execute $PIP tensorflow$GPU_PRESENT
 elif test "$tempvar" = "s"; then
     if ! test -d "tensorflow"; then
-        execute git clone --quiet --recurse-submodules https://github.com/tensorflow/tensorflow
+        git clone --recurse-submodules https://github.com/tensorflow/tensorflow
     else
     (
         cd tensorflow || exit
@@ -114,7 +114,7 @@ elif test "$tempvar" = "s"; then
     git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
 
     # Install minimum required version of Bazel for the current Tensorflow release
-    BAZEL_VERSION="$(cat configure.py | grep "check_bazel_version('" | grep -o -E "[0-9].[1-9][1-9].[0-9]" | head -1)"
+    BAZEL_VERSION="$(cat configure.py | grep "check_bazel_version('" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
     execute sudo apt-get install -y g++ zlib1g-dev bash-completion
     cd ..
     execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
