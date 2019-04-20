@@ -123,7 +123,7 @@ elif test "$tempvar" = "s"; then
         if locate intel-mkl > /dev/null; then   MKL_OPTIM=" --config=mkl";   fi
     else
         echo "Configuring script now"
-        PYTHON_BIN_PATH=$(which python) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" TF_CUDA_CLANG=0 TF_NEED_CUDA=0 TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" ./configure
+        PYTHON_BIN_PATH=$(which python) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" TF_CUDA_CLANG=0 TF_NEED_CUDA=0 TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 TF_NEED_IGNITE=0 CC_OPT_FLAGS="-march=native" ./configure
 	CI_OPTIM=" --config=noaws --config=nogcp --config=nohdfs --config=noignite --config=nokafka --config=nonccl"
     fi
 	
