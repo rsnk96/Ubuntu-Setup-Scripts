@@ -36,7 +36,7 @@ fi
 
 execute sudo apt-get update -y
 if [[ ! -n $CIINSTALL ]]; then
-    execute sudo apt-get dist-upgrade -y
+    sudo apt-get dist-upgrade -y
     sudo apt-get install ubuntu-restricted-extras -y
 fi
 #sudo ubuntu-drivers autoinstall 
