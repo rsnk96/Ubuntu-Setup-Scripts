@@ -28,6 +28,16 @@ Then execute them in the terminal in the sequence of filenames.
 * `3-ML-Build.sh` - Compiles commonly used ML/DL libraries from source, so that it is optimized to run on your computer
 * `opencvDirectInstall.sh` - Compiles the latest tag of OpenCV+Contrib from source on your machine with focus on optimization of execution of OpenCV code.
 * `ML-Basic.sh` - Installs from pip commonly used DL libraries
+
+### Notes
+* Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
+* During the `opencvDirectInstall` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
+
+    * If you are on a browser, just open the following page - [http://www.tortall.net/](http://www.tortall.net/)  
+      If a webpage opens up, then the download will work.
+
+    * If you only have a terminal access, run this command : `curl -Is www.tortall.net | head -1`  
+      Output with Status code `200 OK` means that the request has succeeded and the URL is reachable.
 <br><br>
 
 ## Major Alterations
@@ -50,7 +60,10 @@ Then execute them in the terminal in the sequence of filenames.
 <br>
 
 ## Programs that are installed
-`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `Lyx`, `VLC`, `Chromium and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `Qt5`, `gimp`, `meld`(To be used with `git mergetool`), `aria2`, `tor` & `i2p`, `redshift`, `lm-sensors`, `ffmpeg`(might've missed some)
+`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `VLC`, `Google Chrome and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `gimp`, `meld` (To be used with `git mergetool`), `aria2`, `tor`, `redshift`, `lm-sensors`, `SimpleScreenRecorder` (might've missed some)  
+
+Text Editors:  `VS Code`, `Sublime Text 3`, `Atom` (any 1)  
+Arc themes with Tweak tool for Desktop customization
 
 ## Python Packages
 * Machine Learning Libraries: Tensorflow built from source, optimized for user hardware. Theano, Keras, OpenAI Gym and Pytorch installed from pip
@@ -89,8 +102,18 @@ Then execute them in the terminal in the sequence of filenames.
   ```
 
   If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
+* If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
+  * OpenCV   
+  Comment out the line fetching the [latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/opencvDirectInstall.sh#L158) in the `opencvDirectInstall` script.  
+  Add the line below the above commented out one specifying the OpenCV version which you want like this: `latest_tag="3.4.5"`  
+  Alternatively, you could just replace `$latest_tag` with the tag of the version in the following 2 lines: `git checkout -f $latest_tag`  
+  Make sure that the tag of the OpenCV version you want is correct. The tags of all the releases can be checked here - [https://github.com/opencv/opencv/tags](https://github.com/opencv/opencv/tags) 
+
+  * Tensorflow  
+  Similar to above, locate the line fetching the [latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/3-ML-Build.sh#L114) of Tensorflow and replace with the tag of the version required.  
+  The tags of all the Tensorflow releases can be checked here - [https://github.com/tensorflow/tensorflow/tags](https://github.com/tensorflow/tensorflow/tags)
 * These scripts are written and tested on the following configurations - 
-  * Ubuntu 14.04 & 16.04
+  * Ubuntu 16.04 & 18.04
   * 32-bit and 64-bit Intel Processors
   * `ML-Build.sh` - NVIDIA GPUs including but not limited to GeForce GTX 1080, 1070, 940MX, 850M, and Titan X
   
