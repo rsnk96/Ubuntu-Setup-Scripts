@@ -43,6 +43,12 @@ matrix:
       - conda info -a
       - CIINSTALL=yes ./2-GenSoftware.sh
       python: 3.6
+    - name: bionic-opencv
+      os: linux
+      sudo: required
+      dist: bionic
+      script: CIINSTALL=yes ./opencvDirectInstall.sh
+      python: 3.6
     - name: bionic-ml
       os: linux
       sudo: required
