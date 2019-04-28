@@ -25,14 +25,14 @@ execute () {
 }
 
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
-  SHELLRC=~/.zshrc
+    SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
-  SHELLRC=~/.bashrc
+    SHELLRC=~/.bashrc
 elif [[ -n $(echo $SHELL | grep "ksh") ]] ; then
-  SHELLRC=~/.kshrc
+    SHELLRC=~/.kshrc
 else
-  echo "Unidentified shell $SHELL"
-  exit # Ain't nothing I can do to help you buddy :P
+    echo "Unidentified shell $SHELL"
+    exit # Ain't nothing I can do to help you buddy :P
 fi
 
 # Speed up the process
@@ -52,12 +52,12 @@ execute sudo apt-get update
 execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
 execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
-if [[ $(command -v conda) || (-n $CIINSTALL) ]] ; then
-    PIP="pip install"
+if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
+    PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
 else
     execute sudo apt-get install python3 python3-dev python python-dev -y
     execute sudo apt-get install python3-tk python-tk -y
-    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip python-pip; fi
+    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip python-pip -y; fi
     PIP="sudo pip3 install"
 fi
 execute $PIP --upgrade numpy pip
