@@ -10,17 +10,17 @@ Every script is rock stable and runs against https://travis-ci.org to make sure 
 
 | 1-BasicSetUp and 2-GenSoftware | opencvDirectInstall |  ML-Basic            
 |-------------------|-------------------|-------------------|
-| [![Build1][1]][5] | [![Build2][2]][5] | [![Build4][4]][5] |
+| [![Build1][5]][9] | [![Build2][6]][9] | [![Build3][8]][9] |
 
-[1]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/1
-[2]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/2
-[4]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/4
-[5]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
+[5]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/5
+[6]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/6
+[8]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/8
+[9]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
 
 ## Usage instructions
 First download/clone this repository
 
-Run 
+Run
 `chmod u+x *.sh` to make all scripts executable
 Then execute them in the terminal in the sequence of filenames.
 * `1-BasicSetUp.sh` - Sets up terminal configuration, a download accelerator, anaconda python, and shell aliases.
@@ -41,7 +41,7 @@ Then execute them in the terminal in the sequence of filenames.
 <br><br>
 
 ## Major Alterations
-* Default python will be changed to Anaconda, with the latest Python 3, and conda environments called py27 and py36 running Python2.7 and Python3.6 respectively will be your alternate Python2 and Python 3.6 environments. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
+* Default python will be changed to Anaconda, with the latest Python 3. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
 * Default shell is changed to Zim, a zsh plugin, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 
 ## Aliases that are added
