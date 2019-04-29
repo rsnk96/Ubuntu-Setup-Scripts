@@ -111,14 +111,12 @@ aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${conti
 sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
 execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
-spatialPrint "Setting up your anaconda. Environments py27 and py36 will be created"
+spatialPrint "Setting up your anaconda"
 execute /opt/anaconda3/bin/conda update conda -y
 execute /opt/anaconda3/bin/conda clean --all -y
 execute /opt/anaconda3/bin/conda install ipython -y
 
 execute /opt/anaconda3/bin/conda install libgcc -y
-execute /opt/anaconda3/bin/conda create --name py27 python=2.7 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab cython -y
-execute /opt/anaconda3/bin/conda create --name py36 python=3.6 numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py jupyterlab cython line_profiler -y
 execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython
 execute /opt/anaconda3/bin/pip install msgpack
 execute /opt/anaconda3/bin/conda install line_profiler -y
@@ -131,8 +129,6 @@ execute /opt/anaconda3/bin/conda info --envs
 
 spatialPrint "Adding anaconda to path variables"
 {
-    echo "export OLDPATH=\$PATH"
-    echo ""
     echo "# Anaconda Python. Change the \"conda activate base\" to whichever environment you would like to activate by default"
     echo ". /opt/anaconda3/etc/profile.d/conda.sh"
     echo "conda activate base"
