@@ -3,7 +3,6 @@ opencv_contrib
 tensorflow
 zsh
 pytorch
-axel
 anacondaInstallScript.sh
-ffmpeg-build-script/
 nvtop/
+bazel_*
