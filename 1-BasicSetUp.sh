@@ -58,6 +58,12 @@ cp ./config_files/.tmux.conf.local ~
 mkdir -p ~/.config/tilda
 cp ./config_files/config_0 ~/.config/tilda/
 
+#Checks if ZSH is partially or completely Installed to Remove the folders and reinstall it
+zsh_folder=/opt/.zsh/
+if [[ -d $zsh_folder ]];then
+	sudo rm -r /opt/.zsh/*
+fi
+
 spatialPrint "Setting up Zsh + Zim now"
 sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
