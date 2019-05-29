@@ -1,21 +1,21 @@
 #!/bin/bash
 
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
-  SHELLRC=~/.zshrc
+    SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
-  SHELLRC=~/.bashrc
+    SHELLRC=~/.bashrc
 elif [[ -n $(echo $SHELL | grep "ksh") ]] ; then
-  SHELLRC=~/.kshrc
+    SHELLRC=~/.kshrc
 else
-  echo "Unidentified shell $SHELL"
-  exit # Ain't nothing I can do to help you buddy :P
+    echo "Unidentified shell $SHELL"
+    exit # Ain't nothing I can do to help you buddy :P
 fi
 
 # To note: the execute() function doesn't handle pipes well
 execute () {
-	echo "$ $*"
-	OUTPUT=$($@ 2>&1)
-	if [ $? -ne 0 ]; then
+    echo "$ $*"
+    OUTPUT=$($@ 2>&1)
+    if [ $? -ne 0 ]; then
         echo "$OUTPUT"
         echo ""
         echo "Failed to Execute $*" >&2
@@ -34,7 +34,25 @@ if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     source $SHELLRC
 fi
 
-if which nvcc > /dev/null; then GPU_PRESENT="-gpu"; fi
+if which nvcc > /dev/null; then 
+    GPU_PRESENT="-gpu";
+    spatialPrint "Installing nvtop"
+    execute sudo apt-get install cmake libncurses5-dev git -y
+    if [[ ! -d "nvtop" ]]; then
+        execute git clone --quiet https://github.com/Syllo/nvtop.git
+    else
+    (
+        cd nvtop || exit
+        execute git pull origin master
+    )
+    fi
+    execute mkdir -p nvtop/build
+    cd nvtop/build
+    execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
+    execute make
+    execute sudo make install
+    cd ../../
+fi
 
 if [[ $(command -v conda) || (-n $CIINSTALL) ]]; then
     PIP="pip install"
