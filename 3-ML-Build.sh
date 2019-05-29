@@ -65,12 +65,18 @@ if which nvcc > /dev/null; then
     execute sudo apt-get install cmake libncurses5-dev git -y
     if [[ ! -d "nvtop" ]]; then
         execute git clone --quiet https://github.com/Syllo/nvtop.git
+    else
+    (
+        cd nvtop || exit
+        execute git pull origin master
+    )
     fi
     execute mkdir -p nvtop/build
     cd nvtop/build
     execute cmake -DCMAKE_BUILD_TYPE=Optimized -DNVML_RETRIEVE_HEADER_ONLINE=True ..
     execute make
     execute sudo make install
+    cd ../../
 fi
 
 execute $PIP numpy
