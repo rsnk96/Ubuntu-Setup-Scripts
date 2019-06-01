@@ -78,7 +78,7 @@ echo "source /opt/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 
-execute sudo apt-get install aria2
+execute sudo apt-get install aria2 -y
 
 touch /opt/.zsh/bash_aliases
 ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
