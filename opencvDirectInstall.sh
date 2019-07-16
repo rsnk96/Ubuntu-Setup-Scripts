@@ -49,7 +49,7 @@ fi
 
 
 execute sudo apt-get update
-execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config -y
+execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall -y
 execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
 if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
@@ -173,13 +173,23 @@ py3Ex=$(which python3)
 py3In=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
 py3Pack=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 
-# This removes Anaconda from the path, if it's there.
-# Don't worry, your OpenCV WILL STILL BE INSTALLED FOR ANACONDA PYTHON if it is the default python
-# This is important as anaconda has a malformed MKL library
-export TEMP=$PATH
+# Anaconda no longer has the malformed MKL library, (if you are using an older Anaconda, use earlier versions of this file)
+# However, the font and pangoft libraries still cause problems. Hence, need to rename them
 if [[ -n $(echo $PATH | grep 'conda') ]] ; then
-    echo "Your PATH variable will be changed for the installation. Anaconda will be removed from the PATH because it messes the linkings and dependencies"
-    export PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "conda[2-9]\?" | uniq | tr '\n' ':')
+    echo "Some of your Conda libraries will be renamed so that QT windows display properly"
+    CONDA_PATH=$(echo "$PATH" | tr ':' '\n' | grep "conda[2-9]\?" | head -1 | tr '/' '\n' | head -n -1 | tr '\n' '/')
+    (
+        cd $CONDA_PATH
+        cd lib
+
+        for f in libfontconfig.so*; do
+            mv -- "$f" "${f/.so/.so_renamed}"
+        done
+
+        for f in libpangoft2-1.0.so*; do
+            mv -- "$f" "${f/.so/.so_renamed}"
+        done
+    )
 fi
 
 
@@ -223,12 +233,10 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 
 spatialPrint "Making and installing"
 make -j $MJOBS
-sudo make install
+sudo checkinstall -y
 
 spatialPrint "Finishing off installation"
 sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
-
-export PATH=$TEMP
 
 echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
