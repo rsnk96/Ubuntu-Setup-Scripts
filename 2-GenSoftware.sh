@@ -78,8 +78,8 @@ execute sudo apt-get install tlp tlp-rdw -y
 sudo tlp start
 
 # Multiload and other sensor applets
-execute sudo apt-get install lm-sensors hddtemp
-execute sudo apt-get install psensor xsensors
+execute sudo apt-get install lm-sensors hddtemp -y
+execute sudo apt-get install psensor xsensors -y
 execute sudo apt-get update
 
 execute sudo apt-get install redshift redshift-gtk shutter -y
@@ -96,30 +96,36 @@ execute sudo apt-get update
 execute sudo apt-get install -y boot-repair
 
 # Installation of Docker Community Edition
-execute wget get.docker.com -O dockerInstall.sh
-execute chmod +x dockerInstall.sh
-execute ./dockerInstall.sh
-execute rm dockerInstall.sh
-# Adds user to the `docker` group so that docker commands can be run without sudo
-execute sudo usermod -aG docker ${USER}
+if ! which docker > /dev/null; then
+    echo "Installing docker"
+    execute wget get.docker.com -O dockerInstall.sh
+    execute chmod +x dockerInstall.sh
+    execute ./dockerInstall.sh
+    execute rm dockerInstall.sh
+    # Adds user to the `docker` group so that docker commands can be run without sudo
+    execute sudo usermod -aG docker ${USER}
+fi
 
 # nvidia-docker2 installation
 # Only install if Nvidia GPU is present with drivers installed
 if which nvidia-smi > /dev/null; then
+    echo "Installing nvidia-docker"
     # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
     docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
     sudo apt-get purge -y nvidia-docker
 
     # Add package repositories, install nvidia-docker2 & reload Docker daemon config
-    execute curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
     distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
     curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C45B1676A04EA552
     execute sudo apt-get update
     execute sudo apt-get install -y nvidia-docker2
     execute sudo pkill -SIGHUP dockerd
 else
     echo "Skipping nvidia-docker2 installation. Requires Nvidia GPU with drivers installed"
 fi
+
 
 # Grub customization
 execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
