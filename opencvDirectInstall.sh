@@ -52,6 +52,9 @@ execute sudo apt-get update
 execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall -y
 execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
 
+spatialPrint "Image manipulation libraries"
+execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
+
 if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
     PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
 else
@@ -62,7 +65,7 @@ else
 fi
 execute $PIP --upgrade numpy pip
 execute $PIP --upgrade setuptools
-spatialPrint "Also instlaling skimage, dlib and moviepy as CV libraries"
+spatialPrint "Also installing skimage, dlib and moviepy as CV libraries"
 $PIP cython msgpack moviepy scikit-image
 $PIP dlib
 
@@ -103,9 +106,6 @@ fi
 spatialPrint "GUI and openGL extensions"
 execute sudo apt-get install qt5-default libqt5opengl5-dev libx11-dev libgtk-3-dev libgtkglext1-dev -y
 execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
-
-spatialPrint "Image manipulation libraries"
-execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 spatialPrint "Video manipulation libraries"
 execute sudo apt-get install libxine2-dev  -y
