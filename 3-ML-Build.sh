@@ -117,10 +117,11 @@ elif test "$tempvar" = "s"; then
     
     cd tensorflow
 #     Checkout the latest release candidate, as it should be relatively stable
-    git checkout $(git tag --sort=-creatordate | egrep -v '-' | head -1)
+    latest_tag="$(git tag --sort=-creatordate | egrep -v '-' | head -1)"
+    git checkout $latest_tag
 
     # Install minimum required version of Bazel for the current Tensorflow release
-    BAZEL_VERSION="$(cat configure.py | grep "check_bazel_version('" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
+    BAZEL_VERSION="$(cat configure.py | grep "_TF_MIN_BAZEL_VERSION" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
     execute sudo apt-get install -y g++ zlib1g-dev bash-completion
     cd ..
     execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
@@ -135,13 +136,18 @@ elif test "$tempvar" = "s"; then
     else
         echo "Configuring script now"
         PYTHON_BIN_PATH=$(which python) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" TF_CUDA_CLANG=0 TF_NEED_CUDA=0 TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" ./configure
-	CI_OPTIM=" --config=noaws --config=nogcp --config=nohdfs --config=noignite --config=nokafka --config=nonccl"
+	CI_OPTIM=" --config=noaws --config=nohdfs --config=noignite --config=nokafka --config=nonccl"
     fi
 	
     cd tensorflow
     execute bazel shutdown
     spatialPrint "Now using bazel to build Tensorflow"
-    bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
+    
+    if [[ $(echo $latest_tag | grep -o -E "v[0-9]") == "v1" ]]; then
+        VERS=" --config=v1";
+    fi
+
+    bazel build ${VERS} --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
     
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
