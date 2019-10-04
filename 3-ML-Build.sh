@@ -160,7 +160,7 @@ if which conda > /dev/null; then
     execute conda install numpy pyyaml mkl mkl-include setuptools cmake cffi typing -y
     execute conda install -c mingfeima mkldnn -y
     # Add LAPACK support for the GPU
-    if which nvcc > /dev/null; then execute conda install -c soumith magma-cuda90 -y; fi
+    if which nvcc > /dev/null; then execute conda install -c soumith magma-cuda100 -y; fi
     if ! test -d "pytorch"; then
         execute git clone --quiet --recursive https://github.com/pytorch/pytorch
     else
