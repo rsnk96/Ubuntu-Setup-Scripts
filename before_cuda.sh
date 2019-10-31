@@ -47,7 +47,7 @@ fi
 execute sudo apt-get install git -y
 rm -rf ~/.z*
 execute sudo apt-get install tilda tmux -y
-execute sudo apt-get install gimp meld -y
+execute sudo apt-get install meld -y
 execute sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
 execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/.vimrc ~
@@ -65,7 +65,7 @@ if [[ -d $zsh_folder ]];then
 fi
 
 spatialPrint "Setting up Zsh + Zim now"
-sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
+sudo apt install zsh
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
@@ -123,15 +123,11 @@ execute /opt/anaconda3/bin/conda clean --all -y
 execute /opt/anaconda3/bin/conda install ipython -y
 
 execute /opt/anaconda3/bin/conda install libgcc -y
-execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython
+execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter jupyterlab notebook pandas h5py cython
 execute /opt/anaconda3/bin/pip install msgpack
 execute /opt/anaconda3/bin/conda install line_profiler -y
 sed -i.bak "/anaconda3/d" ~/.zshrc
 
-execute /opt/anaconda3/bin/pip install autopep8 scdl org-e youtube-dl jupyterlab
-echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
-
-execute /opt/anaconda3/bin/conda info --envs
 
 spatialPrint "Adding anaconda to path variables"
 {
@@ -144,26 +140,115 @@ spatialPrint "Adding anaconda to path variables"
     echo "fi"
 } >> ~/.zshrc
 
-# echo "*************************** NOTE *******************************"
-# echo "If you ever mess up your anaconda installation somehow, do"
-# echo "\$ conda remove anaconda matplotlib mkl mkl-service nomkl openblas"
-# echo "\$ conda clean --all"
-# echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
+sudo add-apt-repository ppa:graphics-drivers/ppa -y
+execute sudo apt-get update
+sudo ubuntu-drivers autoinstall
 
-## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
-# sudo add-apt-repository ppa:graphics-drivers/ppa -y
-# execute sudo apt-get update
-# sudo ubuntu-drivers autoinstall
-# echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
-# echo "Also, when installing CUDA next, ********don't******* install display drivers."
-# echo "In case your drivers don't work, purge gdm3 and use lightdm (sudo apt-get purge lightdm && sudo dpkg-reconfigure gdm3)"
-# read temp
+# spatialPrint "The script has finished."
+# if [[ ! -n $CIINSTALL ]]; then
+#     # echo "The terminal instance will now close so that the shell changes can take place"
+#     # read -p "Press [Enter] to continue..." temp
+#     # kill -9 $PPID
+#     su - $USER
+# fi
 
 
-spatialPrint "The script has finished."
-if [[ ! -n $CIINSTALL ]]; then
-    # echo "The terminal instance will now close so that the shell changes can take place"
-    # read -p "Press [Enter] to continue..." temp
-    # kill -9 $PPID
-    su - $USER
+execute sudo apt-get install libboost-all-dev curl -y
+
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+execute sudo apt-get install apt-transport-https -y
+execute sudo apt-get update
+execute sudo apt-get install code -y # or code-insiders
+execute rm microsoft.gpg
+
+# Recommended libraries for Nvidia CUDA
+execute sudo apt-get install freeglut3 freeglut3-dev libxi-dev libxmu-dev -y
+
+
+# Enable partner repositories if disabled
+sudo sed -i.bak "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
+execute sudo apt-get update
+
+# TLP manager 
+execute sudo add-apt-repository ppa:linrunner/tlp -y
+execute sudo apt-get update
+execute sudo apt-get install tlp tlp-rdw -y
+sudo tlp start
+
+# Multiload and other sensor applets
+execute sudo apt-get install lm-sensors hddtemp -y
+execute sudo apt-get install psensor xsensors -y
+execute sudo apt-get update
+
+execute sudo apt-get install shutter -y
+
+mkdir -p ~/.config/autostart
+cp ./config_files/tilda.desktop ~/.config/autostart
+cp ./config_files/redshift-gtk.desktop ~/.config/autostart
+
+execute sudo apt-get install htop gparted expect -y
+
+# Boot repair
+execute sudo add-apt-repository ppa:yannubuntu/boot-repair -y
+execute sudo apt-get update
+execute sudo apt-get install -y boot-repair
+
+# Installation of Docker Community Edition
+if ! which docker > /dev/null; then
+    echo "Installing docker"
+    execute wget get.docker.com -O dockerInstall.sh
+    execute chmod +x dockerInstall.sh
+    execute ./dockerInstall.sh
+    execute rm dockerInstall.sh
+    # Adds user to the `docker` group so that docker commands can be run without sudo
+    execute sudo usermod -aG docker ${USER}
 fi
+
+# nvidia-docker installation
+# Only install if Nvidia GPU is present with drivers installed
+if which nvidia-smi > /dev/null; then
+    echo "Installing nvidia-docker"
+    # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+    execute sudo apt-get update
+    execute sudo apt-get install -y nvidia-container-toolkit
+    execute sudo systemctl restart docker
+else
+    echo "Skipping nvidia-docker2 installation. Requires Nvidia GPU with drivers installed"
+fi
+
+
+# Grub customization
+execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
+execute sudo apt-get update
+execute sudo apt-get install grub-customizer -y
+
+# Screen Recorder
+execute sudo apt-get update
+execute sudo apt-get install kazam -y
+
+execute sudo apt-get install vlc -y
+execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
+
+if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -ge 18 ]]; then
+    execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
+fi
+
+# Browsers
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+execute sudo apt-get update  -y
+execute sudo apt-get install google-chrome-stable -y
+execute sudo apt-get install firefox -y
+
+if [[ ! -n $CIINSTALL ]]; then
+    execute sudo apt-get install adobe-flashplugin -y
+    su - ${USER}  # For user being added to docker group to take effect
+fi
+
+echo "Script finished"
