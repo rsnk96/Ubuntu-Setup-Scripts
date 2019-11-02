@@ -65,7 +65,7 @@ if [[ -d $zsh_folder ]];then
 fi
 
 spatialPrint "Setting up Zsh + Zim now"
-sudo apt install zsh
+sudo apt install zsh -y
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
