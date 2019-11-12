@@ -45,9 +45,8 @@ fi
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
 execute sudo apt-get install git -y
-rm -rf ~/.z*
 execute sudo apt-get install tilda tmux -y
-execute sudo apt-get install gimp meld -y
+execute sudo apt-get install gimp -y
 execute sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
 execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/.vimrc ~
@@ -59,13 +58,14 @@ mkdir -p ~/.config/tilda
 cp ./config_files/config_0 ~/.config/tilda/
 
 #Checks if ZSH is partially or completely Installed to Remove the folders and reinstall it
+rm -rf ~/.z*
 zsh_folder=/opt/.zsh/
 if [[ -d $zsh_folder ]];then
 	sudo rm -r /opt/.zsh/*
 fi
 
 spatialPrint "Setting up Zsh + Zim now"
-sh -c "$(wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O -)"
+sudo apt install zsh
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
@@ -88,7 +88,7 @@ spatialPrint "Adding aliases to ~/.bash_aliases"
     echo "alias jl=\"jupyter lab\""
     echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\""
     echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
-    echo "alias server=\"ifconfig | grep inet\\ addr && python3 -m http.server\""
+    echo "alias server=\"ifconfig | grep inet && python3 -m http.server\""
     echo "alias gpom=\"git push origin master\""
     echo "alias update=\"sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y\""
     echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10\""
