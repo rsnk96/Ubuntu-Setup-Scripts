@@ -90,3 +90,9 @@ zhighlighters=(main brackets cursor)
 
 # Load any helper scripts as defined here
 #zpacman_helper=(aur)
+
+#
+# Keybindings for Ctrl+Backspace and Ctrl+Delete to work in any terminal running zsh
+#
+bindkey '^H' backward-kill-word
+bindkey -M emacs '^[[3;5~' kill-word

@@ -52,8 +52,8 @@ execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/.vimrc ~
 
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
-cp ./config_files/.tmux.conf ~
-cp ./config_files/.tmux.conf.local ~
+cp ./config_files/tmux.conf ~/.tmux.conf
+cp ./config_files/tmux.conf.local ~/.tmux.conf.local
 mkdir -p ~/.config/tilda
 cp ./config_files/config_0 ~/.config/tilda/
 
@@ -142,6 +142,9 @@ spatialPrint "Adding anaconda to path variables"
     echo "if [ -f ~/.bash_aliases ]; then"
     echo "  source ~/.bash_aliases"
     echo "fi"
+
+    echo "Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
+    echo "export TERM=xterm-256color"
 } >> ~/.zshrc
 
 # echo "*************************** NOTE *******************************"

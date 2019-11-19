@@ -265,3 +265,7 @@ set -g mouse on
 
 # move status line to top
 #set -g status-position top
+
+# Shifting windows
+bind S-Left  previous-window
+bind S-Right next-window

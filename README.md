@@ -124,6 +124,16 @@ Arc themes with Tweak tool for Desktop customization
 * A [docker image](https://hub.docker.com/r/varun19299/cvi-iitm/) for this set-up (last updated Jan 30th, 2017)
 * A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
 
+
+## Tmux shortcuts that are setup:
+In the description of shortcuts below, if two keys are connected with a `+`, then the second key is to be pressed while keeping the first key pressed. If two keys are connected with a ` `(space), then the previous key/keys are to be released before the next key is pressed. If two keys are separated by a `/`, then it means you can choose any of the specified keys
+* `Ctrl+b c`: Create a new window within the tmux session
+* `Ctrl+b \`: Split existing window into two panes vertically
+* `Ctrl+b -`: Split existing window into two panes horizontally
+* `Alt+Right/Left/Up/Down`: Switch between the panes of the same window
+* `Ctrl+b Shift+Left/Right`: Switch between the windows of the tmux session
+
+
 ## To Dos 
 - [x] CI
 - [ ] configuring default wifi settings
