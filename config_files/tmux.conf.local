@@ -269,3 +269,6 @@ set -g mouse on
 # Shifting windows
 bind S-Left  previous-window
 bind S-Right next-window
+
+# For page up and page down
+bind Pageup copy-mode -u

@@ -58,8 +58,8 @@ if [[ $(command -v conda) || (-n $CIINSTALL) ]]; then
     PIP="pip install"
 else
     execute sudo apt-get update
-    execute sudo apt-get install python3 python3-dev python-dev python-tk -y
-    if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip python-pip; fi
+    # execute sudo apt-get install python3 python3-dev python-dev python-tk -y
+    # if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip python-pip; fi
     PIP="sudo pip3 install"
 fi
 

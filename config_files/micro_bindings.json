@@ -1,0 +1,13 @@
+{
+	"CtrlLeft": "WordLeft",
+	"CtrlRight": "WordRight",
+	"CtrlShiftUp": "SelectUp",
+	"CtrlShiftDown": "SelectDown",
+	"CtrlShiftLeft": "SelectWordLeft",
+	"CtrlShiftRight": "SelectWordRight",
+	"CtrlShiftHome": "SelectToStart",
+	"CtrlShiftEnd": "SelectToEnd",
+	"ShiftPageUp": "SelectPageUp",
+	"ShiftPageDown": "SelectPageDown",
+	"CtrlW": "Quit"
+}
