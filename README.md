@@ -59,36 +59,27 @@ Then execute them in the terminal in the sequence of filenames.
 
 <br>
 
-## Programs that are installed
-`Tmux`, `Tilda`, `Ubuntu-Restricted-Extras`, `VLC`, `Google Chrome and Firefox`, `Dropbox`, `Gparted`, `Boot-Repair`, `Shutter`,`Grub Customizer`, `Ffmpeg`, `gimp`, `meld` (To be used with `git mergetool`), `aria2`, `tor`, `redshift`, `lm-sensors`, `SimpleScreenRecorder` (might've missed some)  
-
-Text Editors:  `VS Code`, `Sublime Text 3`, `Atom` (any 1)  
-Arc themes with Tweak tool for Desktop customization
-
-## Python Packages
-* Machine Learning Libraries: Tensorflow built from source, optimized for user hardware. Theano, Keras, OpenAI Gym and Pytorch installed from pip
-* OpenCV: Compiled from source, multithreaded and optimized to use your hardware
-* Autopep8
-* scdl - a soundcloud downloader
-* org-e - An app to sort and declutter folders (like ~/Downloads/)
-* youtube-dl: A youtube downloader
-
 ## Notes
 * If you are using this script to set up a computer with many users,
     * You need to run these scripts using only one user, say `first_user`
-    * We need to copy the configuration files to the new user, say `new_user`. From `first_user`'s account, run the following
+    * We need to copy the configuration files to the new user, say `new_user`. From `first_user`'s account, run the following after entering the username of the `new_user` in the second line of this snippet
         ```bash
-        ln -s /opt/.zsh/zim/ /home/<new_user>/.zim
-        cp /opt/.zsh/bash_aliases /home/<new_user>/.bash_aliases
-        cp -s /opt/.zsh/zim/templates/zimrc /home/<new_user>/.zimrc
-        cp -s /opt/.zsh/zim/templates/zlogin /home/<new_user>/.zlogin
-        cp -s /opt/.zsh/zim/templates/zshrc /home/<new_user>/.zshrc
+        cd ~
+        export NEW_USER=<username_of_new_user>
+        cp /opt/.zsh/zim/ /home/$NEW_USER/.zim
+        cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
+        cp /opt/.zsh/zim/templates/zimrc /home/$NEW_USER/.zimrc
+        cp /opt/.zsh/zim/templates/zlogin /home/$NEW_USER/.zlogin
+        cp /opt/.zsh/zim/templates/zshrc /home/$NEW_USER/.zshrc
 
-        cp ~/.xbindkeysrc /home/<new_user>
-        mkdir -p /home/<new_user>/.config/tilda
-        cp ~/.config/tilda/config_0 /home/<new_user>/.config/tilda/config_0
+        cp ~/.xbindkeysrc /home/$NEW_USER
+        mkdir -p /home/$NEW_USER/.config/tilda
+        cp ~/.config/tilda/config_0 /home/$NEW_USER/.config/tilda/config_0
+        mkdir -p /home/$NEW_USER/.config/micro
+        cp ~/.config/micro/bindings.json /home/$NEW_USER/.config/micro/bindings.json
+        cp ~/.tmux.local* /home/$NEW_USER/
 
-        sudo chown <new_user>: /home/<new_user>/*
+        sudo chown -R $NEW_USER: /home/$NEW_USER/*
         ```
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
@@ -120,18 +111,19 @@ Arc themes with Tweak tool for Desktop customization
   Although it should work on other configurations out of the box, I have not tested them
 
 
-## Alternatives
-* A [docker image](https://hub.docker.com/r/varun19299/cvi-iitm/) for this set-up (last updated Jan 30th, 2017)
-* A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
-
-
-## Tmux shortcuts that are setup:
+## Tmux shortcuts conf:
 In the description of shortcuts below, if two keys are connected with a `+`, then the second key is to be pressed while keeping the first key pressed. If two keys are connected with a ` `(space), then the previous key/keys are to be released before the next key is pressed. If two keys are separated by a `/`, then it means you can choose any of the specified keys
 * `Ctrl+b c`: Create a new window within the tmux session
 * `Ctrl+b \`: Split existing window into two panes vertically
 * `Ctrl+b -`: Split existing window into two panes horizontally
 * `Alt+Right/Left/Up/Down`: Switch between the panes of the same window
 * `Ctrl+b Shift+Left/Right`: Switch between the windows of the tmux session
+* `Ctrl+b [`: Go into tmux copy mode (enable selection of text from the tmux buffer quickly using just your keyboard). Go to your preferred start point, press `Space` to start the selection of the copy section. Press `Enter` at the end point
+
+
+## Alternatives
+* A [docker image](https://hub.docker.com/r/varun19299/cvi-iitm/) for this set-up (last updated Jan 30th, 2017)
+* A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
 
 
 ## To Dos 

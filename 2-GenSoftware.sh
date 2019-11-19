@@ -129,9 +129,9 @@ execute sudo apt-get update
 execute sudo apt-get install grub-customizer -y
 
 # Screen Recorder
-execute sudo add-apt-repository ppa:maarten-baert/simplescreenrecorder -y
+execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
 execute sudo apt-get update
-execute sudo apt-get install simplescreenrecorder -y
+execute sudo apt-get install kazam -y
 
 # Keepass 2
 execute sudo apt-add-repository ppa:jtaylor/keepass -y
@@ -154,13 +154,13 @@ execute sudo apt-get install google-chrome-stable -y
 execute sudo apt-get install firefox -y
 
 # Install tor
-if [[ ! -n $(lsb_release -d | grep 18) ]]; then
-    execute sudo add-apt-repository ppa:webupd8team/tor-browser -y
-    execute sudo apt-get update -y
-    execute sudo apt-get install tor-browser -y
-else
-    execute sudo apt-get install tor torbrowser-launcher -y
-fi
+#if [[ ! -n $(lsb_release -d | grep 18) ]]; then
+#    execute sudo add-apt-repository ppa:webupd8team/tor-browser -y
+#    execute sudo apt-get update -y
+#    execute sudo apt-get install tor-browser -y
+#else
+#    execute sudo apt-get install tor torbrowser-launcher -y
+#fi
 
 # # # Install I2P
 # # execute sudo apt-add-repository ppa:i2p-maintainers/i2p -y
@@ -179,10 +179,6 @@ if [[ ! -n $CIINSTALL ]]; then
     # execute sudo apt update
     # execute sudo apt install skypeforlinux
     # execute rm SKYPE-GPG-KEY
-
-    # Station, an electron app to manage commonly used websites
-    execute sudo aria2c --file-allocation=none -c -x 10 -s 10 -d /opt/ -o station.AppImage "https://dl.getstation.com/download/linux_64?filetype=AppImage"
-    sudo chmod +x /opt/station.AppImage
 
     su - ${USER}  # For user being added to docker group to take effect
 fi
