@@ -48,8 +48,9 @@ execute sudo apt-get install git -y
 execute sudo apt-get install tilda tmux -y
 execute sudo apt-get install gimp -y
 execute sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
-execute sudo apt-get install micro vim-gui-common vim-runtime -y
+execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/vimrc ~/.vimrc
+execute snap install micro --classic
 mkdir -p ~/.config/micro/
 cp ./config_files/micro_bindings.json ~/.config/micro/bindings.json
 
