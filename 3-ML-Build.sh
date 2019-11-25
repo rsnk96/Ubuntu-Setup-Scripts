@@ -80,7 +80,7 @@ if which nvcc > /dev/null; then
 fi
 
 execute $PIP numpy
-execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk
+execute sudo apt-get install -y build-essential cmake pkg-config openjdk-8-jdk libhdf5-dev
 
 # To install the latest Bazel version, which has been commented out as of tensorflow v1.13 because the latest version is not supported yet
 # Uncomment the following lines and comment out the Bazel installation further down below in order to install the latest Bazel release
