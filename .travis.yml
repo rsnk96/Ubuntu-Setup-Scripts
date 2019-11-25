@@ -11,25 +11,25 @@ matrix:
       - hash -r  # To reload env vars like PATH
       - conda info -a
       - CIINSTALL=yes ./2-GenSoftware.sh
-      python: 3.8
+      python: 3.7
     - name: xenial-opencv
       os: linux
       sudo: required
       dist: xenial
       script: CIINSTALL=yes ./opencvDirectInstall.sh
-      python: 3.8
+      python: 3.7
     - name: xenial-ml
       os: linux
       sudo: required
       dist: xenial
       script: CIINSTALL=yes ./3-ML-Build.sh
-      python: 3.8
+      python: 3.7
     - name: xenial-ml-basic
       os: linux
       sudo: required
       dist: xenial
       script: CIINSTALL=yes ./ML-Basic.sh
-      python: 3.8
+      python: 3.7
     - name: bionic-basic
       os: linux
       sudo: required
@@ -40,25 +40,25 @@ matrix:
       - hash -r  # To reload env vars like PATH
       - conda info -a
       - CIINSTALL=yes ./2-GenSoftware.sh
-      python: 3.8
+      python: 3.7
     - name: bionic-opencv
       os: linux
       sudo: required
       dist: bionic
       script: CIINSTALL=yes ./opencvDirectInstall.sh
-      python: 3.8
+      python: 3.7
     - name: bionic-ml
       os: linux
       sudo: required
       dist: bionic
       script: CIINSTALL=yes ./3-ML-Build.sh
-      python: 3.8
+      python: 3.7
     - name: bionic-ml-basic
       os: linux
       sudo: required
       dist: bionic
       script: CIINSTALL=yes ./ML-Basic.sh
-      python: 3.8
+      python: 3.7
 before_install:
     - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
     - sudo apt-get update -qq
