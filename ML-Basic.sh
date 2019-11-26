@@ -63,6 +63,8 @@ else
     PIP="sudo pip3 install"
 fi
 
+execute sudo apt-get install libhdf5-dev
+
 $PIP --upgrade numpy tabulate python-dateutil
 execute $PIP keras gensim networkx --upgrade
 execute $PIP tensorflow$GPU_PRESENT --upgrade
