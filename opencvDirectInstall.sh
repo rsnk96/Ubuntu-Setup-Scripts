@@ -24,6 +24,14 @@ execute () {
     fi
 }
 
+# Executes first command passed &
+# echo's it to the file passed as second argument 
+run_and_echo () {
+    eval $1
+    echo "$1" >> $2
+}
+
+
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
     SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
@@ -90,17 +98,17 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         sed -i 's/execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} ./execute cmake -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} -DBUILD_SHARED_LIBS=1 ./g' build-ffmpeg
         
         AUTOINSTALL=yes ./build-ffmpeg --build
+
         echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
         {
             echo ""
             echo "# ffmpeg-build-script"
-            echo "export LD_LIBRARY_PATH=$(pwd)/workspace/lib:\$LD_LIBRARY_PATH"
-            echo "export PKG_CONFIG_PATH=$(pwd)/workspace/lib/pkgconfig:\$(pkg-config --variable pc_path pkg-config)"
-            echo "export PKG_CONFIG_LIBDIR=$(pwd)/workspace/lib/:\$PKG_CONFIG_LIBDIR"
-
         } >> $SHELLRC
+
+        run_and_echo "export LD_LIBRARY_PATH=$(pwd)/workspace/lib:\$LD_LIBRARY_PATH" $SHELLRC
+        run_and_echo "export PKG_CONFIG_PATH=$(pwd)/workspace/lib/pkgconfig:\$(pkg-config --variable pc_path pkg-config)" $SHELLRC
+        run_and_echo "export PKG_CONFIG_LIBDIR=$(pwd)/workspace/lib/:\$PKG_CONFIG_LIBDIR" $SHELLRC
     )
-    source $SHELLRC
 fi
 
 spatialPrint "GUI and openGL extensions"
