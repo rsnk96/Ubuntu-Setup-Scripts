@@ -66,9 +66,8 @@ execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libw
 if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
     PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
 else
-    execute sudo apt-get install python3 python3-dev python python-dev -y
-    execute sudo apt-get install python3-tk python-tk -y
-    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip python-pip -y; fi
+    execute sudo apt-get install python3 python3-dev -y
+    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip -y; fi
     PIP="sudo pip3 install"
 fi
 execute $PIP --upgrade numpy pip
@@ -174,9 +173,6 @@ git checkout -f $latest_tag
 mkdir -p build
 cd build
 
-py2Ex=$(which python2)
-py2In=$(python2 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
-py2Pack=$(python2 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 py3Ex=$(which python3)
 py3In=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
 py3Pack=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
@@ -206,9 +202,6 @@ fi
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
- -D PYTHON2_EXECUTABLE="$py2Ex" \
- -D PYTHON2_INCLUDE_DIR="$py2In" \
- -D PYTHON2_PACKAGES_PATH="$py2Pack" \
  -D PYTHON3_EXECUTABLE="$py3Ex" \
  -D PYTHON3_INCLUDE_DIR="$py3In" \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
