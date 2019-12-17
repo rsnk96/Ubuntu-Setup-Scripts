@@ -58,7 +58,7 @@ fi
 
 execute sudo apt-get update
 execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall -y
-execute sudo apt-get install libopenblas-dev liblapack-dev libatlas-base-dev gfortran -y
+execute sudo apt-get install libopenblas-dev liblapacke-dev libatlas-base-dev gfortran -y
 
 spatialPrint "Image manipulation libraries"
 execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
