@@ -107,6 +107,11 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         run_and_echo "export LD_LIBRARY_PATH=$(pwd)/workspace/lib:\$LD_LIBRARY_PATH" $SHELLRC
         run_and_echo "export PKG_CONFIG_PATH=$(pwd)/workspace/lib/pkgconfig:\$(pkg-config --variable pc_path pkg-config)" $SHELLRC
         run_and_echo "export PKG_CONFIG_LIBDIR=$(pwd)/workspace/lib/:\$PKG_CONFIG_LIBDIR" $SHELLRC
+
+        # Update shell environment with the changes
+        if [[ ! -n $CIINSTALL ]]; then
+            su - $USER
+        fi
     )
 fi
 
