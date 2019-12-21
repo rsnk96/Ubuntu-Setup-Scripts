@@ -29,16 +29,6 @@ Then execute them in the terminal in the sequence of filenames.
 * `opencvDirectInstall.sh` - Compiles the latest tag of OpenCV+Contrib from source on your machine with focus on optimization of execution of OpenCV code.
 * `ML-Basic.sh` - Installs from pip commonly used DL libraries
 
-### Notes
-* Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
-* During the `opencvDirectInstall` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
-
-    * If you are on a browser, just open the following page - [http://www.tortall.net/](http://www.tortall.net/)  
-      If a webpage opens up, then the download will work.
-
-    * If you only have a terminal access, run this command : `curl -Is www.tortall.net | head -1`  
-      Output with Status code `200 OK` means that the request has succeeded and the URL is reachable.
-<br><br>
 
 ## Major Alterations
 * Default python will be changed to Anaconda, with the latest Python 3. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
@@ -66,21 +56,30 @@ Then execute them in the terminal in the sequence of filenames.
         ```bash
         cd ~
         export NEW_USER=<username_of_new_user>
-        cp /opt/.zsh/zim/ /home/$NEW_USER/.zim
-        cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
-        cp /opt/.zsh/zim/templates/zimrc /home/$NEW_USER/.zimrc
-        cp /opt/.zsh/zim/templates/zlogin /home/$NEW_USER/.zlogin
-        cp /opt/.zsh/zim/templates/zshrc /home/$NEW_USER/.zshrc
+        sudo cp /opt/.zsh/zim/ /home/$NEW_USER/.zim
+        sudo cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
+        sudo cp /opt/.zsh/zim/templates/zimrc /home/$NEW_USER/.zimrc
+        sudo cp /opt/.zsh/zim/templates/zlogin /home/$NEW_USER/.zlogin
+        sudo cp ~/zshrc /home/$NEW_USER/.zshrc
 
-        cp ~/.xbindkeysrc /home/$NEW_USER
-        mkdir -p /home/$NEW_USER/.config/tilda
-        cp ~/.config/tilda/config_0 /home/$NEW_USER/.config/tilda/config_0
-        mkdir -p /home/$NEW_USER/.config/micro
-        cp ~/.config/micro/bindings.json /home/$NEW_USER/.config/micro/bindings.json
-        cp ~/.tmux.local* /home/$NEW_USER/
+        sudo cp ~/.xbindkeysrc /home/$NEW_USER
+        sudo mkdir -p /home/$NEW_USER/.config/tilda
+        sudo cp ~/.config/tilda/config_0 /home/$NEW_USER/.config/tilda/config_0
+        sudo mkdir -p /home/$NEW_USER/.config/micro
+        sudo cp ~/.config/micro/bindings.json /home/$NEW_USER/.config/micro/bindings.json
+        sudo cp ~/.tmux.conf* /home/$NEW_USER/
 
-        sudo chown -R $NEW_USER: /home/$NEW_USER/*
+        sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.config/micro /home/$NEW_USER/.tmux.conf*
         ```
+* Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
+* During the `opencvDirectInstall` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
+
+    * If you are on a browser, just open the following page - [http://www.tortall.net/](http://www.tortall.net/)  
+      If a webpage opens up, then the download will work.
+
+    * If you only have a terminal access, run this command : `curl -Is www.tortall.net | head -1`  
+      Output with Status code `200 OK` means that the request has succeeded and the URL is reachable.
+
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
 * If you would like to install with OpenCV for CUDA, change the flags `-D WITH_NVCUVID=0`, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
