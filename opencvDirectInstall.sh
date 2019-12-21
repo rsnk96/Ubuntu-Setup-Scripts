@@ -181,6 +181,7 @@ cd build
 py3Ex=$(which python3)
 py3In=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
 py3Pack=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+py3Lib=$(python3 -c "import distutils.sysconfig as sysconfig; import os; print(os.path.join(sysconfig.get_config_var('LIBDIR'), sysconfig.get_config_var('LDLIBRARY')))")
 
 # Anaconda no longer has the malformed MKL library, (if you are using an older Anaconda, use earlier versions of this file)
 # However, the font and pangoft libraries still cause problems. Hence, need to rename them
@@ -210,6 +211,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D PYTHON3_EXECUTABLE="$py3Ex" \
  -D PYTHON3_INCLUDE_DIR="$py3In" \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
+ -D PYTHON3_LIBRARY="$py3Lib" \
  -D PYTHON_DEFAULT_EXECUTABLE="$py3Ex" \
  -D WITH_FFMPEG=1 \
  -D WITH_GSTREAMER=ON \
