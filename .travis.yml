@@ -1,9 +1,9 @@
 language: python
-matrix:
+os: linux
+
+jobs:
   include:
     - name: xenial-basic
-      os: linux
-      sudo: required
       dist: xenial
       script:
       - CIINSTALL=yes ./1-BasicSetUp.sh
@@ -13,26 +13,18 @@ matrix:
       - CIINSTALL=yes ./2-GenSoftware.sh
       python: 3.7
     - name: xenial-opencv
-      os: linux
-      sudo: required
       dist: xenial
       script: CIINSTALL=yes ./opencvDirectInstall.sh
       python: 3.7
     - name: xenial-ml
-      os: linux
-      sudo: required
       dist: xenial
       script: CIINSTALL=yes ./3-ML-Build.sh
       python: 3.7
     - name: xenial-ml-basic
-      os: linux
-      sudo: required
       dist: xenial
       script: CIINSTALL=yes ./ML-Basic.sh
       python: 3.7
     - name: bionic-basic
-      os: linux
-      sudo: required
       dist: bionic
       script:
       - CIINSTALL=yes ./1-BasicSetUp.sh
@@ -42,20 +34,14 @@ matrix:
       - CIINSTALL=yes ./2-GenSoftware.sh
       python: 3.7
     - name: bionic-opencv
-      os: linux
-      sudo: required
       dist: bionic
       script: CIINSTALL=yes ./opencvDirectInstall.sh
       python: 3.7
     - name: bionic-ml
-      os: linux
-      sudo: required
       dist: bionic
       script: CIINSTALL=yes ./3-ML-Build.sh
       python: 3.7
     - name: bionic-ml-basic
-      os: linux
-      sudo: required
       dist: bionic
       script: CIINSTALL=yes ./ML-Basic.sh
       python: 3.7
