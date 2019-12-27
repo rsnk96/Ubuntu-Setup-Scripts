@@ -120,8 +120,8 @@ elif test "$tempvar" = "s"; then
     latest_tag="$(git tag --sort=-creatordate | egrep -v '-' | head -1)"
     git checkout $latest_tag
 
-    # Install minimum required version of Bazel for the current Tensorflow release
-    BAZEL_VERSION="$(cat configure.py | grep "_TF_MIN_BAZEL_VERSION" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
+    # Install latest version of Bazel supported for the Tensorflow version being installed
+    BAZEL_VERSION="$(cat configure.py | grep "_TF_MAX_BAZEL_VERSION" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
     execute sudo apt-get install -y g++ zlib1g-dev bash-completion
     cd ..
     execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
@@ -142,12 +142,8 @@ elif test "$tempvar" = "s"; then
     cd tensorflow
     execute bazel shutdown
     spatialPrint "Now using bazel to build Tensorflow"
-    
-    if [[ $(echo $latest_tag | grep -o -E "v[0-9]") == "v1" ]]; then
-        VERS=" --config=v1";
-    fi
 
-    bazel build ${VERS} --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
+    bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
     
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
