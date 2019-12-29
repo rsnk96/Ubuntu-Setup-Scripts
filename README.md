@@ -82,7 +82,9 @@ Then execute them in the terminal in the sequence of filenames.
 
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
-* If you would like to install with OpenCV for CUDA, change the flags `-D WITH_NVCUVID=0`, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
+* If you would like to install with OpenCV for CUDA, change the flags, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
+* Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
+* OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
 * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
   ```bash
@@ -92,15 +94,16 @@ Then execute them in the terminal in the sequence of filenames.
   ```
 
   If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
+* Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
 * If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
   * OpenCV   
-  Comment out the line fetching the [latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/opencvDirectInstall.sh#L158) in the `opencvDirectInstall` script.  
+  Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/opencvDirectInstall.sh#L170) in the `opencvDirectInstall` script.  
   Add the line below the above commented out one specifying the OpenCV version which you want like this: `latest_tag="3.4.5"`  
   Alternatively, you could just replace `$latest_tag` with the tag of the version in the following 2 lines: `git checkout -f $latest_tag`  
   Make sure that the tag of the OpenCV version you want is correct. The tags of all the releases can be checked here - [https://github.com/opencv/opencv/tags](https://github.com/opencv/opencv/tags) 
 
   * Tensorflow  
-  Similar to above, locate the line fetching the [latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/3-ML-Build.sh#L114) of Tensorflow and replace with the tag of the version required.  
+  Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/3-ML-Build.sh#L120) of Tensorflow and replace with the tag of the version required.  
   The tags of all the Tensorflow releases can be checked here - [https://github.com/tensorflow/tensorflow/tags](https://github.com/tensorflow/tensorflow/tags)
 * These scripts are written and tested on the following configurations - 
   * Ubuntu 16.04 & 18.04
