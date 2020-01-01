@@ -1,50 +1,89 @@
 language: python
 os: linux
+env: CIINSTALL=yes
 
 jobs:
   include:
     - name: xenial-basic
       dist: xenial
       script:
-      - CIINSTALL=yes ./1-BasicSetUp.sh
+      - ./1-BasicSetUp.sh
       - export PATH=/opt/anaconda3/bin:$PATH
       - hash -r  # To reload env vars like PATH
       - conda info -a
-      - CIINSTALL=yes ./2-GenSoftware.sh
+      - ./2-GenSoftware.sh
       python: 3.7
+
     - name: xenial-opencv
       dist: xenial
-      script: CIINSTALL=yes ./opencvDirectInstall.sh
+      script: 
+      - ./opencvDirectInstall.sh
+      - ffmpeg -version
+      - python3 -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
+
     - name: xenial-ml
       dist: xenial
-      script: CIINSTALL=yes ./3-ML-Build.sh
+      script: ./3-ML-Build.sh
       python: 3.7
+
     - name: xenial-ml-basic
       dist: xenial
-      script: CIINSTALL=yes ./ML-Basic.sh
+      script: ./ML-Basic.sh
       python: 3.7
+
+    - name: xenial-opencv-conda
+      dist: xenial
+      script:
+      - ./1-BasicSetUp.sh
+      - export PATH=/opt/anaconda3/bin:$PATH
+      - hash -r  # To reload env vars like PATH
+      - conda info -a
+      - ./opencvDirectInstall.sh
+      - ffmpeg -version
+      - python -c "import cv2; print(cv2.getBuildInformation());"
+      python: 3.7
+
     - name: bionic-basic
       dist: bionic
       script:
-      - CIINSTALL=yes ./1-BasicSetUp.sh
+      - ./1-BasicSetUp.sh
       - export PATH=/opt/anaconda3/bin:$PATH
       - hash -r  # To reload env vars like PATH
       - conda info -a
-      - CIINSTALL=yes ./2-GenSoftware.sh
+      - ./2-GenSoftware.sh
       python: 3.7
+
     - name: bionic-opencv
       dist: bionic
-      script: CIINSTALL=yes ./opencvDirectInstall.sh
+      script: 
+      - ./opencvDirectInstall.sh
+      - ffmpeg -version
+      - python3 -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
+
     - name: bionic-ml
       dist: bionic
-      script: CIINSTALL=yes ./3-ML-Build.sh
+      script: ./3-ML-Build.sh
       python: 3.7
+
     - name: bionic-ml-basic
       dist: bionic
-      script: CIINSTALL=yes ./ML-Basic.sh
+      script: ./ML-Basic.sh
       python: 3.7
+
+    - name: bionic-opencv-conda
+      dist: bionic
+      script:
+      - ./1-BasicSetUp.sh
+      - export PATH=/opt/anaconda3/bin:$PATH
+      - hash -r  # To reload env vars like PATH
+      - conda info -a
+      - ./opencvDirectInstall.sh
+      - ffmpeg -version
+      - python -c "import cv2; print(cv2.getBuildInformation());"
+      python: 3.7
+
 before_install:
     - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
     - sudo apt-get update -qq
