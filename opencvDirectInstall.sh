@@ -31,6 +31,21 @@ run_and_echo () {
     echo "$1" >> $2
 }
 
+# Rename .so files
+# Used for fixing conflicting libs with Anaconda
+rename_so () {
+    for f in "$1"*; do
+        mv -- "$f" "${f/.so/.so.bkp}"
+    done
+}
+
+# Undo renaming of .so files
+undo_rename_so () {
+    for f in "$1"*; do
+        mv -- "$f" "${f/.so.bkp/.so}"
+    done
+}
+
 
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
     SHELLRC=~/.zshrc
@@ -192,13 +207,12 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
         cd $CONDA_PATH
         cd lib
 
-        for f in libfontconfig.so*; do
-            mv -- "$f" "${f/.so/.so_renamed}"
-        done
-
-        for f in libpangoft2-1.0.so*; do
-            mv -- "$f" "${f/.so/.so_renamed}"
-        done
+        rename_so libfontconfig.so
+        rename_so libpangoft2-1.0.so
+        rename_so libz.so
+        rename_so libfreetype.so
+        rename_so libharfbuzz.so
+        rename_so libtbb.so
     )
 fi
 
@@ -247,5 +261,22 @@ sudo checkinstall -y
 spatialPrint "Finishing off installation"
 sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
+
+# Undo renaming of conda libraries
+if [[ -n $(echo $PATH | grep 'conda') ]] ; then
+    echo "Restoring renamed Conda libraries"
+    CONDA_PATH=$(echo "$PATH" | tr ':' '\n' | grep "conda[2-9]\?" | head -1 | tr '/' '\n' | head -n -1 | tr '\n' '/')
+    (
+        cd $CONDA_PATH
+        cd lib
+
+        undo_rename_so libfontconfig.so.bkp
+        undo_rename_so libpangoft2-1.0.so.bkp
+        undo_rename_so libz.so.bkp
+        undo_rename_so libfreetype.so.bkp
+        undo_rename_so libharfbuzz.so.bkp
+        undo_rename_so libtbb.so.bkp
+    )
+fi
 
 echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
