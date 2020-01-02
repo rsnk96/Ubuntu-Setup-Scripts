@@ -113,8 +113,8 @@ cp ./config_files/xbindkeysrc ~/.xbindkeysrc
 
 # Now download and install bat
 spatialPrint "Installing bat, a handy replacement for cat"
-latest_bat_setup=$(wget -q -O - https://github.com/sharkdp/bat/releases/ index.html | grep "deb" | head -n 1 | cut -d \" -f 2)
-aria2c --file-allocation=none -c -x 10 -s 10 --dir /tmp -o bat.deb https://github.com${latest_bat_setup}
+latest_bat_setup=$(curl --silent "https://api.github.com/repos/sharkdp/bat/releases/latest" | grep "deb" | grep "browser_download_url" | head -n 1 | cut -d \" -f 4)
+aria2c --file-allocation=none -c -x 10 -s 10 --dir /tmp -o bat.deb $latest_bat_setup
 execute sudo dpkg -i /tmp/bat.deb
 execute sudo apt-get install -f
 
