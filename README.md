@@ -56,11 +56,11 @@ Then execute them in the terminal in the sequence of filenames.
         ```bash
         cd ~
         export NEW_USER=<username_of_new_user>
-        sudo cp /opt/.zsh/zim/ /home/$NEW_USER/.zim
+        sudo cp -r /opt/.zsh/zim/ /home/$NEW_USER/.zim
         sudo cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
         sudo cp /opt/.zsh/zim/templates/zimrc /home/$NEW_USER/.zimrc
         sudo cp /opt/.zsh/zim/templates/zlogin /home/$NEW_USER/.zlogin
-        sudo cp ~/zshrc /home/$NEW_USER/.zshrc
+        sudo cp ~/.zshrc /home/$NEW_USER/.zshrc
 
         sudo cp ~/.xbindkeysrc /home/$NEW_USER
         sudo mkdir -p /home/$NEW_USER/.config/tilda
