@@ -70,7 +70,7 @@ fi
 spatialPrint "Setting up Zsh + Zim now"
 sudo apt install zsh
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
-git clone --recursive --quiet https://github.com/Eriner/zim.git /opt/.zsh/zim
+git clone --recursive --quiet --branch zsh-5.2 https://github.com/zimfw/zimfw.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
 ln -s /opt/.zsh/zim/templates/zimrc ~/.zimrc
 ln -s /opt/.zsh/zim/templates/zlogin ~/.zlogin
