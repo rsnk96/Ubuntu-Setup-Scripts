@@ -228,13 +228,12 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D WITH_QT=1 \
  -D WITH_OPENGL=1 \
  -D ENABLE_CXX11=1 \
- -D WITH_NVCUVID=0 \
  -D BUILD_TIFF=ON \
  -D WITH_CUDA=0 \
  -D WITH_CUBLAS=0 \
  -D WITH_CUFFT=0 \
  -D CUDA_FAST_MATH=0 ..
-#  -D BUILD_opencv_java=0 \
+#  -D BUILD_JAVA=0 \
 #  -D WITH_VTK=0 \
 #  -D BUILD_opencv_freetype=ON \
 
