@@ -83,6 +83,7 @@ Then execute them in the terminal in the sequence of filenames.
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
 * If you would like to install with OpenCV for CUDA, change the flags, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
+* Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
 * Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
 * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
 * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
@@ -94,6 +95,7 @@ Then execute them in the terminal in the sequence of filenames.
   ```
 
   If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
+* If you run into compilation problems or something else during OpenCV installation, make sure to remove the entire `build` folder inside `opencv` directory before rebuilding, otherwise strange errors can pop up.
 * Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
 * If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
   * OpenCV   
