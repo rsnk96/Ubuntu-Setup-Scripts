@@ -135,15 +135,15 @@ elif test "$tempvar" = "s"; then
         if locate intel-mkl > /dev/null; then   MKL_OPTIM=" --config=mkl";   fi
     else
         echo "Configuring script now"
-        PYTHON_BIN_PATH=$(which python3) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" TF_CUDA_CLANG=0 TF_NEED_CUDA=0 TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" ./configure
-        CI_OPTIM=" --config=noaws --config=nohdfs --config=nokafka --config=nonccl"
+        PYTHON_BIN_PATH=$(which python3) PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())')" \
+        TF_CUDA_CLANG=0 TF_NEED_CUDA=0 TF_NEED_OPENCL_SYCL=0 TF_NEED_COMPUTECPP=0 TF_NEED_OPENCL=0  TF_NEED_TENSORRT=0 TF_ENABLE_XLA=0 TF_NEED_VERBS=0 TF_DOWNLOAD_CLANG=0 TF_NEED_ROCM=0 TF_NEED_MPI=0 TF_SET_ANDROID_WORKSPACE=0 CC_OPT_FLAGS="-march=native" ./configure
     fi
 
     cd tensorflow
     execute bazel shutdown
     spatialPrint "Now using bazel to build Tensorflow"
 
-    bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM}${CI_OPTIM} //tensorflow/tools/pip_package:build_pip_package
+    bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
     
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
