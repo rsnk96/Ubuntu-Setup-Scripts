@@ -82,7 +82,7 @@ if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
     PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
 else
     execute sudo apt-get install python3 python3-dev -y
-    if [[ ! -n $CIINSTALL ]]; then sudo apt-get install python3-pip -y; fi
+    if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip -y; fi
     PIP="sudo pip3 install"
 fi
 execute $PIP --upgrade numpy pip
