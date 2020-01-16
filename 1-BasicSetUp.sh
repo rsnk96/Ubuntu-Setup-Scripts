@@ -44,7 +44,7 @@ fi
 # My choice for terminal: Tilda+tmux
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
-execute sudo apt-get install git -y
+execute sudo apt-get install git wget curl -y
 execute sudo apt-get install tilda tmux -y
 execute sudo apt-get install gimp -y
 execute sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
@@ -68,7 +68,7 @@ if [[ -d $zsh_folder ]];then
 fi
 
 spatialPrint "Setting up Zsh + Zim now"
-sudo apt install zsh
+execute sudo apt-get install zsh -y
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 git clone --recursive --quiet --branch zsh-5.2 https://github.com/zimfw/zimfw.git /opt/.zsh/zim
 ln -s /opt/.zsh/zim/ ~/.zim
