@@ -101,12 +101,23 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     (
         cd /opt/ffmpeg-build-script
         git clone --quiet https://github.com/markus-perl/ffmpeg-build-script.git .
+
+        # The nasm.us, tortall.net for yasm sites can cause problems. So use apt instead
+        mkdir -p packages
+        touch "$(pwd)/packages/yasm.done"
+        execute sudo apt-get install yasm -y
+
+        # Ubuntu 16.04 has older non-compatible nasm in apt repository
+        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -ge 18 ]]; then
+            touch "$(pwd)/packages/nasm.done"
+            execute sudo apt-get install nasm -y
+        fi
+
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
         sed -i 's/--enable-shared\ \\/--enable-shared\ --cc="gcc -fPIC"\ \\/g' build-ffmpeg
         sed -i 's/-DENABLE_SHARED:bool=off/-DENABLE_SHARED:bool=on/g' build-ffmpeg
         sed -i 's/-DBUILD_SHARED_LIBS=OFF/-DBUILD_SHARED_LIBS=ON/g' build-ffmpeg
-
         # Build libaom as a shared library
         sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
         
@@ -121,11 +132,6 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         run_and_echo "export LD_LIBRARY_PATH=$(pwd)/workspace/lib:\$LD_LIBRARY_PATH" $SHELLRC
         run_and_echo "export PKG_CONFIG_PATH=$(pwd)/workspace/lib/pkgconfig:\$(pkg-config --variable pc_path pkg-config)" $SHELLRC
         run_and_echo "export PKG_CONFIG_LIBDIR=$(pwd)/workspace/lib/:\$PKG_CONFIG_LIBDIR" $SHELLRC
-
-        # Update shell environment with the changes
-        if [[ ! -n $CIINSTALL ]]; then
-            su - $USER
-        fi
 
         sudo sh -c 'echo "/opt/ffmpeg-build-script/workspace/lib" > /etc/ld.so.conf.d/ffmpeg.conf'
         sudo ldconfig
