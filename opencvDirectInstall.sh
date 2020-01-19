@@ -98,7 +98,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     execute sudo apt-get install libasound2-dev -y
     execute sudo mkdir -p /opt/ffmpeg-build-script 
     execute sudo chmod ugo+w /opt/ffmpeg-build-script
-    (
+    {
         cd /opt/ffmpeg-build-script
         git clone --quiet https://github.com/markus-perl/ffmpeg-build-script.git .
 
@@ -135,7 +135,10 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
 
         sudo sh -c 'echo "/opt/ffmpeg-build-script/workspace/lib" > /etc/ld.so.conf.d/ffmpeg.conf'
         sudo ldconfig
-    )
+
+        # Go back to the repo directory
+        cd -
+    }
 fi
 
 spatialPrint "GUI and openGL extensions"
