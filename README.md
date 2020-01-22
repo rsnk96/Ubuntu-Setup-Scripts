@@ -8,14 +8,15 @@ These are the scripts that I use to set my Ubuntu up as quick as possible. Feel 
 Every script is rock stable and runs against https://travis-ci.org to make sure everything works as expected. Note that `3-ML-Build.sh` is not shown here as it takes >2 hours to build TF+Pytorch on the Travis systems from source, and 2 hours is the system limit for free accounts on Travis. You can, however, still see the results of it running [here](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts)
 
 
-| 1-BasicSetUp and 2-GenSoftware | opencvDirectInstall |  ML-Basic            
-|-------------------|-------------------|-------------------|
-| [![Build1][5]][9] | [![Build2][6]][9] | [![Build3][8]][9] |
+| 1-BasicSetUp and 2-GenSoftware | opencvDirectInstall |  ML-Basic | Anaconda + OpenCV |            
+|-------------------|-------------------|-------------------|--------------------|
+| [![Build1][6]][11] | [![Build2][7]][11] | [![Build3][9]][11] | [![Build4][10]][11] |
 
-[5]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/5
 [6]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/6
-[8]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/8
-[9]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
+[7]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/7
+[9]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/9
+[10]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/10
+[11]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
 
 ## Usage instructions
 First download/clone this repository
