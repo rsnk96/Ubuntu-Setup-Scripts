@@ -19,7 +19,7 @@ jobs:
       script: 
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python3 -c "import cv2; print(cv2.getBuildInformation());"
+      - python3 extras/opencv_test.py
       python: 3.7
 
     - name: xenial-ml
@@ -41,7 +41,7 @@ jobs:
       - conda info -a
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python -c "import cv2; print(cv2.getBuildInformation());"
+      - python extras/opencv_test.py
       python: 3.7
 
     - name: bionic-basic
@@ -59,7 +59,7 @@ jobs:
       script: 
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python3 -c "import cv2; print(cv2.getBuildInformation());"
+      - python3 extras/opencv_test.py
       python: 3.7
 
     - name: bionic-ml
@@ -81,7 +81,7 @@ jobs:
       - conda info -a
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python -c "import cv2; print(cv2.getBuildInformation());"
+      - python extras/opencv_test.py
       python: 3.7
 
 before_install:
