@@ -11,7 +11,7 @@
     Mod2+Mod4 + Up
 
 # Tile window
-"wmctrl -r :ACTIML-BasicVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 0 y"
+"wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 0 y"
     Mod2+Mod4 + Left
 
 "wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 9999 y"
