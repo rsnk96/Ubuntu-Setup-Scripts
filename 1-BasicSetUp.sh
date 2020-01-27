@@ -166,10 +166,13 @@ spatialPrint "Adding anaconda to path variables"
 # echo "\$ conda clean --all"
 # echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
 
-## If you want to install the bleeding edge Nvidia drivers, uncomment the next set of lines
-# sudo add-apt-repository ppa:graphics-drivers/ppa -y
-# execute sudo apt-get update
-# sudo ubuntu-drivers autoinstall
+## Detect if an Nvidia card is attached, and install the graphics drivers automatically
+if [[ lspci | grep -i nvidia ]]; then
+    sudo add-apt-repository ppa:graphics-drivers/ppa -y
+    execute sudo apt-get update
+    sudo ubuntu-drivers autoinstall
+fi
+
 # echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
 # echo "Also, when installing CUDA next, ********don't******* install display drivers."
 # echo "In case your drivers don't work, purge gdm3 and use lightdm (sudo apt-get purge lightdm && sudo dpkg-reconfigure gdm3)"

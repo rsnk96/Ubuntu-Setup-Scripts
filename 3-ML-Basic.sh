@@ -65,6 +65,11 @@ fi
 
 execute sudo apt-get install libhdf5-dev
 
+# Install opencv from pip only if it isn't already installed. Need to use `pkgutil` because opencv built from source does not appear in `pip list`
+if [[ $(python -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then
+    $PIP opencv-contrib-python --upgrade
+fi
+
 $PIP --upgrade numpy tabulate python-dateutil
 execute $PIP keras gensim networkx --upgrade
 execute $PIP tensorflow$GPU_PRESENT --upgrade
