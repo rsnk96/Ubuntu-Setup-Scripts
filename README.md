@@ -5,12 +5,12 @@ These are the scripts that I use to set my Ubuntu up as quick as possible. Feel 
 
 ## Build Status:
 
-Every script is rock stable and runs against https://travis-ci.org to make sure everything works as expected. Note that `3-ML-Build.sh` is not shown here as it takes >2 hours to build TF+Pytorch on the Travis systems from source, and 2 hours is the system limit for free accounts on Travis. You can, however, still see the results of it running [here](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts)
+Every script is rock stable and runs against [Travis CI](https://travis-ci.org) to make sure everything works as expected. Note that `Build-ML.sh` is not shown here as it takes >2 hours to build TF+Pytorch on the Travis systems from source, and 2 hours is the system limit for free accounts on Travis. You can, however, still see the results of it running [here](https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts)
 
 
-| 1-BasicSetUp and 2-GenSoftware | opencvDirectInstall |  ML-Basic | Anaconda + OpenCV |            
+| 1-BasicSetUp and 2-GenSoftware | 3-ML-Basic | Build-OpenCV  | Build-OpenCV in a conda env |
 |-------------------|-------------------|-------------------|--------------------|
-| [![Build1][6]][11] | [![Build2][7]][11] | [![Build3][9]][11] | [![Build4][10]][11] |
+| [![Build1][6]][11] | [![Build2][9]][11] | [![Build3][7]][11] | [![Build4][10]][11] |
 
 [6]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/6
 [7]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/7
@@ -23,12 +23,14 @@ First download/clone this repository
 
 Run
 `chmod u+x *.sh` to make all scripts executable
-Then execute them in the terminal in the sequence of filenames.
+Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh`, `/2-GenSoftware.sh`, and so on.
 * `1-BasicSetUp.sh` - Sets up terminal configuration, a download accelerator, anaconda python, and shell aliases.
 * `2-GenSoftware.sh` - Sets up tools for programming(editor, etc), and other general purpose software I use
-* `3-ML-Build.sh` - Compiles commonly used ML/DL libraries from source, so that it is optimized to run on your computer
-* `opencvDirectInstall.sh` - Compiles the latest tag of OpenCV+Contrib from source on your machine with focus on optimization of execution of OpenCV code.
-* `ML-Basic.sh` - Installs from pip commonly used DL libraries
+* `3-ML-Basic.sh` - Installs from pip commonly used DL libraries
+
+Additional scripts to built libraries from source:
+* `Build-ML.sh` - Compiles commonly used ML/DL libraries from source, so that it is optimized to run on your computer
+* `Build-OpenCV.sh` - Compiles the latest tag of OpenCV+Contrib from source on your machine with focus on optimization of execution of OpenCV code.
 
 
 ## Major Alterations
@@ -73,7 +75,7 @@ Then execute them in the terminal in the sequence of filenames.
         sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.config/micro /home/$NEW_USER/.tmux.conf*
         ```
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
-* During the `opencvDirectInstall` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
+* During the `Build-OpenCV` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
 
     * If you are on a browser, just open the following page - [http://www.tortall.net/](http://www.tortall.net/)  
       If a webpage opens up, then the download will work.
@@ -82,8 +84,8 @@ Then execute them in the terminal in the sequence of filenames.
       Output with Status code `200 OK` means that the request has succeeded and the URL is reachable.
 
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
-* If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `opencvDirectInstall.sh` script
-* If you would like to install with OpenCV for CUDA, change the flags, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `opencvDirectInstall.sh` to `ON`
+* If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `Build-OpenCV.sh` script
+* If you would like to install with OpenCV for CUDA, change the flags, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `Build-OpenCV.sh` to `ON`
 * Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
 * Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
 * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
@@ -100,13 +102,13 @@ Then execute them in the terminal in the sequence of filenames.
 * Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
 * If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
   * OpenCV   
-  Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/opencvDirectInstall.sh#L170) in the `opencvDirectInstall` script.  
+  Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-OpenCV.sh#L170) in the `Build-OpenCV` script.  
   Add the line below the above commented out one specifying the OpenCV version which you want like this: `latest_tag="3.4.5"`  
   Alternatively, you could just replace `$latest_tag` with the tag of the version in the following 2 lines: `git checkout -f $latest_tag`  
   Make sure that the tag of the OpenCV version you want is correct. The tags of all the releases can be checked here - [https://github.com/opencv/opencv/tags](https://github.com/opencv/opencv/tags) 
 
   * Tensorflow  
-  Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/3-ML-Build.sh#L120) of Tensorflow and replace with the tag of the version required.  
+  Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-ML.sh#L120) of Tensorflow and replace with the tag of the version required.  
   The tags of all the Tensorflow releases can be checked here - [https://github.com/tensorflow/tensorflow/tags](https://github.com/tensorflow/tensorflow/tags)
 * These scripts are written and tested on the following configurations - 
   * Ubuntu 16.04 & 18.04

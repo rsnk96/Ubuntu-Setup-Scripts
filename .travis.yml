@@ -17,19 +17,19 @@ jobs:
     - name: xenial-opencv
       dist: xenial
       script: 
-      - ./opencvDirectInstall.sh
+      - ./Build-OpenCV.sh
       - ffmpeg -version
       - python3 -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
 
     - name: xenial-ml
       dist: xenial
-      script: ./3-ML-Build.sh
+      script: ./Build-ML.sh
       python: 3.7
 
     - name: xenial-ml-basic
       dist: xenial
-      script: ./ML-Basic.sh
+      script: ./3-ML-Basic.sh
       python: 3.7
 
     - name: xenial-opencv-conda
@@ -39,7 +39,7 @@ jobs:
       - export PATH=/opt/anaconda3/bin:$PATH
       - hash -r  # To reload env vars like PATH
       - conda info -a
-      - ./opencvDirectInstall.sh
+      - ./Build-OpenCV.sh
       - ffmpeg -version
       - python -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
@@ -57,19 +57,19 @@ jobs:
     - name: bionic-opencv
       dist: bionic
       script: 
-      - ./opencvDirectInstall.sh
+      - ./Build-OpenCV.sh
       - ffmpeg -version
       - python3 -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
 
     - name: bionic-ml
       dist: bionic
-      script: ./3-ML-Build.sh
+      script: ./Build-ML.sh
       python: 3.7
 
     - name: bionic-ml-basic
       dist: bionic
-      script: ./ML-Basic.sh
+      script: ./3-ML-Basic.sh
       python: 3.7
 
     - name: bionic-opencv-conda
@@ -79,7 +79,7 @@ jobs:
       - export PATH=/opt/anaconda3/bin:$PATH
       - hash -r  # To reload env vars like PATH
       - conda info -a
-      - ./opencvDirectInstall.sh
+      - ./Build-OpenCV.sh
       - ffmpeg -version
       - python -c "import cv2; print(cv2.getBuildInformation());"
       python: 3.7
