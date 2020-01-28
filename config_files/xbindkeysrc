@@ -2,10 +2,6 @@
 "run-one xdg-open ~"
     Mod2+Mod4 + e
 
-# Open station
-"/opt/station.AppImage"
-    Control+Shift+Alt + s
-
 # Screenshot with Shutter, which will be saved in /tmp
 "shutter -s -o '/tmp/%y-%m-%d_$w_$h.png' -c -e"
     Control+Shift+Alt + p
