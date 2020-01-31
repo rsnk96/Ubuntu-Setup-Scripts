@@ -167,10 +167,10 @@ spatialPrint "Adding anaconda to path variables"
 # echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
 
 ## Detect if an Nvidia card is attached, and install the graphics drivers automatically
-if [[ lspci | grep -i nvidia ]]; then
-    sudo add-apt-repository ppa:graphics-drivers/ppa -y
+if [[ -n $(lspci | grep -i nvidia) ]]; then
+    execute sudo add-apt-repository ppa:graphics-drivers/ppa -y
     execute sudo apt-get update
-    sudo ubuntu-drivers autoinstall
+    execute sudo ubuntu-drivers autoinstall
 fi
 
 # echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
