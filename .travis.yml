@@ -19,7 +19,7 @@ jobs:
       script: 
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python3 extras/opencv_test.py
+      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
       python: 3.7
 
     - name: xenial-ml
@@ -41,7 +41,7 @@ jobs:
       - conda info -a
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python extras/opencv_test.py
+      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
       python: 3.7
 
     - name: bionic-basic
@@ -59,7 +59,7 @@ jobs:
       script: 
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python3 extras/opencv_test.py
+      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
       python: 3.7
 
     - name: bionic-ml
@@ -81,13 +81,13 @@ jobs:
       - conda info -a
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - python extras/opencv_test.py
+      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
       python: 3.7
 
 before_install:
     - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
     - sudo apt-get update -qq
     - sudo apt-get install -y software-properties-common
-    - sudo apt-get install -qq build-essential curl g++ python3-dev python3-setuptools
+    - sudo apt-get install -qq build-essential curl g++ python3-dev python3-setuptools gdb
     - echo 'America/Los_Angeles' | sudo tee /etc/timezone
     - sudo dpkg-reconfigure --frontend noninteractive tzdata
