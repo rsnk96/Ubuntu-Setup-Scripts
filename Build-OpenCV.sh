@@ -213,6 +213,7 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
 
         rename_so libfontconfig.so
         rename_so libpangoft2-1.0.so
+        rename_so libtbb.so
     )
 fi
 
