@@ -39,14 +39,6 @@ rename_so () {
     done
 }
 
-# Undo renaming of .so files
-undo_rename_so () {
-    for f in "$1"*; do
-        mv -- "$f" "${f/.so.bkp/.so}"
-    done
-}
-
-
 if [[ -n $(echo $SHELL | grep "zsh") ]] ; then
     SHELLRC=~/.zshrc
 elif [[ -n $(echo $SHELL | grep "bash") ]] ; then
@@ -221,10 +213,11 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
 
         rename_so libfontconfig.so
         rename_so libpangoft2-1.0.so
-        rename_so libz.so
-        rename_so libfreetype.so
-        rename_so libharfbuzz.so
-        rename_so libtbb.so
+
+        # Ubuntu 16.04 Anaconda has conflicting libtbb
+        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -le 16 ]]; then
+            rename_so libtbb.so
+        fi
     )
 fi
 
@@ -234,6 +227,7 @@ fi
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
+ -D WITH_HDF5=ON \
  -D PYTHON3_EXECUTABLE="$py3Ex" \
  -D PYTHON3_INCLUDE_DIR="$py3In" \
  -D PYTHON3_PACKAGES_PATH="$py3Pack" \
@@ -273,22 +267,5 @@ sudo checkinstall -y
 spatialPrint "Finishing off installation"
 sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
 sudo ldconfig
-
-# Undo renaming of conda libraries
-if [[ -n $(echo $PATH | grep 'conda') ]] ; then
-    echo "Restoring renamed Conda libraries"
-    CONDA_PATH=$(echo "$PATH" | tr ':' '\n' | grep "conda[2-9]\?" | head -1 | tr '/' '\n' | head -n -1 | tr '\n' '/')
-    (
-        cd $CONDA_PATH
-        cd lib
-
-        undo_rename_so libfontconfig.so.bkp
-        undo_rename_so libpangoft2-1.0.so.bkp
-        undo_rename_so libz.so.bkp
-        undo_rename_so libfreetype.so.bkp
-        undo_rename_so libharfbuzz.so.bkp
-        undo_rename_so libtbb.so.bkp
-    )
-fi
 
 echo "The installation just completed. If it shows an error in the end, kindly post an issue on the git repo"
