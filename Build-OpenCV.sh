@@ -83,6 +83,13 @@ spatialPrint "Also installing skimage, dlib and moviepy as CV libraries"
 $PIP cython msgpack moviepy scikit-image
 $PIP dlib
 
+# Don't build FFmpeg from source, instead use apt libraries
+# TODO: remove this section after testing if https://github.com/opencv/opencv/issues/15551 resolves this
+echo "# ffmpeg-build-script" >> $SHELLRC
+execute sudo apt-get install x264 libx264-dev ffmpeg -y
+execute sudo apt-get install libasound2-dev -y
+execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev -y
+
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
     execute sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
@@ -141,7 +148,6 @@ spatialPrint "Video manipulation libraries"
 execute sudo apt-get install libxine2-dev  -y
 
 spatialPrint "Codecs"
-# execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev -y
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 execute sudo apt-get install yasm libtheora-dev libvorbis-dev libxvidcore-dev -y
