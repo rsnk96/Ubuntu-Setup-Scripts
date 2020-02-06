@@ -34,9 +34,8 @@ if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
     source $SHELLRC
 fi
 
-if which nvcc > /dev/null; then 
-    GPU_PRESENT="-gpu";
-    spatialPrint "Installing nvtop"
+if which nvidia-smi > /dev/null; then 
+    echo "Installing nvtop"
     execute sudo apt-get install cmake libncurses5-dev git -y
     if [[ ! -d "nvtop" ]]; then
         execute git clone --quiet https://github.com/Syllo/nvtop.git
@@ -58,22 +57,26 @@ if [[ $(command -v conda) || (-n $CIINSTALL) ]]; then
     PIP="pip install"
 else
     execute sudo apt-get update
-    # execute sudo apt-get install python3 python3-dev python-dev python-tk -y
-    # if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip python-pip; fi
     PIP="sudo pip3 install"
 fi
 
 execute sudo apt-get install libhdf5-dev
 
 # Install opencv from pip only if it isn't already installed. Need to use `pkgutil` because opencv built from source does not appear in `pip list`
-if [[ $(python -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then
+if [[ ! $(python -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then
     $PIP opencv-contrib-python --upgrade
 fi
 
 $PIP --upgrade numpy tabulate python-dateutil
-execute $PIP keras gensim networkx --upgrade
-execute $PIP tensorflow$GPU_PRESENT --upgrade
-execute $PIP torch torchvision gym --upgrade
+execute $PIP keras --upgrade
+
+if [[ $(command -v nvidia-smi) && $(command -v conda) ]]; then
+    execute conda install tensorflow-gpu -y
+    execute conda install pytorch torchvision -c pytorch -y
+else
+    execute pip install tensorflow --upgrade
+    execute pip install torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html --upgrade
+fi
 
 echo ""
 echo "This script has finished"
