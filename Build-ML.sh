@@ -46,7 +46,7 @@ if [[ ! -n $CIINSTALL ]]; then
     read -r -p "***************** Hit [Enter] if you have, [Ctrl+C] if you have not!********************" temp
 fi
 
-if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
+if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" ) ]]; then
     echo "Adding Cuda location to PATH"
     {
         echo ""
@@ -60,7 +60,7 @@ else
     echo "Not adding Cuda to the PATH"
 fi
 
-if which nvcc > /dev/null; then
+if which nvidia-smi > /dev/null; then
     spatialPrint "Installing nvtop"
     execute sudo apt-get install cmake libncurses5-dev git -y
     if [[ ! -d "nvtop" ]]; then
