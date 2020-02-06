@@ -23,7 +23,7 @@ execute () {
     fi
 }
 
-if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" )]]; then
+if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" ) ]]; then
     echo "Adding Cuda location to PATH"
     {
         echo "# Cuda"
@@ -56,26 +56,36 @@ fi
 if [[ $(command -v conda) || (-n $CIINSTALL) ]]; then
     PIP="pip install"
 else
-    execute sudo apt-get update
+    execute sudo apt-get install python3 python3-dev -y
+    if [[ ! -n $CIINSTALL ]]; then execute sudo apt-get install python3-pip -y; fi
     PIP="sudo pip3 install"
 fi
 
 execute sudo apt-get install libhdf5-dev
 
 # Install opencv from pip only if it isn't already installed. Need to use `pkgutil` because opencv built from source does not appear in `pip list`
-if [[ ! $(python -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then
+if [[ ! $(python3 -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then
     $PIP opencv-contrib-python --upgrade
 fi
 
-$PIP --upgrade numpy tabulate python-dateutil
-execute $PIP keras --upgrade
+execute $PIP --upgrade numpy tabulate python-dateutil
+execute $PIP --upgrade keras
 
-if [[ $(command -v nvidia-smi) && $(command -v conda) ]]; then
-    execute conda install tensorflow-gpu -y
-    execute conda install pytorch torchvision -c pytorch -y
+if [[ -n $(command -v nvidia-smi) ]]; then
+
+    # If Anaconda is present, use conda
+    if [[ -n $(command -v conda) ]]; then
+        execute conda install tensorflow-gpu -y
+        execute conda install pytorch torchvision -c pytorch -y
+    else
+        # Else use pip
+        execute $PIP --upgrade tensorflow
+        execute $PIP --upgrade torch torchvision
+    fi
+
 else
-    execute pip install tensorflow --upgrade
-    execute pip install torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html --upgrade
+    execute $PIP --upgrade tensorflow
+    execute $PIP --upgrade torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 fi
 
 echo ""
