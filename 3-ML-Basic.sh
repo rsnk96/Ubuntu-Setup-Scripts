@@ -84,8 +84,14 @@ if [[ -n $(command -v nvidia-smi) ]]; then
     fi
 
 else
-    execute $PIP --upgrade tensorflow
-    execute $PIP --upgrade torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+    # If Anaconda is present, use conda
+    if [[ -n $(command -v conda) ]]; then
+        execute conda install tensorflow -y
+        execute conda install pytorch torchvision cpuonly -c pytorch -y
+    else
+        execute $PIP --upgrade tensorflow
+        execute $PIP --upgrade torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+    fi
 fi
 
 echo ""
