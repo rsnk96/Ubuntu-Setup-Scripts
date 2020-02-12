@@ -227,6 +227,15 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
     )
 fi
 
+# If CUDA is installed, build OpenCV with CUDA support
+if which nvcc > /dev/null; then
+    OPENCV_CUDA_FLAGS="-D WITH_CUDA=ON -D WITH_CUBLAS=ON -D WITH_CUFFT=ON -D CUDA_FAST_MATH=ON"
+
+    # Check if CUDNN is installed
+    if whereis cudnn.h > /dev/null; then
+        OPENCV_CUDNN_FLAGS="-D WITH_CUDNN=ON -D OPENCV_DNN_CUDA=ON -D CUDA_ARCH_BIN=5.3,6.0,6.1,7.0,7.5"
+    fi
+fi
 
 # Build tiff on as opencv supports tiff4, which is older version, which ubuntu has dropped
 
@@ -255,10 +264,8 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D WITH_OPENGL=1 \
  -D ENABLE_CXX11=1 \
  -D BUILD_TIFF=ON \
- -D WITH_CUDA=0 \
- -D WITH_CUBLAS=0 \
- -D WITH_CUFFT=0 \
- -D CUDA_FAST_MATH=0 ..
+ ${OPENCV_CUDA_FLAGS} \
+ ${OPENCV_CUDNN_FLAGS} ..
 #  -D BUILD_JAVA=0 \
 #  -D WITH_VTK=0 \
 #  -D BUILD_opencv_freetype=ON \
