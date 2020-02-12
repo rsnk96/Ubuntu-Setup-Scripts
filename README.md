@@ -75,17 +75,10 @@ Additional scripts to built libraries from source:
         sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.config/micro /home/$NEW_USER/.tmux.conf*
         ```
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
-* During the `Build-OpenCV` script, `yasm` package is downloaded while `ffmpeg` is being built. The download link for this package fails to work on certain networks, therefore check the download link as described below before running the script. If it doesn't work, then please switch to a different network. You can switch back to the original network after `yasm` has been downloaded if required
-
-    * If you are on a browser, just open the following page - [http://www.tortall.net/](http://www.tortall.net/)  
-      If a webpage opens up, then the download will work.
-
-    * If you only have a terminal access, run this command : `curl -Is www.tortall.net | head -1`  
-      Output with Status code `200 OK` means that the request has succeeded and the URL is reachable.
-
 * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
 * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `Build-OpenCV.sh` script
-* If you would like to install with OpenCV for CUDA, change the flags, `-D WITH_CUDA=0`, `-D WITH_CUBLAS=0`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH` in the file `Build-OpenCV.sh` to `ON`
+* If CUDA is already installed when building OpenCV from source, it'll be detected and the corresponding flags (`-D WITH_CUDA`, `-D WITH_CUBLAS`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH`) are enabled.
+* Similarly, if CuDNN is also installed, then support for that will be enabled. By default, if CuDNN is installed, then OpenCV's DNN module with support for Nvidia GPUS (only in OpenCV >= 4.2.0) will also be built. Note that this requires GPUs with Compute Capability (i.e. architecture) 5.3 or higher. Default behaviour is build for all supported architectures, but you can speed up the compilation by specifying the architecture in the `CUDA_ARCH_BIN` flag as described below.
 * Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
 * Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
 * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
