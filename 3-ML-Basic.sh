@@ -23,15 +23,20 @@ execute () {
     fi
 }
 
+# Executes first command passed &
+# echo's it to the file passed as second argument 
+run_and_echo () {
+    eval $1
+    echo "$1" >> $2
+}
+
+
 if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" ) ]]; then
     echo "Adding Cuda location to PATH"
-    {
-        echo "# Cuda"
-        echo "export PATH=/usr/local/cuda/bin:\$PATH"
-        echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH"
-        echo "export CUDA_HOME=/usr/local/cuda"
-    } >> $SHELLRC
-    source $SHELLRC
+    run_and_echo "# Cuda" $SHELLRC
+    run_and_echo "export PATH=/usr/local/cuda/bin:\$PATH" $SHELLRC
+    run_and_echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:\$LD_LIBRARY_PATH" $SHELLRC
+    run_and_echo "export CUDA_HOME=/usr/local/cuda" $SHELLRC
 fi
 
 if which nvidia-smi > /dev/null; then 
@@ -61,7 +66,7 @@ else
     PIP="sudo pip3 install"
 fi
 
-execute sudo apt-get install libhdf5-dev
+execute sudo apt-get install libhdf5-dev exiftool ffmpeg -y
 
 # Install opencv from pip only if it isn't already installed. Need to use `pkgutil` because opencv built from source does not appear in `pip list`
 if [[ ! $(python3 -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules()])" | grep cv2) ]]; then

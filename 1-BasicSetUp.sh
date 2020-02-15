@@ -39,9 +39,8 @@ if [[ ! -n $CIINSTALL ]]; then
     sudo apt-get dist-upgrade -y
     sudo apt-get install ubuntu-restricted-extras -y
 fi
-#sudo ubuntu-drivers autoinstall 
 
-# My choice for terminal: Tilda+tmux
+# Choice for terminal that will be adopted: Tilda+tmux
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
 execute sudo apt-get install git wget curl -y
@@ -83,29 +82,9 @@ sudo chsh -s "$(command -v zsh)" "${USER}"
 
 execute sudo apt-get install aria2 -y
 
-touch /opt/.zsh/bash_aliases
+# Create bash aliases
+cp ./config_files/bash_aliases /opt/.zsh/bash_aliases
 ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
-spatialPrint "Adding aliases to ~/.bash_aliases"
-{
-    echo "alias jn=\"jupyter notebook\""
-    echo "alias jl=\"jupyter lab\""
-    echo "alias maxvol=\"pactl set-sink-volume @DEFAULT_SINK@ 150%\""
-    echo "alias download=\"wget --random-wait -r -p --no-parent -e robots=off -U mozilla\""
-    echo "alias server=\"ifconfig | grep inet && python3 -m http.server\""
-    echo "alias gpom=\"git push origin master\""
-    echo "alias update=\"sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y\""
-    echo "alias aria=\"aria2c --file-allocation=none -c -x 10 -s 10\""
-    echo "alias tsux=\"tmux -u new-session \\; \\
-            neww \\; \\
-              send-keys 'htop' C-m \\; \\
-              split-window -h \\; \\
-              send-keys 'nvtop' C-m \\; \\
-              split-window -v \\; \\
-              send-keys 'watch sensors' C-m \\; \\
-              rename-window 'performance' \\; \\
-            select-window -l\""
-
-} >> ~/.bash_aliases
 
 # Now create shortcuts
 execute sudo apt-get install run-one xbindkeys xbindkeys-config wmctrl xdotool -y
@@ -133,13 +112,10 @@ execute /opt/anaconda3/bin/conda clean --all -y
 execute /opt/anaconda3/bin/conda install ipython -y
 
 execute /opt/anaconda3/bin/conda install libgcc -y
-execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython
+execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython jupyterlab
 execute /opt/anaconda3/bin/pip install msgpack
 execute /opt/anaconda3/bin/conda install line_profiler -y
 sed -i.bak "/anaconda3/d" ~/.zshrc
-
-execute /opt/anaconda3/bin/pip install autopep8 scdl youtube-dl jupyterlab
-echo "alias ydl=\"youtube-dl -f 140 --add-metadata --metadata-from-title \\\"%(artist)s - %(title)s\\\" -o \\\"%(title)s.%(ext)s\\\"\"" >> ~/.bash_aliases
 
 execute /opt/anaconda3/bin/conda info --envs
 
@@ -168,21 +144,13 @@ spatialPrint "Adding anaconda to path variables"
 
 ## Detect if an Nvidia card is attached, and install the graphics drivers automatically
 if [[ -n $(lspci | grep -i nvidia) ]]; then
+    spatialPrint "Installing Display drivers and any other auto-detected drivers for your hardware"
     execute sudo add-apt-repository ppa:graphics-drivers/ppa -y
     execute sudo apt-get update
     execute sudo ubuntu-drivers autoinstall
 fi
 
-# echo "The PC will restart now. Check if your display is working, as your display driver would have been updated. Hit [Enter]"
-# echo "Also, when installing CUDA next, ********don't******* install display drivers."
-# echo "In case your drivers don't work, purge gdm3 and use lightdm (sudo apt-get purge lightdm && sudo dpkg-reconfigure gdm3)"
-# read temp
-
-
 spatialPrint "The script has finished."
 if [[ ! -n $CIINSTALL ]]; then
-    # echo "The terminal instance will now close so that the shell changes can take place"
-    # read -p "Press [Enter] to continue..." temp
-    # kill -9 $PPID
     su - $USER
 fi
