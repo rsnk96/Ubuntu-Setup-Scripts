@@ -163,7 +163,7 @@ execute sudo apt-get install libeigen3-dev libtbb-dev -y
 spatialPrint "Optional Dependencies"
 execute sudo apt-get install libprotobuf-dev protobuf-compiler -y
 execute sudo apt-get install libgoogle-glog-dev libgflags-dev -y
-execute sudo apt-get install libhdf5-dev -y
+execute sudo apt-get install libhdf5-dev exiftool -y
 # execute sudo apt-get install doxygen sphinx-common texlive-latex-extra -y
 execute sudo apt-get install libfreetype6-dev libharfbuzz-dev -y
 
