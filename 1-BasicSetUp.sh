@@ -86,6 +86,18 @@ execute sudo apt-get install aria2 -y
 cp ./config_files/bash_aliases /opt/.zsh/bash_aliases
 ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 
+{
+    echo "if [ -f ~/.bash_aliases ]; then"
+    echo "  source ~/.bash_aliases"
+    echo "fi"
+
+    echo "# Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
+    echo "export TERM=xterm-256color"
+
+    echo "# Setting the default text editor to micro, a terminal text editor with shortcuts similar to what you'd encounter in an IDE"
+    echo "export VISUAL=micro"
+} >> ~/.zshrc
+
 # Now create shortcuts
 execute sudo apt-get install run-one xbindkeys xbindkeys-config wmctrl xdotool -y
 cp ./config_files/xbindkeysrc ~/.xbindkeysrc
@@ -97,44 +109,42 @@ aria2c --file-allocation=none -c -x 10 -s 10 --dir /tmp -o bat.deb $latest_bat_s
 execute sudo dpkg -i /tmp/bat.deb
 execute sudo apt-get install -f
 
-spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
-continuum_website=https://repo.continuum.io/archive/
-# Stepwise filtering of the html at $continuum_website
-# Get the topmost line that matches our requirements, extract the file name.
-latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_setup}
-sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
-execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
+# Check if Anaconda is already installed
+if [[ -n $(echo $PATH | grep 'conda') ]]; then
+    echo "Anaconda is already installed, skipping installation"
+    echo "To reinstall, delete the Anaconda install directory and remove from PATH as well"
+else
 
-spatialPrint "Setting up your anaconda"
-execute /opt/anaconda3/bin/conda update conda -y
-execute /opt/anaconda3/bin/conda clean --all -y
-execute /opt/anaconda3/bin/conda install ipython -y
+    spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
+    continuum_website=https://repo.continuum.io/archive/
+    # Stepwise filtering of the html at $continuum_website
+    # Get the topmost line that matches our requirements, extract the file name.
+    latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+    aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_setup}
+    sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
+    execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
-execute /opt/anaconda3/bin/conda install libgcc -y
-execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython jupyterlab
-execute /opt/anaconda3/bin/pip install msgpack
-execute /opt/anaconda3/bin/conda install line_profiler -y
-sed -i.bak "/anaconda3/d" ~/.zshrc
+    spatialPrint "Setting up your anaconda"
+    execute /opt/anaconda3/bin/conda update conda -y
+    execute /opt/anaconda3/bin/conda clean --all -y
+    execute /opt/anaconda3/bin/conda install ipython -y
 
-execute /opt/anaconda3/bin/conda info --envs
+    execute /opt/anaconda3/bin/conda install libgcc -y
+    execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython jupyterlab
+    execute /opt/anaconda3/bin/pip install msgpack
+    execute /opt/anaconda3/bin/conda install line_profiler -y
+    sed -i.bak "/anaconda3/d" ~/.zshrc
 
-spatialPrint "Adding anaconda to path variables"
-{
-    echo "# Anaconda Python. Change the \"conda activate base\" to whichever environment you would like to activate by default"
-    echo ". /opt/anaconda3/etc/profile.d/conda.sh"
-    echo "conda activate base"
+    /opt/anaconda3/bin/conda info -a
 
-    echo "if [ -f ~/.bash_aliases ]; then"
-    echo "  source ~/.bash_aliases"
-    echo "fi"
+    spatialPrint "Adding anaconda to path variables"
+    {
+        echo "# Anaconda Python. Change the \"conda activate base\" to whichever environment you would like to activate by default"
+        echo ". /opt/anaconda3/etc/profile.d/conda.sh"
+        echo "conda activate base"
+    } >> ~/.zshrc
 
-    echo "# Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
-    echo "export TERM=xterm-256color"
-
-    echo "# Setting the default text editor to micro, a terminal text editor with shortcuts similar to what you'd encounter in an IDE"
-    echo "export VISUAL=micro"
-} >> ~/.zshrc
+fi # Anaconda Installation end
 
 # echo "*************************** NOTE *******************************"
 # echo "If you ever mess up your anaconda installation somehow, do"
