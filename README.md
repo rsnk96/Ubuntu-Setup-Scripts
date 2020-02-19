@@ -25,8 +25,9 @@ Run
 `chmod u+x *.sh` to make all scripts executable
 Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh`, `/2-GenSoftware.sh`, and so on.
 * `1-BasicSetUp.sh` - Sets up terminal configuration, a download accelerator, anaconda python, and shell aliases.
+* Now is a good time to restart your PC if you have an Nvidia GPU so that the display driver loads
 * `2-GenSoftware.sh` - Sets up tools for programming(editor, etc), and other general purpose software I use
-* `3-ML-Basic.sh` - Installs from pip commonly used DL libraries
+* `3-ML-Basic.sh` - Installs from pip/conda commonly used DL libraries, and also installs the latest cuda if no cuda is detected
 
 Additional scripts to built libraries from source:
 * `Build-ML.sh` - Compiles commonly used ML/DL libraries from source, so that it is optimized to run on your computer
@@ -54,7 +55,7 @@ Additional scripts to built libraries from source:
 
 ## Notes
 * If you are using this script to set up a computer with many users,
-    * You need to run these scripts using only one user, say `first_user`
+    * You need to run these scripts using **only one** user, say `first_user`. But make sure you have **logged in at least once** into the new user so that the home directory of the other user is instantiated.
     * We need to copy the configuration files to the new user, say `new_user`. From `first_user`'s account, run the following after entering the username of the `new_user` in the second line of this snippet
         ```bash
         cd ~
@@ -75,24 +76,26 @@ Additional scripts to built libraries from source:
         sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.config/micro /home/$NEW_USER/.tmux.conf*
         ```
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
-* OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
-* If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `Build-OpenCV.sh` script
-* If CUDA is already installed when building OpenCV from source, it'll be detected and the corresponding flags (`-D WITH_CUDA`, `-D WITH_CUBLAS`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH`) are enabled.
-* Similarly, if CuDNN is also installed, then support for that will be enabled. By default, if CuDNN is installed, then OpenCV's DNN module with support for Nvidia GPUS (only in OpenCV >= 4.2.0) will also be built. Note that this requires GPUs with Compute Capability (i.e. architecture) 5.3 or higher. Default behaviour is build for all supported architectures, but you can speed up the compilation by specifying the architecture in the `CUDA_ARCH_BIN` flag as described below.
-* Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
-* Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
-* OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
-* After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
+* `Build-OpenCV.sh`
+    * OpenCV is built to link to an `ffmpeg` that is built from scratch using [Markus' script](https://github.com/markus-perl/ffmpeg-build-script). The `ffmpeg` that is built is stored in `/opt/ffmpeg-build-script`. While the binaries are copied to `/usr/local/bin`, the specific versions of `libavcodec` and other referenced libraries are still maintained at `/opt/ffmpeg-build-script/workspace/lib`
+    * If you have Anaconda Python, OpenCV will be linked to Anaconda Python by default, not the Linux default python. If you would like to compile for the Linux default Python, remove Anaconda from your path before running the `Build-OpenCV.sh` script
+    * If CUDA is already installed when building OpenCV from source, it'll be detected and the corresponding flags (`-D WITH_CUDA`, `-D WITH_CUBLAS`, `-D WITH_CUFFT`,`-D CUDA_FAST_MATH`) are enabled.
+    * Similarly, if CuDNN is also installed, then support for that will be enabled. By default, if CuDNN is installed, then OpenCV's DNN module with support for Nvidia GPUS (only in OpenCV >= 4.2.0) will also be built. Note that this requires GPUs with Compute Capability (i.e. architecture) 5.3 or higher. Default behaviour is build for all supported architectures, but you can speed up the compilation by specifying the architecture in the `CUDA_ARCH_BIN` flag as described below.
+    * Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
+    * Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
+    * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
+    * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
-  ```bash
-   -D ENABLE_SSE=OFF \
-   -D ENABLE_SSE2=OFF \
-   -D ENABLE_SSE3=OFF ..
-  ```
+      ```bash
+      -D ENABLE_SSE=OFF \
+      -D ENABLE_SSE2=OFF \
+      -D ENABLE_SSE3=OFF ..
+      ```
 
-  If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
-* If you run into compilation problems or something else during OpenCV installation, make sure to remove the entire `build` folder inside `opencv` directory before rebuilding, otherwise strange errors can pop up.
-* Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
+      If you still want to be able to receive the benefits of CPU optimization to whatever extent you can, then hit `cat /proc/cpuinfo` and see what `sse`s are available under flags
+    * If you run into compilation problems or something else during OpenCV installation, make sure to remove the entire `build` folder inside `opencv` directory before rebuilding, otherwise strange errors can pop up.
+* `Build-ML.sh`
+    * Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
 * If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
   * OpenCV   
   Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-OpenCV.sh#L170) in the `Build-OpenCV` script.  

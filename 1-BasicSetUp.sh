@@ -120,9 +120,9 @@ else
     # Stepwise filtering of the html at $continuum_website
     # Get the topmost line that matches our requirements, extract the file name.
     latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
-    aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh ${continuum_website}${latest_anaconda_setup}
+    aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh --dir ./extras ${continuum_website}${latest_anaconda_setup}
     sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
-    execute bash ./anacondaInstallScript.sh -f -b -p /opt/anaconda3
+    execute bash ./extras/anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
     spatialPrint "Setting up your anaconda"
     execute /opt/anaconda3/bin/conda update conda -y
