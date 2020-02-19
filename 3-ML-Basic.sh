@@ -31,6 +31,22 @@ run_and_echo () {
 }
 
 
+if [[ (-n $(lspci | grep -i nvidia)) && (! ( -d "/usr/local/cuda" ) ) ]]; then
+    echo "Installing the latest cuda"
+    cuda_instr_block=$(wget -q -O - 'https://developer.nvidia.com/cuda-downloads' | grep wget | head -n 1)
+    cuda_download_command=$(echo ${cuda_instr_block} | sed 's#\(.*\)"cudaBash">.*#\1#' | sed 's#.*"cudaBash">\([^<]*\).*#\1#' )
+    cuda_install_command=$(echo ${cuda_instr_block} | sed 's#.*"cudaBash">\([^<]*\).*#\1#' | sed 's#&nbsp;# ./extras/#' ) # Get everything after the last `"cudaBash"` block till the next `<` character, replace the &nbsp; with a download path
+    if [[ $(command -v aria2c) ]]; then
+        cuda_download_command=$(echo ${cuda_download_command} | sed 's#wget#aria2c --file-allocation=none -c -x 10 -s 10 --dir extras#' )
+    else
+        cuda_download_command=$(${cuda_download_command} -P ./extras)
+    fi
+
+    $cuda_download_command
+    execute $cuda_install_command --silent --toolkit --run-nvidia-xconfig
+fi
+
+
 if [[ (! -n $(echo $PATH | grep 'cuda')) && ( -d "/usr/local/cuda" ) ]]; then
     echo "Adding Cuda location to PATH"
     run_and_echo "# Cuda" $SHELLRC
@@ -73,7 +89,7 @@ if [[ ! $(python3 -c "import pkgutil; print([p[1] for p in pkgutil.iter_modules(
     $PIP opencv-contrib-python --upgrade
 fi
 
-execute $PIP --upgrade numpy tabulate python-dateutil
+execute $PIP --upgrade numpy pandas tabulate python-dateutil
 execute $PIP --upgrade keras
 
 if [[ -n $(command -v nvidia-smi) ]]; then
