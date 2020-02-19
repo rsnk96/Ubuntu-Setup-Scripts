@@ -69,13 +69,8 @@ fi
 spatialPrint "Setting up Zsh + Zim now"
 execute sudo apt-get install zsh -y
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
-git clone --recursive --quiet --branch zsh-5.2 https://github.com/zimfw/zimfw.git /opt/.zsh/zim
-ln -s /opt/.zsh/zim/ ~/.zim
-ln -s /opt/.zsh/zim/templates/zimrc ~/.zimrc
-ln -s /opt/.zsh/zim/templates/zlogin ~/.zlogin
-ln -s /opt/.zsh/zim/templates/zshrc ~/.zshrc
-git clone https://github.com/zsh-users/zsh-autosuggestions /opt/.zsh/zsh-autosuggestions
-echo "source /opt/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+export ZIM_HOME=/opt/.zsh/zim
+curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
