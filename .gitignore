@@ -3,6 +3,8 @@ opencv_contrib
 tensorflow
 zsh
 pytorch
-anacondaInstallScript.sh
+extras/*.sh
+extras/*.run
+extras/*.deb
 nvtop/
 bazel_*
