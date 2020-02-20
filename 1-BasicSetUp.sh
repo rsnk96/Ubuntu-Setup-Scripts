@@ -67,7 +67,16 @@ if [[ -d $zsh_folder ]];then
 fi
 
 spatialPrint "Setting up Zsh + Zim now"
-execute sudo apt-get install zsh -y
+# Ubuntu 16.04 has older zsh in repository
+if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -le 16 ]]; then
+    wget https://gist.githubusercontent.com/rsnk96/87229bd910e01f2ee7c35f96d7cb2f6c/raw/f068812ebd711ed01ebc4c128c8624730ab0dc81/build-zsh.sh -O extras/build-zsh.sh
+    # Install latest zsh release
+    sed -i '/cd zsh/a git checkout $(git tag | tail -1)' extras/build-zsh.sh
+    bash extras/build-zsh.sh
+else
+    execute sudo apt-get install zsh -y
+fi
+
 sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
 export ZIM_HOME=/opt/.zsh/zim
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
