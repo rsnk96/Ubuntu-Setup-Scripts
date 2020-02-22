@@ -30,6 +30,8 @@ run_and_echo () {
     echo "$1" >> $2
 }
 
+# For utilities such as lspci
+execute sudo apt-get install pciutils
 
 if [[ (-n $(lspci | grep -i nvidia)) && (! ( -d "/usr/local/cuda" ) ) ]]; then
     echo "Installing the latest cuda"

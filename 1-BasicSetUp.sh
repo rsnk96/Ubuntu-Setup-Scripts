@@ -156,6 +156,9 @@ fi # Anaconda Installation end
 # echo "\$ conda clean --all"
 # echo "Do this for each environment as well as your root. Then reinstall all except nomkl"
 
+# For utilities such as lspci
+execute sudo apt-get install pciutils
+
 ## Detect if an Nvidia card is attached, and install the graphics drivers automatically
 if [[ -n $(lspci | grep -i nvidia) ]]; then
     spatialPrint "Installing Display drivers and any other auto-detected drivers for your hardware"
