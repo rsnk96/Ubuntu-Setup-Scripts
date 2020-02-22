@@ -21,8 +21,6 @@ Every script is rock stable and runs against [Travis CI](https://travis-ci.org) 
 ## Usage instructions
 First download/clone this repository
 
-Run
-`chmod u+x *.sh` to make all scripts executable
 Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh`, `/2-GenSoftware.sh`, and so on.
 * `1-BasicSetUp.sh` - Sets up terminal configuration, a download accelerator, anaconda python, and shell aliases.
 * Now is a good time to restart your PC if you have an Nvidia GPU so that the display driver loads
@@ -113,6 +111,9 @@ Additional scripts to built libraries from source:
   
   Although it should work on other configurations out of the box, I have not tested them
 
+* Docker Images
+  * An example `Dockerfile` is present in the repository, which builds OpenCV with CUDA support enabled. Customize it as required for specific requirements such as different CUDA versions, CPU-only images, etc.
+  * Some images built using these scripts can be found at [Docker Hub](https://hub.docker.com/repository/docker/rajat2004/ubuntu-setup-scripts)
 
 ## Tmux shortcuts conf:
 In the description of shortcuts below, if two keys are connected with a `+`, then the second key is to be pressed while keeping the first key pressed. If two keys are connected with a ` `(space), then the previous key/keys are to be released before the next key is pressed. If two keys are separated by a `/`, then it means you can choose any of the specified keys
@@ -125,10 +126,4 @@ In the description of shortcuts below, if two keys are connected with a `+`, the
 
 
 ## Alternatives
-* A [docker image](https://hub.docker.com/r/varun19299/cvi-iitm/) for this set-up (last updated Jan 30th, 2017)
 * A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
-
-
-## To Dos 
-- [x] CI
-- [ ] configuring default wifi settings
