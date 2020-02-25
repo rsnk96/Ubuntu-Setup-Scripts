@@ -60,11 +60,12 @@ Additional scripts to built libraries from source:
         ```bash
         cd ~
         export NEW_USER=<username_of_new_user>
-        sudo cp -r /opt/.zsh/zim/ /home/$NEW_USER/.zim
         sudo cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
-        sudo cp /opt/.zsh/zim/templates/zimrc /home/$NEW_USER/.zimrc
-        sudo cp /opt/.zsh/zim/templates/zlogin /home/$NEW_USER/.zlogin
+        sudo cp -r ~/.zim/ /home/$NEW_USER/.zim
+        sudo cp ~/.zimrc /home/$NEW_USER/.zimrc
+        sudo cp ~/.zlogin /home/$NEW_USER/.zlogin
         sudo cp ~/.zshrc /home/$NEW_USER/.zshrc
+        sudo cp ~/.zshenv /home/$NEW_USER/.zshenv
 
         sudo cp ~/.xbindkeysrc /home/$NEW_USER
         sudo mkdir -p /home/$NEW_USER/.config/tilda
