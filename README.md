@@ -114,7 +114,7 @@ Additional scripts to built libraries from source:
 
 * Docker Images
   * An example `Dockerfile` is present in the repository, which builds OpenCV with CUDA support enabled. Customize it as required for specific requirements such as different CUDA versions, CPU-only images, etc.
-  * Some images built using these scripts can be found at [Docker Hub](https://hub.docker.com/repository/docker/rajat2004/ubuntu-setup-scripts)
+  * Some images built using these scripts can be found at [Docker Hub](https://hub.docker.com/r/rajat2004/ubuntu-setup-scripts)
 
 ## Tmux shortcuts conf:
 In the description of shortcuts below, if two keys are connected with a `+`, then the second key is to be pressed while keeping the first key pressed. If two keys are connected with a ` `(space), then the previous key/keys are to be released before the next key is pressed. If two keys are separated by a `/`, then it means you can choose any of the specified keys
