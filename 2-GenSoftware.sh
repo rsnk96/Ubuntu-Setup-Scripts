@@ -71,7 +71,7 @@ elif which caja > /dev/null; then
     execute sudo apt-get install caja-dropbox -y
 fi
 
-# TLP manager 
+# TLP manager
 execute sudo add-apt-repository ppa:linrunner/tlp -y
 execute sudo apt-get update
 execute sudo apt-get install tlp tlp-rdw -y
@@ -84,11 +84,14 @@ execute sudo apt-get update
 
 execute sudo apt-get install redshift redshift-gtk shutter -y
 
-mkdir -p ~/.config/autostart 
+mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
 execute sudo apt-get install htop gparted expect -y
+
+# Meld - Visual diff and merge tool
+execute sudo apt-get install meld -y
 
 # Boot repair
 execute sudo add-apt-repository ppa:yannubuntu/boot-repair -y
@@ -146,7 +149,7 @@ if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -ge 1
 fi
 
 # Browsers
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 execute sudo apt-get update  -y
 execute sudo apt-get install google-chrome-stable -y
@@ -173,7 +176,7 @@ if [[ ! -n $CIINSTALL ]]; then
 
     # Skype - travis doesn't allow dpkg -i for some reason
     # echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | sudo tee /etc/apt/sources.list.d/skype-stable.list
-    # execute wget https://repo.skype.com/data/SKYPE-GPG-KEY 
+    # execute wget https://repo.skype.com/data/SKYPE-GPG-KEY
     # execute sudo apt-key add SKYPE-GPG-KEY
     # execute sudo apt install apt-transport-https
     # execute sudo apt update
