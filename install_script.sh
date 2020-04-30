@@ -181,7 +181,10 @@ mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
-sudo apt-get install htop gparted expect -y
+# REMVOE THE THIRD LINE for production desktops because it will boot the PC into power saving mode
+sudo apt-get install htop indicator-cpufreq gparted expect -y
+cpufreq-info
+sudo sed -i 's/^GOVERNOR=.*/GOVERNOR=”powersave”/' /etc/init.d/cpufrequtils
 
 # Boot repair
 sudo add-apt-repository ppa:yannubuntu/boot-repair -y
