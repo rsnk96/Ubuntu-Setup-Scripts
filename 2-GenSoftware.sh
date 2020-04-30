@@ -88,8 +88,8 @@ mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
 cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
-execute sudo apt-get install htop indicator-cpufreq gparted expect -y
-execute cpufreq-info
+execute sudo apt-get install htop cpufrequtils indicator-cpufreq gparted expect -y
+execute /usr/bin/cpufreq-info
 sudo sed -i 's/^GOVERNOR=.*/GOVERNOR=”powersave”/' /etc/init.d/cpufrequtils
 
 # Meld - Visual diff and merge tool
