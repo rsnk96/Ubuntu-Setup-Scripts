@@ -114,20 +114,20 @@ elif test "$tempvar" = "s"; then
         execute git pull origin master
     )
     fi
-    
+
     cd tensorflow
 #     Checkout the latest release candidate, as it should be relatively stable
     latest_tag="$(git tag --sort=-creatordate | egrep -v '-' | head -1)"
     git checkout $latest_tag
 
     # Install latest version of Bazel supported for the Tensorflow version being installed
-    BAZEL_VERSION="$(cat configure.py | grep "_TF_MAX_BAZEL_VERSION" | grep -o -E "[0-9].[0-9][0-9].[0-9]" | head -1)"
+    BAZEL_VERSION="$(cat configure.py | grep "_TF_MAX_BAZEL_VERSION = " | grep -o -E "[0-9]{1,}.[0-9]{1,}.[0-9]{1,}")"
     execute sudo apt-get install -y g++ zlib1g-dev bash-completion
     cd ..
     execute curl -LO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb"
     sudo dpkg -i bazel_*.deb
     cd tensorflow
-    
+
     if [[ ! -n $CIINSTALL ]]; then
         read -p "Starting Configuration process. Be alert for the queries it will throw at you. Press [Enter]" temp
         execute ./configure
@@ -145,7 +145,7 @@ elif test "$tempvar" = "s"; then
 
     bazel build --config=opt${MKL_OPTIM}${GPU_OPTIM} //tensorflow/tools/pip_package:build_pip_package
     cd ../
-    
+
     execute bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
     execute $PIP /tmp/tensorflow_pkg/*.whl --force-reinstall
     cd ../
