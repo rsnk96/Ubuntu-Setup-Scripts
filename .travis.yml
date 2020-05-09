@@ -3,6 +3,15 @@ os: linux
 env: CIINSTALL=yes
 
 jobs:
+  allow_failures:
+    - name: xenial-ml
+      dist: xenial
+      python: 3.7
+
+    - name: bionic-ml
+      dist: bionic
+      python: 3.7
+
   include:
     - name: xenial-basic
       dist: xenial
@@ -15,7 +24,7 @@ jobs:
 
     - name: xenial-opencv
       dist: xenial
-      script: 
+      script:
       - ./Build-OpenCV.sh
       - ffmpeg -version
       - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
@@ -53,7 +62,7 @@ jobs:
 
     - name: bionic-opencv
       dist: bionic
-      script: 
+      script:
       - ./Build-OpenCV.sh
       - ffmpeg -version
       - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
