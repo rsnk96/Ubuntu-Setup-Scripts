@@ -10,12 +10,12 @@ Every script is rock stable and runs against [Travis CI](https://travis-ci.org) 
 
 | 1-BasicSetUp and 2-GenSoftware | 3-ML-Basic | Build-OpenCV  | Build-OpenCV in a conda env |
 |-------------------|-------------------|-------------------|--------------------|
-| [![Build1][6]][11] | [![Build2][9]][11] | [![Build3][7]][11] | [![Build4][10]][11] |
+| [![Build1][5]][11] | [![Build2][7]][11] | [![Build3][6]][11] | [![Build4][8]][11] |
 
+[5]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/5
 [6]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/6
 [7]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/7
-[9]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/9
-[10]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/10
+[8]: https://travis-matrix-badges.herokuapp.com/repos/rsnk96/Ubuntu-Setup-Scripts/branches/master/8
 [11]: https://travis-ci.org/rsnk96/Ubuntu-Setup-Scripts
 
 ## Usage instructions
@@ -82,7 +82,7 @@ Additional scripts to built libraries from source:
     * Similarly, if CuDNN is also installed, then support for that will be enabled. By default, if CuDNN is installed, then OpenCV's DNN module with support for Nvidia GPUS (only in OpenCV >= 4.2.0) will also be built. Note that this requires GPUs with Compute Capability (i.e. architecture) 5.3 or higher. Default behaviour is build for all supported architectures, but you can speed up the compilation by specifying the architecture in the `CUDA_ARCH_BIN` flag as described below.
     * Building OpenCV with CUDA enabled can take a very long time, since it has to build the same code for all GPU architectures. If you don't need to compile for all architectures, you can specify the architecture using `CUDA_ARCH_BIN` such as 30 for Kepler, 61 for Pascal, etc. Information about your GPU can be found at [Nvidia's page](https://developer.nvidia.com/cuda-gpus)
     * Non-free & patented algorithms in OpenCV such as SIFT & SURF have been enabled, for disabling them, set the flag `-D OPENCV_ENABLE_NONFREE=ON` to off
-    * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9) 
+    * OpenCV will be built without support for Python 2. If you would like to build it with Python 2 support, then add back the lines removed in [this commit](https://github.com/rsnk96/Ubuntu-Setup-Scripts/commit/1e50b5fabff0026300879eb73ed36bb9b34ed6c9)
     * After OpenCV installation, if you get an error of the sort `illegal hardware instructions` when you try to run a python or c++ program, that is because your CPU is an older one (Pentium/Celeron/...). You can overcome this by adding the following to the end of the cmake (just before the `..`)
 
       ```bash
@@ -96,20 +96,20 @@ Additional scripts to built libraries from source:
 * `Build-ML.sh`
     * Building Tensorflow from source has different configuration options, info on which can be seen on [Tensorflow's Build from Source page](https://www.tensorflow.org/install/source). Note that by default, 2.x version of Tensorflow will be built, to build 1.x version, add `--config=v1` to the bazel build command
 * If you want to install a specific version of OpenCV or Tensorflow, i.e different from the latest release, make the following changes. The scripts should work with different versions but they haven't been tested
-  * OpenCV   
-  Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-OpenCV.sh#L170) in the `Build-OpenCV` script.  
-  Add the line below the above commented out one specifying the OpenCV version which you want like this: `latest_tag="3.4.5"`  
-  Alternatively, you could just replace `$latest_tag` with the tag of the version in the following 2 lines: `git checkout -f $latest_tag`  
-  Make sure that the tag of the OpenCV version you want is correct. The tags of all the releases can be checked here - [https://github.com/opencv/opencv/tags](https://github.com/opencv/opencv/tags) 
+  * OpenCV
+  Comment out the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-OpenCV.sh#L170) in the `Build-OpenCV` script.
+  Add the line below the above commented out one specifying the OpenCV version which you want like this: `latest_tag="3.4.5"`
+  Alternatively, you could just replace `$latest_tag` with the tag of the version in the following 2 lines: `git checkout -f $latest_tag`
+  Make sure that the tag of the OpenCV version you want is correct. The tags of all the releases can be checked here - [https://github.com/opencv/opencv/tags](https://github.com/opencv/opencv/tags)
 
-  * Tensorflow  
-  Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-ML.sh#L120) of Tensorflow and replace with the tag of the version required.  
+  * Tensorflow
+  Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-ML.sh#L120) of Tensorflow and replace with the tag of the version required.
   The tags of all the Tensorflow releases can be checked here - [https://github.com/tensorflow/tensorflow/tags](https://github.com/tensorflow/tensorflow/tags)
-* These scripts are written and tested on the following configurations - 
+* These scripts are written and tested on the following configurations -
   * Ubuntu 16.04 & 18.04
   * 32-bit and 64-bit Intel Processors
   * `ML-Build.sh` - NVIDIA GPUs including but not limited to GeForce GTX 1080, 1070, 940MX, 850M, and Titan X
-  
+
   Although it should work on other configurations out of the box, I have not tested them
 
 * Docker Images
