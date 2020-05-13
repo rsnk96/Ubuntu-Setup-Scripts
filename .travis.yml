@@ -27,7 +27,7 @@ jobs:
       script:
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
+      - python3 extras/opencv_test.py
       python: 3.7
 
     - name: xenial-ml
@@ -48,7 +48,7 @@ jobs:
       - hash -r  # To reload env vars like PATH
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
+      - python extras/opencv_test.py
       python: 3.7
 
     - name: bionic-basic
@@ -65,7 +65,7 @@ jobs:
       script:
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
+      - python3 extras/opencv_test.py
       python: 3.7
 
     - name: bionic-ml
@@ -86,7 +86,7 @@ jobs:
       - hash -r  # To reload env vars like PATH
       - ./Build-OpenCV.sh
       - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
+      - python extras/opencv_test.py
       python: 3.7
 
 before_install:
