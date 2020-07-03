@@ -105,11 +105,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         touch "$(pwd)/packages/yasm.done"
         execute sudo apt-get install yasm -y
 
-        # Ubuntu 16.04 has older non-compatible nasm in apt repository
-        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -ge 18 ]]; then
-            touch "$(pwd)/packages/nasm.done"
-            execute sudo apt-get install nasm -y
-        fi
+        execute sudo apt-get install nasm -y
 
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
@@ -219,11 +215,6 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
 
         rename_so libfontconfig.so
         rename_so libpangoft2-1.0.so
-
-        # Ubuntu 16.04 Anaconda has conflicting libtbb
-        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -le 16 ]]; then
-            rename_so libtbb.so
-        fi
     )
 fi
 
