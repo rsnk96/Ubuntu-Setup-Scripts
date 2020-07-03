@@ -25,7 +25,7 @@ execute () {
 }
 
 # Executes first command passed &
-# echo's it to the file passed as second argument 
+# echo's it to the file passed as second argument
 run_and_echo () {
     eval $1
     echo "$1" >> $2
@@ -94,7 +94,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     execute sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
     execute sudo apt-get --purge remove libav-tools -y
     execute sudo apt-get install libasound2-dev -y
-    execute sudo mkdir -p /opt/ffmpeg-build-script 
+    execute sudo mkdir -p /opt/ffmpeg-build-script
     execute sudo chmod ugo+w /opt/ffmpeg-build-script
     {
         cd /opt/ffmpeg-build-script
@@ -103,9 +103,8 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         # The nasm.us, tortall.net for yasm sites can cause problems. So use apt instead
         mkdir -p packages
         touch "$(pwd)/packages/yasm.done"
-        execute sudo apt-get install yasm -y
-
-        execute sudo apt-get install nasm -y
+        touch "$(pwd)/packages/nasm.done"
+        execute sudo apt-get install yasm nasm -y
 
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
@@ -114,7 +113,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         sed -i 's/-DBUILD_SHARED_LIBS=OFF/-DBUILD_SHARED_LIBS=ON/g' build-ffmpeg
         # Build libaom as a shared library
         sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
-        
+
         AUTOINSTALL=yes ./build-ffmpeg --build
 
         echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
@@ -141,7 +140,7 @@ execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Video manipulation libraries"
 execute sudo apt-get install libxine2-dev  -y
-execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncomment if you want to enable other backends
+execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y
 
 spatialPrint "Codecs"
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
@@ -232,6 +231,7 @@ fi
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
  -D CMAKE_C_COMPILER=/usr/bin/gcc-8 \
+ -D CMAKE_CXX_COMPILER=/usr/bin/g++-8 \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
  -D WITH_HDF5=ON \
