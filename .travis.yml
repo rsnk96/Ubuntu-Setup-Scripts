@@ -1,93 +1,91 @@
 language: python
+python: 3.7
 os: linux
-env: CIINSTALL=yes
 
 jobs:
   allow_failures:
     - name: bionic-ml
       dist: bionic
-      python: 3.7
 
     - name: focal-ml
       dist: focal
-      python: 3.7
 
   include:
     - name: bionic-basic
       dist: bionic
-      script:
-      - ./1-BasicSetUp.sh
-      - export PATH=/opt/anaconda3/bin:$PATH
-      - hash -r  # To reload env vars like PATH
-      - ./2-GenSoftware.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=12 # BasicSetup + GenSoftware
 
     - name: bionic-opencv
       dist: bionic
-      script:
-      - ./Build-OpenCV.sh
-      - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=4 # Build-OpenCV
 
     - name: bionic-ml
       dist: bionic
-      script: ./Build-ML.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=5 # BuildML
 
     - name: bionic-ml-basic
       dist: bionic
-      script: ./3-ML-Basic.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=3 # ML-Basic
 
     - name: bionic-opencv-conda
       dist: bionic
-      script:
-      - ./1-BasicSetUp.sh
-      - export PATH=/opt/anaconda3/bin:$PATH
-      - hash -r  # To reload env vars like PATH
-      - ./Build-OpenCV.sh
-      - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=14 # BasicSetup + OpenCV (Conda OpenCV)
 
     - name: focal-basic
       dist: focal
-      script:
-      - ./1-BasicSetUp.sh
-      - export PATH=/opt/anaconda3/bin:$PATH
-      - hash -r  # To reload env vars like PATH
-      - ./2-GenSoftware.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=12 # BasicSetup + GenSoftware
 
     - name: focal-opencv
       dist: focal
-      script:
-      - ./Build-OpenCV.sh
-      - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python3 extras/opencv_test.py
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=4 # Build-OpenCV
 
     - name: focal-ml
       dist: focal
-      script: ./Build-ML.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=5 # BuildML
 
     - name: focal-ml-basic
       dist: focal
-      script: ./3-ML-Basic.sh
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=3 # ML-Basic
 
     - name: focal-opencv-conda
       dist: focal
-      script:
-      - ./1-BasicSetUp.sh
-      - export PATH=/opt/anaconda3/bin:$PATH
-      - hash -r  # To reload env vars like PATH
-      - ./Build-OpenCV.sh
-      - ffmpeg -version
-      - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
-      python: 3.7
+      env: CIINSTALL=yes SCRIPT=14 # BasicSetup + OpenCV (Conda OpenCV)
+
+script:
+  # BasicSetup + GenSoftware
+  - if [[ $SCRIPT -eq 12 ]]; then
+      ./1-BasicSetUp.sh;
+      export PATH=/opt/anaconda3/bin:$PATH;
+      hash -r;
+      ./2-GenSoftware.sh;
+    fi
+
+  # ML-Basic
+  - if [[ $SCRIPT -eq 3 ]]; then
+      ./3-ML-Basic.sh;
+    fi
+
+  # Build-OpenCV
+  - if [[ $SCRIPT -eq 4 ]]; then
+      ./Build-OpenCV.sh;
+      ffmpeg -version;
+      python3 extras/opencv_test.py;
+    fi
+
+  # BasicSetup + OpenCV (Conda OpenCV)
+  - if [[ $SCRIPT -eq 14 ]]; then
+      ./1-BasicSetUp.sh;
+      export PATH=/opt/anaconda3/bin:$PATH;
+      hash -r;
+      ./Build-OpenCV.sh;
+      ffmpeg -version;
+      python extras/opencv_test.py;
+    fi
+
+  # BuildML
+  - if [[ $SCRIPT -eq 5 ]]; then
+      ./Build-ML.sh;
+    fi
 
 before_install:
     - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
