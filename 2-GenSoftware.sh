@@ -14,7 +14,10 @@ execute () {
 
 execute sudo apt-get install libboost-all-dev curl -y
 
-if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -le 17 ]]; then
+# Get the OS version number (major e.g. 20, 18)
+OS_MAJOR_VERSION=$(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1)
+
+if [[ OS_MAJOR_VERSION -lt 20 ]]; then  # TODO: Remove when packages available for 20.04
     execute sudo add-apt-repository ppa:noobslab/themes -y
     execute sudo apt-get update
 fi
@@ -130,9 +133,11 @@ fi
 
 
 # Grub customization
-execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
-execute sudo apt-get update
-execute sudo apt-get install grub-customizer -y
+if [[ OS_MAJOR_VERSION -lt 20 ]]; then # TODO: Remove when packages available for 20.04
+    execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
+    execute sudo apt-get update
+    execute sudo apt-get install grub-customizer -y
+fi
 
 # Screen Recorder
 execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
@@ -147,9 +152,7 @@ execute sudo apt-get install xdotool keepass2 -y
 execute sudo apt-get install vlc -y
 execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
 
-if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -ge 18 ]]; then
-    execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
-fi
+execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
 
 # Browsers
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
