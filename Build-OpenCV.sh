@@ -64,11 +64,10 @@ fi
 
 
 execute sudo apt-get update
-execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall -y
-execute sudo apt-get install libopenblas-dev liblapacke-dev libatlas-base-dev gfortran -y
+execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall gcc-8 g++-8 -y
 
 spatialPrint "Image manipulation libraries"
-execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
+execute sudo apt-get install libpng-dev libjpeg-dev libtiff-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
     PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
@@ -88,7 +87,7 @@ $PIP dlib
 echo "# ffmpeg-build-script" >> $SHELLRC
 execute sudo apt-get install x264 libx264-dev ffmpeg -y
 execute sudo apt-get install libasound2-dev -y
-execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev -y
+execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev libavresample-dev -y
 
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
@@ -146,18 +145,19 @@ execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Video manipulation libraries"
 execute sudo apt-get install libxine2-dev  -y
+execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncomment if you want to enable other backends
 
 spatialPrint "Codecs"
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 execute sudo apt-get install yasm libtheora-dev libvorbis-dev libxvidcore-dev -y
-execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
 execute sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly -y
 
 spatialPrint "Java"
 execute sudo apt-get install -y ant default-jdk
 
-spatialPrint "Parallelism libraries"
+spatialPrint "Parallelism and optimization libraries"
+execute sudo apt-get install libopenblas-dev liblapacke-dev libatlas-base-dev gfortran -y
 execute sudo apt-get install libeigen3-dev libtbb-dev -y
 
 spatialPrint "Optional Dependencies"
@@ -240,6 +240,7 @@ fi
 # Build tiff on as opencv supports tiff4, which is older version, which ubuntu has dropped
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
+ -D CMAKE_C_COMPILER=/usr/bin/gcc-8 \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
  -D WITH_HDF5=ON \

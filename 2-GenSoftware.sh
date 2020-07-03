@@ -43,8 +43,10 @@ if [ "$tempvar" = "v" ]; then
     execute sudo apt-get install code -y # or code-insiders
     execute rm microsoft.gpg
 elif [ "$tempvar" = "a" ]; then
-    execute sudo add-apt-repository ppa:webupd8team/atom
-    execute sudo apt-get update; execute sudo apt-get install atom -y
+    wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
+    execute sudo apt-get update
+    execute sudo apt-get install atom
 elif [ "$tempvar" = "s" ]; then
     wget -q -O - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
     echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -82,7 +84,7 @@ execute sudo apt-get install lm-sensors hddtemp -y
 execute sudo apt-get install psensor xsensors -y
 execute sudo apt-get update
 
-execute sudo apt-get install redshift redshift-gtk shutter -y
+execute sudo apt-get install flameshot -y
 
 mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart

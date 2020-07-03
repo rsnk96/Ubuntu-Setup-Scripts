@@ -2,8 +2,8 @@
 "run-one xdg-open ~"
     Mod2+Mod4 + e
 
-# Screenshot with Shutter, which will be saved in /tmp
-"shutter -s -o '/tmp/%y-%m-%d_$w_$h.png' -c -e"
+# Screenshot with Flameshot, which will be saved in /tmp
+"flameshot gui -r > /tmp/$(whoami)_$(date +%Y_%m_%d_%H_%M_%S).png"
     Control+Shift+Alt + p
 
 # Maximize window
