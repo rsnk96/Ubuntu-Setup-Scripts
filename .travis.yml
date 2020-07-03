@@ -11,7 +11,7 @@ jobs:
     - name: bionic-ml
       dist: bionic
       python: 3.7
-    
+
     - name: focal-ml
       dist: focal
       python: 3.7
@@ -92,8 +92,8 @@ jobs:
       - ffmpeg -version
       - gdb --ex='set confirm on' -ex=run -ex=bt -ex=quit --args python extras/opencv_test.py
       python: 3.7
-    
-      - name: focal-basic
+
+    - name: focal-basic
       dist: focal
       script:
       - ./1-BasicSetUp.sh
