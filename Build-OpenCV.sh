@@ -105,7 +105,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         sed -i 's/-DENABLE_SHARED:bool=off/-DENABLE_SHARED:bool=on/g' build-ffmpeg
         sed -i 's/-DBUILD_SHARED_LIBS=OFF/-DBUILD_SHARED_LIBS=ON/g' build-ffmpeg
         # Build libaom as a shared library
-        sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
+        sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH="${WORKSPACE}" "$PACKAGES"\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 --cc="gcc -fPIC" -DCMAKE_INSTALL_PREFIX:PATH="${WORKSPACE}" "$PACKAGES"\/av1/g' build-ffmpeg
 
         AUTOINSTALL=yes ./build-ffmpeg --build
 
