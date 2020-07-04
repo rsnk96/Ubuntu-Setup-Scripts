@@ -14,7 +14,10 @@ execute () {
 
 execute sudo apt-get install libboost-all-dev curl -y
 
-if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -le 17 ]]; then
+# Get the OS version number (major e.g. 20, 18)
+OS_MAJOR_VERSION=$(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1)
+
+if [[ OS_MAJOR_VERSION -lt 20 ]]; then  # TODO: Remove when packages available for 20.04
     execute sudo add-apt-repository ppa:noobslab/themes -y
     execute sudo apt-get update
 fi
@@ -43,8 +46,10 @@ if [ "$tempvar" = "v" ]; then
     execute sudo apt-get install code -y # or code-insiders
     execute rm microsoft.gpg
 elif [ "$tempvar" = "a" ]; then
-    execute sudo add-apt-repository ppa:webupd8team/atom
-    execute sudo apt-get update; execute sudo apt-get install atom -y
+    wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
+    execute sudo apt-get update
+    execute sudo apt-get install atom
 elif [ "$tempvar" = "s" ]; then
     wget -q -O - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
     echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -82,7 +87,7 @@ execute sudo apt-get install lm-sensors hddtemp -y
 execute sudo apt-get install psensor xsensors -y
 execute sudo apt-get update
 
-execute sudo apt-get install redshift redshift-gtk shutter -y
+execute sudo apt-get install flameshot -y
 
 mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
@@ -128,9 +133,11 @@ fi
 
 
 # Grub customization
-execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
-execute sudo apt-get update
-execute sudo apt-get install grub-customizer -y
+if [[ OS_MAJOR_VERSION -lt 20 ]]; then # TODO: Remove when packages available for 20.04
+    execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
+    execute sudo apt-get update
+    execute sudo apt-get install grub-customizer -y
+fi
 
 # Screen Recorder
 execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
@@ -145,9 +152,7 @@ execute sudo apt-get install xdotool keepass2 -y
 execute sudo apt-get install vlc -y
 execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
 
-if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[1-9][1-9]') -ge 18 ]]; then
-    execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
-fi
+execute sudo apt-get install vmg -y # Virtual magnifying glass, enabled by shortcut Super+<NumPadPlus>
 
 # Browsers
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -

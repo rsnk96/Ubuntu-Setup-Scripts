@@ -25,7 +25,7 @@ execute () {
 }
 
 # Executes first command passed &
-# echo's it to the file passed as second argument 
+# echo's it to the file passed as second argument
 run_and_echo () {
     eval $1
     echo "$1" >> $2
@@ -64,11 +64,10 @@ fi
 
 
 execute sudo apt-get update
-execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall -y
-execute sudo apt-get install libopenblas-dev liblapacke-dev libatlas-base-dev gfortran -y
+execute sudo apt-get install build-essential curl g++ cmake cmake-curses-gui git pkg-config checkinstall gcc-8 g++-8 -y
 
 spatialPrint "Image manipulation libraries"
-execute sudo apt-get install libpng-dev libjpeg-dev libtiff5-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
+execute sudo apt-get install libpng-dev libjpeg-dev libtiff-dev zlib1g-dev libwebp-dev libopenexr-dev libgdal-dev -y
 
 if [[ $(which python) = *"conda"* || (-n $CIINSTALL) ]] ; then
     PIP="pip install"   # Even though we've forced usage of bash, if conda exists, it will derive it since the parent shell is zsh/ksh/....with conda in the path
@@ -88,14 +87,14 @@ $PIP dlib
 echo "# ffmpeg-build-script" >> $SHELLRC
 execute sudo apt-get install x264 libx264-dev ffmpeg -y
 execute sudo apt-get install libasound2-dev -y
-execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev -y
+execute sudo apt-get install libswscale-dev libavformat-dev libavutil-dev libavcodec-dev libavresample-dev -y
 
 if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
     spatialPrint "Building FFmpeg now"
     execute sudo apt-get -qq remove x264 libx264-dev ffmpeg -y
     execute sudo apt-get --purge remove libav-tools -y
     execute sudo apt-get install libasound2-dev -y
-    execute sudo mkdir -p /opt/ffmpeg-build-script 
+    execute sudo mkdir -p /opt/ffmpeg-build-script
     execute sudo chmod ugo+w /opt/ffmpeg-build-script
     {
         cd /opt/ffmpeg-build-script
@@ -104,13 +103,8 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         # The nasm.us, tortall.net for yasm sites can cause problems. So use apt instead
         mkdir -p packages
         touch "$(pwd)/packages/yasm.done"
-        execute sudo apt-get install yasm -y
-
-        # Ubuntu 16.04 has older non-compatible nasm in apt repository
-        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -ge 18 ]]; then
-            touch "$(pwd)/packages/nasm.done"
-            execute sudo apt-get install nasm -y
-        fi
+        touch "$(pwd)/packages/nasm.done"
+        execute sudo apt-get install yasm nasm -y
 
         # Build libraries with --enable-shared so that they can be used by OpenCV
         sed -i 's/--disable-shared/--enable-shared/g' build-ffmpeg
@@ -119,7 +113,7 @@ if [[ ! -n $(cat $SHELLRC | grep '# ffmpeg-build-script') ]]; then
         sed -i 's/-DBUILD_SHARED_LIBS=OFF/-DBUILD_SHARED_LIBS=ON/g' build-ffmpeg
         # Build libaom as a shared library
         sed -i 's/execute cmake -DENABLE_TESTS=0 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/execute cmake -DENABLE_TESTS=0 -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX:PATH=${WORKSPACE} $PACKAGES\/av1/g' build-ffmpeg
-        
+
         AUTOINSTALL=yes ./build-ffmpeg --build
 
         echo "Adding ffmpeg's libraries to LD_LIBRARY_PATH"
@@ -146,18 +140,19 @@ execute sudo apt-get install libvtk6-dev libvtk6-qt-dev -y
 
 spatialPrint "Video manipulation libraries"
 execute sudo apt-get install libxine2-dev  -y
+execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y
 
 spatialPrint "Codecs"
 execute sudo apt-get install libfaac-dev libmp3lame-dev -y
 execute sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev -y
 execute sudo apt-get install yasm libtheora-dev libvorbis-dev libxvidcore-dev -y
-execute sudo apt-get install libv4l-dev v4l-utils libdc1394-22-dev libdc1394-utils libgphoto2-dev -y  # Uncommend if you want to enable other backends
 execute sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly -y
 
 spatialPrint "Java"
 execute sudo apt-get install -y ant default-jdk
 
-spatialPrint "Parallelism libraries"
+spatialPrint "Parallelism and optimization libraries"
+execute sudo apt-get install libopenblas-dev liblapacke-dev libatlas-base-dev gfortran -y
 execute sudo apt-get install libeigen3-dev libtbb-dev -y
 
 spatialPrint "Optional Dependencies"
@@ -219,11 +214,6 @@ if [[ -n $(echo $PATH | grep 'conda') ]] ; then
 
         rename_so libfontconfig.so
         rename_so libpangoft2-1.0.so
-
-        # Ubuntu 16.04 Anaconda has conflicting libtbb
-        if [[ $(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1) -le 16 ]]; then
-            rename_so libtbb.so
-        fi
     )
 fi
 
@@ -240,6 +230,8 @@ fi
 # Build tiff on as opencv supports tiff4, which is older version, which ubuntu has dropped
 
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
+ -D CMAKE_C_COMPILER=/usr/bin/gcc-8 \
+ -D CMAKE_CXX_COMPILER=/usr/bin/g++-8 \
  -D CMAKE_INSTALL_PREFIX=/usr/local \
  -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
  -D WITH_HDF5=ON \

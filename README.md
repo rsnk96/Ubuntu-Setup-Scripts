@@ -106,7 +106,7 @@ Additional scripts to built libraries from source:
   Similar to above, locate the [line fetching the latest release tag](https://github.com/rsnk96/Ubuntu-Setup-Scripts/blob/master/Build-ML.sh#L120) of Tensorflow and replace with the tag of the version required.
   The tags of all the Tensorflow releases can be checked here - [https://github.com/tensorflow/tensorflow/tags](https://github.com/tensorflow/tensorflow/tags)
 * These scripts are written and tested on the following configurations -
-  * Ubuntu 16.04 & 18.04
+  * Ubuntu 18.04 & 20.04 (for support for 16.04, please use the tree as per previous commits on this repo)
   * 32-bit and 64-bit Intel Processors
   * `ML-Build.sh` - NVIDIA GPUs including but not limited to GeForce GTX 1080, 1070, 940MX, 850M, and Titan X
 
