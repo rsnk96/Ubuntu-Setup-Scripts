@@ -116,15 +116,32 @@ Additional scripts to built libraries from source:
   * An example `Dockerfile` is present in the repository, which builds OpenCV with CUDA support enabled. Customize it as required for specific requirements such as different CUDA versions, CPU-only images, etc.
   * Some images built using these scripts can be found at [Docker Hub](https://hub.docker.com/r/rajat2004/ubuntu-setup-scripts)
 
-## Tmux shortcuts conf:
-In the description of shortcuts below, if two keys are connected with a `+`, then the second key is to be pressed while keeping the first key pressed. If two keys are connected with a ` `(space), then the previous key/keys are to be released before the next key is pressed. If two keys are separated by a `/`, then it means you can choose any of the specified keys
-* `Ctrl+b c`: Create a new window within the tmux session
-* `Ctrl+b \`: Split existing window into two panes vertically
-* `Ctrl+b -`: Split existing window into two panes horizontally
-* `Alt+Right/Left/Up/Down`: Switch between the panes of the same window
-* `Ctrl+b Shift+Left/Right`: Switch between the windows of the tmux session
-* `Ctrl+b [`: Go into tmux copy mode (enable selection of text from the tmux buffer quickly using just your keyboard). Go to your preferred start point, press `Space` to start the selection of the copy section. Press `Enter` at the end point
+## Tmux configuration shortctus:
+
+The tmux configuration used is inspired from [https://github.com/gpakosz/.tmux](https://github.com/gpakosz/.tmux)
+
+In the description of shortcuts below, meaning of connectors:
+* `+`: The second key is to be pressed while keeping the first key pressed
+* ` `(space): The previous key/keys are to be released before the next key is pressed
+* `/`: You can choose any of the specified keys
+
+The shortcuts within `tsux`/`tmux` that you can use are:
+* Pane control:
+  * `Ctrl+b \`: Split existing window into two panes vertically
+  * `Ctrl+b -`: Split existing window into two panes horizontally
+  * `Alt+Right/Left/Up/Down`: Switch between the panes of the same window
+* Window control:
+  * `Ctrl+b c`: Create a new window within the tmux session
+  * `Ctrl+b Shift+Left/Right`: Switch between the windows of the tmux session
+* Copy-paste:
+  * When you highlight any text with the mouse, it's automatically copied
+  * `Ctrl+b [`: Go into tmux copy-mode (enable selection of text from the tmux buffer quickly using just your keyboard). Go to your preferred start point, press `Space` to start the selection of the copy section. Press `Enter` at the end point
 
 
 ## Alternatives
 * A Ubuntu customization dedicated to [robotics](https://github.com/ahundt/robotics_setup)
+
+
+## Maintainers
+* [@rsnk96](https://github.com/rsnk96)
+* [@rajat2004](https://github.com/rajat2004)

@@ -144,10 +144,8 @@ execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
 execute sudo apt-get update
 execute sudo apt-get install kazam -y
 
-# Keepass 2
-execute sudo apt-add-repository ppa:jtaylor/keepass -y
-execute sudo apt-get update -y
-execute sudo apt-get install xdotool keepass2 -y
+# Bitwarden
+sudo snap install bitwarden
 
 execute sudo apt-get install vlc -y
 execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
