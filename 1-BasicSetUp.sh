@@ -46,7 +46,7 @@ fi
 execute sudo apt-get install git wget curl -y
 execute sudo apt-get install tilda tmux -y
 execute sudo apt-get install gimp -y
-execute sudo apt-get install xclip -y # this is used for the copying tmux buffer to clipboard buffer
+execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
 execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/vimrc ~/.vimrc
 execute sudo snap install micro --classic

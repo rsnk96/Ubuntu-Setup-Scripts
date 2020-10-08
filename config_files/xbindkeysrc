@@ -1,10 +1,10 @@
-# Open File Explorer
-"run-one xdg-open ~"
-    Mod2+Mod4 + e
+# Open File Explorer - Comes in a lot of Ubuntu distros out of the box now. If not in yours, then uncomment the below two lines
+#"run-one xdg-open ~"
+#    Mod2+Mod4 + e
 
-# Screenshot with Flameshot, which will be saved in /tmp
+# Screenshot with Flameshot, which will be saved in /tmp. Modified to align with Windows' Snip and Sketch tool shortcut
 "flameshot gui -r > /tmp/$(whoami)_$(date +%Y_%m_%d_%H_%M_%S).png"
-    Control+Shift+Alt + p
+    Mod2+Mod4+Shift+s
 
 # Maximize window
 "wmctrl -r :ACTIVE: -b toggle,maximized_vert,maximized_horz"
@@ -17,14 +17,6 @@
 "wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz && xdotool windowsize $(xdotool getwindowfocus) 50% 100% && xdotool windowmove $(xdotool getwindowfocus) 9999 y"
     Mod2+Mod4 + Right
 
-# Open KeePass2
-"mono /usr/lib/keepass2/KeePass.exe"
-    Control+Alt + k
-
-# KeePass2 Auto-type
-"mono /usr/lib/keepass2/KeePass.exe --auto-type"
-    Control+Alt + j
-
 # -- Move to Right Workspace --
 "xdotool set_desktop $(expr $(expr $(xdotool get_desktop) + 1) % $(xdotool get_num_desktops))"
     Control+Mod2+Mod4 + Right
@@ -33,7 +25,7 @@
 "xdotool set_desktop $(expr $(expr $(xdotool get_desktop) + $(expr $(xdotool get_num_desktops) - 1)) % $(xdotool get_num_desktops))"
     Control+Mod2+Mod4 + Left
 
-# Show Desktop using Windows shortcut if on Ubuntu Mate/...
+# Show Desktop using Windows shortcut if on an Ubuntu Distro which doesn't support the Windows shortcut
 #"xdotool key --clearmodifiers ctrl+alt+d"
 #    Mod2+Mod4+d
 
