@@ -4,7 +4,7 @@ alias maxvol="pactl set-sink-volume @DEFAULT_SINK@ 150%"
 alias download="wget --random-wait -r -p --no-parent -e robots=off -U mozilla"
 alias server="ifconfig | grep inet && python3 -m http.server"
 alias gpom="git push origin master"
-alias update="sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y"
+alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 alias aria="aria2c --file-allocation=none -c -x 10 -s 10"
 alias tsux="tmux -u new-session \; \
             neww \; \
