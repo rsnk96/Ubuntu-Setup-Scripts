@@ -36,7 +36,7 @@ fi
 
 execute sudo apt-get update -y
 if [[ ! -n $CIINSTALL ]]; then
-    sudo apt-get dist-upgrade -y
+    sudo apt-get upgrade -y
     sudo apt-get install ubuntu-restricted-extras -y
 fi
 
@@ -44,15 +44,11 @@ fi
 # Not guake because tilda is lighter on resources
 # Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
 execute sudo apt-get install git wget curl -y
-execute sudo apt-get install tilda tmux -y
+execute sudo apt-get install tilda tmux byobu -y
 execute sudo apt-get install gimp -y
 execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
 execute sudo apt-get install vim-gui-common vim-runtime -y
 cp ./config_files/vimrc ~/.vimrc
-execute sudo snap install micro --classic
-mkdir -p ~/.config/micro/
-cp ./config_files/micro_bindings.json ~/.config/micro/bindings.json
-
 # refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
 cp ./config_files/tmux.conf ~/.tmux.conf
 cp ./config_files/tmux.conf.local ~/.tmux.conf.local
@@ -78,7 +74,8 @@ sudo chsh -s "$(command -v zsh)" "${USER}"
 execute sudo apt-get install aria2 -y
 
 # Create bash aliases
-cp ./config_files/bash_aliases /opt/.zsh/bash_aliases
+cp ./config_files/bash_aliases /opt/.zsh/bash_aliases >/dev/null  # Suppress error messages in case the file already exists
+rm -f ~/.bash_aliases
 ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 
 {
@@ -88,9 +85,6 @@ ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 
     echo "# Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
     echo "export TERM=xterm-256color"
-
-    echo "# Setting the default text editor to micro, a terminal text editor with shortcuts similar to what you'd encounter in an IDE"
-    echo "export VISUAL=micro"
 } >> ~/.zshrc
 
 # Now create shortcuts
@@ -107,14 +101,14 @@ execute sudo apt-get install -f
 # Check if Anaconda is already installed
 if [[ -n $(echo $PATH | grep 'conda') ]]; then
     echo "Anaconda is already installed, skipping installation"
-    echo "To reinstall, delete the Anaconda install directory and remove from PATH as well"
+    echo "To reinstall, delete the Anaconda install directory (/opt/anaconda3 if done by this script) and remove from PATH as well"
 else
 
     spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
     continuum_website=https://repo.continuum.io/archive/
     # Stepwise filtering of the html at $continuum_website
-    # Get the topmost line that matches our requirements, extract the file name.
-    latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | head -n 1 | cut -d \" -f 2)
+    # Get the most recent anaconda version (tail -1), extract the file name.
+    latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | tail -n 1 | cut -d \" -f 2)
     aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh --dir ./extras ${continuum_website}${latest_anaconda_setup}
     sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
     execute bash ./extras/anacondaInstallScript.sh -f -b -p /opt/anaconda3
@@ -150,15 +144,15 @@ fi # Anaconda Installation end
 # For utilities such as lspci
 execute sudo apt-get install pciutils
 
-## Detect if an Nvidia card is attached, and install the graphics drivers automatically
-if [[ -n $(lspci | grep -i nvidia) ]]; then
+## Detect if an Nvidia card is attached, and install the graphics drivers automatically if not already installed
+if [[ -n $(lspci | grep -i nvidia) && ! $(command -v nvidia-smi) ]]; then
     spatialPrint "Installing Display drivers and any other auto-detected drivers for your hardware"
     execute sudo add-apt-repository ppa:graphics-drivers/ppa -y
     execute sudo apt-get update
     execute sudo ubuntu-drivers autoinstall
 fi
 
-spatialPrint "The script has finished."
+spatialPrint "The script has finished. Please enter credentials to access your new shell"
 if [[ ! -n $CIINSTALL ]]; then
     su - $USER
 fi
