@@ -12,15 +12,23 @@ execute () {
     fi
 }
 
-execute sudo apt-get install libboost-all-dev curl -y
+# Get the OS major version number (major e.g. 20, 18)
+get_os_version () {
+    if [[ $(. /etc/os-release;echo $ID) == "ubuntu" ]]; then    # If an official ubuntu flavour
+        echo $(. /etc/os-release;echo $VERSION_ID | grep -o -E '[0-9][0-9]' | head -n 1)
+    else                                                        # If an unofficial ubuntu flavour, like Zorin/Pop/...
+        ubuntu_codename=$(. /etc/os-release;echo $UBUNTU_CODENAME)
+        if [[ ${ubuntu_codename} == "focal" ]]; then
+            echo "20.04"
+        elif [[ ${ubuntu_codename} == "xenial" ]]; then
+            echo "18.04"
+        fi
+    fi
+}
 
-# Get the OS version number (major e.g. 20, 18)
-OS_MAJOR_VERSION=$(cat /etc/os-release | grep "VERSION_ID" | grep -o -E '[0-9][0-9]' | head -n 1)
+OS_VERSION=$(get_os_version)
+OS_MAJOR_VERSION=$(echo ${OS_VERSION} | grep -o -E '[0-9][0-9]' | head -1)
 
-if [[ OS_MAJOR_VERSION -lt 20 ]]; then  # TODO: Remove when packages available for 20.04
-    execute sudo add-apt-repository ppa:noobslab/themes -y
-    execute sudo apt-get update
-fi
 if [[ $XDG_CURRENT_DESKTOP = *"Unity"* ]]; then	# To be removed once Unity is phased out
     execute sudo apt-get install unity-tweak-tool -y
 elif [[ $XDG_CURRENT_DESKTOP = *"GNOME"* ]]; then
@@ -30,6 +38,7 @@ elif [[ $XDG_CURRENT_DESKTOP = *"MATE"* ]]; then
     execute sudo apt-get install mate-tweak -y
 fi
 execute sudo apt-get install arc-theme -y
+execute sudo apt-get install curl -y
 
 # Install code editor of your choice
 if [[ ! -n $CIINSTALL ]]; then
@@ -60,21 +69,11 @@ elif [ "$tempvar" = "q" ];then
     echo "Skipping this step"
 fi
 
-# Recommended libraries for Nvidia CUDA
-execute sudo apt-get install freeglut3 freeglut3-dev libxi-dev libxmu-dev -y
-
-
-# General Software from now on
+### General Software from now on ###
 
 # Enable partner repositories if disabled
 sudo sed -i.bak "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
 execute sudo apt-get update
-
-if which nautilus > /dev/null; then
-    execute sudo apt-get install nautilus-dropbox -y
-elif which caja > /dev/null; then
-    execute sudo apt-get install caja-dropbox -y
-fi
 
 # TLP manager
 execute sudo add-apt-repository ppa:linrunner/tlp -y
@@ -85,19 +84,16 @@ sudo tlp start
 # Multiload and other sensor applets
 execute sudo apt-get install lm-sensors hddtemp -y
 execute sudo apt-get install psensor xsensors -y
-execute sudo apt-get update
 
+# Flameshot, a tool for screenshot with annotation. Linked to Super+Shift+S (Windows shortcut) as per keybindings
 execute sudo apt-get install flameshot -y
 
+# Make tilda start on login
 mkdir -p ~/.config/autostart
 cp ./config_files/tilda.desktop ~/.config/autostart
-cp ./config_files/redshift-gtk.desktop ~/.config/autostart
 
 execute sudo apt-get install htop cpufrequtils indicator-cpufreq gparted expect -y
 sudo sed -i 's/^GOVERNOR=.*/GOVERNOR=”powersave”/' /etc/init.d/cpufrequtils
-
-# Meld - Visual diff and merge tool
-execute sudo apt-get install meld -y
 
 # Boot repair
 execute sudo add-apt-repository ppa:yannubuntu/boot-repair -y
@@ -115,17 +111,23 @@ if ! which docker > /dev/null; then
     execute sudo usermod -aG docker ${USER}
 fi
 
+# Docker-Compose
+if ! which docker-compose > /dev/null; then
+    execute sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    execute sudo chmod +x /usr/local/bin/docker-compose
+fi
+
 # nvidia-docker installation
 # Only install if Nvidia GPU is present with drivers installed
 if which nvidia-smi > /dev/null; then
     echo "Installing nvidia-docker"
     # If you have nvidia-docker 1.0 installed: we need to remove it and all existing GPU containers
-    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    distribution=$(echo ubuntu${OS_VERSION})
     curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
     curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
     execute sudo apt-get update
-    execute sudo apt-get install -y nvidia-container-toolkit
+    execute sudo apt-get install -y nvidia-container-toolkit nvidia-docker2
     execute sudo systemctl restart docker
 else
     echo "Skipping nvidia-docker2 installation. Requires Nvidia GPU with drivers installed"
@@ -133,11 +135,7 @@ fi
 
 
 # Grub customization
-if [[ OS_MAJOR_VERSION -lt 20 ]]; then # TODO: Remove when packages available for 20.04
-    execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
-    execute sudo apt-get update
-    execute sudo apt-get install grub-customizer -y
-fi
+execute sudo apt-get install grub-customizer -y
 
 # Screen Recorder
 execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
@@ -147,6 +145,7 @@ execute sudo apt-get install kazam -y
 # Bitwarden
 sudo snap install bitwarden
 
+# VLC
 execute sudo apt-get install vlc -y
 execute mkdir -p ~/.cache/vlc   # For VLSub to work flawlessly
 
@@ -175,18 +174,6 @@ execute sudo apt-get install firefox -y
 # # execute sudo apt-get install i2p -y
 
 if [[ ! -n $CIINSTALL ]]; then
-    # Adobe flashplugin doesn't install on travis for some reason
-    execute sudo apt-get install adobe-flashplugin -y
-
-    # Skype - travis doesn't allow dpkg -i for some reason
-    # echo "deb [arch=amd64] https://repo.skype.com/deb stable main" | sudo tee /etc/apt/sources.list.d/skype-stable.list
-    # execute wget https://repo.skype.com/data/SKYPE-GPG-KEY
-    # execute sudo apt-key add SKYPE-GPG-KEY
-    # execute sudo apt install apt-transport-https
-    # execute sudo apt update
-    # execute sudo apt install skypeforlinux
-    # execute rm SKYPE-GPG-KEY
-
     su - ${USER}  # For user being added to docker group to take effect
 fi
 
