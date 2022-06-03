@@ -13,9 +13,21 @@ execute () {
 }
 
 # Get the OS major version number (major e.g. 20, 18)
-get_os_version () {
+get_os_lts_version () {
     if [[ $(. /etc/os-release;echo $ID) == "ubuntu" ]]; then    # If an official ubuntu flavour
-        echo $(. /etc/os-release;echo $VERSION_ID | grep -o -E '[0-9][0-9]' | head -n 1)
+        version_id=$(. /etc/os-release;echo $VERSION_ID)
+        if [[ ${version_id} == "18.10" || ${version_id} == "19.04" || ${version_id} == "19.10" ]]; then
+            echo "18.04"
+        elif [[ ${version_id} == "20.10" || ${version_id} == "21.04" || ${version_id} == "21.10" ]]; then
+            echo "20.04"
+        elif [[ ${version_id} == "22.10" || ${version_id} == "23.04" || ${version_id} == "23.10" ]]; then
+            echo "22.04"
+        elif [[ ${version_id} == "24.10" || ${version_id} == "25.04" || ${version_id} == "25.10" ]]; then
+            echo "24.04"
+        else
+            # Already an LTS version, use as is.
+            echo ${version_id}
+        fi
     else                                                        # If an unofficial ubuntu flavour, like Zorin/Pop/...
         ubuntu_codename=$(. /etc/os-release;echo $UBUNTU_CODENAME)
         if [[ ${ubuntu_codename} == "focal" ]]; then
@@ -26,8 +38,7 @@ get_os_version () {
     fi
 }
 
-OS_VERSION=$(get_os_version)
-OS_MAJOR_VERSION=$(echo ${OS_VERSION} | grep -o -E '[0-9][0-9]' | head -1)
+OS_VERSION=$(get_os_lts_version)
 
 if [[ $XDG_CURRENT_DESKTOP = *"Unity"* ]]; then	# To be removed once Unity is phased out
     execute sudo apt-get install unity-tweak-tool -y
@@ -138,7 +149,6 @@ fi
 execute sudo apt-get install grub-customizer -y
 
 # Screen Recorder
-execute sudo add-apt-repository ppa:sylvain-pineau/kazam -y
 execute sudo apt-get update
 execute sudo apt-get install kazam -y
 
@@ -158,6 +168,22 @@ execute sudo apt-get update  -y
 execute sudo apt-get install google-chrome-stable -y
 #execute sudo apt-get install chromium-browser -y
 execute sudo apt-get install firefox -y
+
+# XRDP that can be opened on port 3389, from https://www.e2enetworks.com/help/knowledge-base/how-to-install-remote-desktop-xrdp-on-ubuntu-18-04/
+sudo apt-get install xrdp -y
+sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n mate-session \n' /etc/xrdp/startwm.sh
+sudo adduser xrdp ssl-cert
+sudo /etc/init.d/xrdp restart
+
+# Network Manager, for allowing non-sudo users to control the network configuration (which networkd doesn't allow without sudo)
+sudo apt-get install network-manager -y
+sudo apt-get install network-manager-openvpn -y
+
+# Install Reminna
+sudo snap install remmina
+
+# Install OnlyOffice
+sudo snap install onlyoffice-desktopeditors
 
 # Install tor
 #if [[ ! -n $(lsb_release -d | grep 18) ]]; then
