@@ -98,17 +98,14 @@ aria2c --file-allocation=none -c -x 10 -s 10 --dir /tmp -o bat.deb $latest_bat_s
 execute sudo dpkg -i /tmp/bat.deb
 execute sudo apt-get install -f
 
-# Check if Anaconda is already installed
+# Check if Anaconda's Miniconda is already installed
 if [[ -n $(echo $PATH | grep 'conda') ]]; then
     echo "Anaconda is already installed, skipping installation"
     echo "To reinstall, delete the Anaconda install directory (/opt/anaconda3 if done by this script) and remove from PATH as well"
 else
 
     spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
-    continuum_website=https://repo.continuum.io/archive/
-    # Stepwise filtering of the html at $continuum_website
-    # Get the most recent anaconda version (tail -1), extract the file name.
-    latest_anaconda_setup=$(wget -q -O - $continuum_website index.html | grep "Anaconda3-" | grep "Linux" | grep "86_64" | tail -n 1 | cut -d \" -f 2)
+    latest_anaconda_setup="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
     aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh --dir ./extras ${continuum_website}${latest_anaconda_setup}
     sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
     execute bash ./extras/anacondaInstallScript.sh -f -b -p /opt/anaconda3
@@ -116,6 +113,7 @@ else
     spatialPrint "Setting up your anaconda"
     execute /opt/anaconda3/bin/conda update conda -y
     execute /opt/anaconda3/bin/conda clean --all -y
+    execute /opt/anaconda3/bin/conda install anaconda -y
     execute /opt/anaconda3/bin/conda install ipython -y
 
     execute /opt/anaconda3/bin/conda install libgcc -y
