@@ -66,13 +66,8 @@ Additional scripts to built libraries from source:
         sudo cp ~/.zshenv /home/$NEW_USER/.zshenv
 
         sudo cp ~/.xbindkeysrc /home/$NEW_USER
-        sudo mkdir -p /home/$NEW_USER/.config/tilda
-        sudo cp ~/.config/tilda/config_0 /home/$NEW_USER/.config/tilda/config_0
-        sudo mkdir -p /home/$NEW_USER/.config/micro
-        sudo cp ~/.config/micro/bindings.json /home/$NEW_USER/.config/micro/bindings.json
-        sudo cp ~/.tmux.conf* /home/$NEW_USER/
-
-        sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.config/micro /home/$NEW_USER/.tmux.conf*
+        
+        sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.tmux.conf*
         ```
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
 * `Build-OpenCV.sh`

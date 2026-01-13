@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 set -e
 
 spatialPrint() {
@@ -22,45 +21,31 @@ execute () {
     fi
 }
 
-# Speed up the process
-# Env Var NUMJOBS overrides automatic detection
-if [[ -n $NUMJOBS ]]; then
-    MJOBS=$NUMJOBS
-elif [[ -f /proc/cpuinfo ]]; then
-    MJOBS=$(grep -c processor /proc/cpuinfo)
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-	MJOBS=$(sysctl -n machdep.cpu.thread_count)
-else
-    MJOBS=4
-fi
-
 execute sudo apt-get update -y
 if [[ ! -n $CIINSTALL ]]; then
     sudo apt-get upgrade -y
     sudo apt-get install ubuntu-restricted-extras -y
 fi
 
-# Choice for terminal that will be adopted: Tilda+tmux
-# Not guake because tilda is lighter on resources
-# Not terminator because tmux sessions continue to run if you accidentally close the terminal emulator
-execute sudo apt-get install git wget curl -y
-execute sudo apt-get install tilda tmux byobu -y
-execute sudo apt-get install gimp -y
+# Choice for terminal that will be adopted: tmux & zellij
+execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta xrdp -y
 execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
-execute sudo apt-get install vim-gui-common vim-runtime -y
-cp ./config_files/vimrc ~/.vimrc
-# refer : [http://www.rushiagr.com/blog/2016/06/16/everything-you-need-to-know-about-tmux-copy-pasting-ubuntu/] for tmux buffers in ubuntu
-cp ./config_files/tmux.conf ~/.tmux.conf
-cp ./config_files/tmux.conf.local ~/.tmux.conf.local
-mkdir -p ~/.config/tilda
-cp ./config_files/config_0 ~/.config/tilda/
 
-#Checks if ZSH is partially or completely Installed to Remove the folders and reinstall it
-rm -rf ~/.z*
-zsh_folder=/opt/.zsh/
-if [[ -d $zsh_folder ]];then
-	sudo rm -r /opt/.zsh/*
+#Completely uninstall ZSH and Zim along with all z-config files
+spatialPrint "Removing existing Zsh and Zim installations"
+
+# Reset shell to bash and uninstall zsh
+if command -v zsh &> /dev/null || [[ "$SHELL" == *"zsh"* ]]; then
+    sudo chsh -s /bin/bash "${USER}" 2>/dev/null || true
+    sudo useradd -D -s /bin/bash 2>/dev/null || true
+    sudo apt-get remove --purge zsh -y 2>/dev/null || true
+    sudo apt-get autoremove -y 2>/dev/null || true
 fi
+
+# Remove all zsh/zim config files and directories
+rm -rf ~/.z* ~/.zim ~/.cache/{zsh,zim}
+sudo rm -rf /etc/zsh* /opt/.zsh*
+sudo sed -i '/zsh/d' /etc/shells 2>/dev/null || true
 
 spatialPrint "Setting up Zsh + Zim now"
 execute sudo apt-get install zsh -y
@@ -70,6 +55,7 @@ curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | 
 # Change default shell to zsh
 command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
+sudo useradd -D -s /bin/zsh
 
 execute sudo apt-get install aria2 -y
 
@@ -88,29 +74,27 @@ ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 } >> ~/.zshrc
 
 # Now create shortcuts
-execute sudo apt-get install run-one xbindkeys xbindkeys-config wmctrl xdotool -y
+execute sudo apt-get install run-one xbindkeys wmctrl xdotool -y
 cp ./config_files/xbindkeysrc ~/.xbindkeysrc
 
 # Now download and install bat
-spatialPrint "Installing bat, a handy replacement for cat"
-latest_bat_setup=$(curl --silent "https://api.github.com/repos/sharkdp/bat/releases/latest" | grep "deb" | grep "browser_download_url" | head -n 1 | cut -d \" -f 4)
-aria2c --file-allocation=none -c -x 10 -s 10 --dir /tmp -o bat.deb $latest_bat_setup
-execute sudo dpkg -i /tmp/bat.deb
-execute sudo apt-get install -f
+execute sudo apt-get install bat -y
 
 # Check if Anaconda's Miniconda is already installed
 if [[ -n $(echo $PATH | grep 'conda') ]]; then
     echo "Anaconda is already installed, skipping installation"
     echo "To reinstall, delete the Anaconda install directory (/opt/anaconda3 if done by this script) and remove from PATH as well"
 else
-
     spatialPrint "Installing the latest Anaconda Python in /opt/anaconda3"
+    execute sudo rm -rf /opt/anaconda3
     latest_anaconda_setup="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-    aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh --dir ./extras ${continuum_website}${latest_anaconda_setup}
+    aria2c --file-allocation=none -c -x 10 -s 10 -o anacondaInstallScript.sh --dir ./extras ${latest_anaconda_setup}
     sudo mkdir -p /opt/anaconda3 && sudo chmod ugo+w /opt/anaconda3
     execute bash ./extras/anacondaInstallScript.sh -f -b -p /opt/anaconda3
 
     spatialPrint "Setting up your anaconda"
+    execute /opt/anaconda3/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+    execute /opt/anaconda3/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
     execute /opt/anaconda3/bin/conda update conda -y
     execute /opt/anaconda3/bin/conda clean --all -y
     execute /opt/anaconda3/bin/conda install anaconda -y
@@ -145,12 +129,84 @@ execute sudo apt-get install pciutils
 ## Detect if an Nvidia card is attached, and install the graphics drivers automatically if not already installed
 if [[ -n $(lspci | grep -i nvidia) && ! $(command -v nvidia-smi) ]]; then
     spatialPrint "Installing Display drivers and any other auto-detected drivers for your hardware"
-    execute sudo add-apt-repository ppa:graphics-drivers/ppa -y
     execute sudo apt-get update
     execute sudo ubuntu-drivers autoinstall
+    execute /opt/anaconda3/bin/conda install -c conda-forge nvitop -y
 fi
 
-spatialPrint "The script has finished. Please enter credentials to access your new shell"
-if [[ ! -n $CIINSTALL ]]; then
-    su - $USER
+### Docker and Docker-Compose
+if [ -x "$(command -v docker)" ]; then
+    echo "Docker already installed, skipping it \n\n"
+else
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    sudo usermod -aG docker $USER
 fi
+
+### Nvidia-Container Toolkit
+if [ -x "$(docker info | grep nvidia)" ]; then
+    echo "Nvidia container runtime seems to already be installed, skipping!"
+else
+    if [ ! -f /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg ]; then
+        curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    else
+        echo "Nvidia Container Toolkit Keyring already present – not overwriting."
+    fi
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+    && \
+    sudo apt-get update
+    sudo apt-get install -y nvidia-container-toolkit
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+fi
+
+
+## Install zellij
+wget https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-x86_64-unknown-linux-musl.tar.gz
+tar -xvf zellij-x86_64-unknown-linux-musl.tar.gz
+chmod +x zellij
+sudo mv zellij /usr/local/bin/
+rm -rf ./zellij*
+
+## Install Neovim with all essential lazyvim plugins
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y build-essential "lua5.1" luarocks ripgrep fd-find fzf nodejs
+mkdir -p ~/.local/bin
+ln -s $(which fdfind) ~/.local/bin/fd
+rm -rf ~/.local/share/nvim/
+rm -rf ~/.config/nvim/
+
+## Install nerd fonts
+sudo mkdir -p /usr/local/share/fonts
+wget -O /tmp/VictorMono.zip \
+  https://github.com/ryanoasis/nerd-fonts/releases/latest/download/VictorMono.zip
+sudo unzip /tmp/VictorMono.zip -d /usr/local/share/fonts/VictorMono
+sudo fc-cache -fv
+
+sudo add-apt-repository ppa:neovim-ppa/unstable -y
+sudo apt update
+sudo apt install -y neovim
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+rm -rf ~/.config/nvim/.git
+
+
+
+
+# Force GDM to use Xorg (X11) instead of Wayland
+sudo sed -i 's/^#WaylandEnable=true/WaylandEnable=false/' /etc/gdm3/custom.conf
+# If the line does not exist in that form, ensure it is present:
+# Also check if gdm3 is the default display manager
+if ! grep -q '^WaylandEnable=' /etc/gdm3/custom.conf && [[ $(dpkg-query -W -f='${Status}' gdm3 2>/dev/null | grep -c "ok installed") -eq 1 ]]; then
+  echo 'WaylandEnable=false' | sudo tee -a /etc/gdm3/custom.conf
+fi
+
+spatialPrint "The script has finished. Please Reboot, you will be switching to X11"
