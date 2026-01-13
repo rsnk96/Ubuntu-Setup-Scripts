@@ -2,18 +2,9 @@ alias jn="jupyter notebook"
 alias jl="jupyter lab"
 alias maxvol="pactl set-sink-volume @DEFAULT_SINK@ 150%"
 alias download="wget --random-wait -r -p --no-parent -e robots=off -U mozilla"
-alias server="ifconfig | grep inet && python3 -m http.server"
-alias gpom="git push origin master"
+alias file_server="ifconfig | grep inet && python3 -m http.server"
+alias gpom="git push origin main"
+alias glog="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''%C(white)%s%C(reset) %C(dim white)- %an%C(reset)' HEAD main origin/main origin/\$(git rev-parse --abbrev-ref HEAD) \$@"
 alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 alias aria="aria2c --file-allocation=none -c -x 10 -s 10"
-alias tsux="tmux -u new-session \; \
-            neww \; \
-              send-keys 'htop' C-m \; \
-              split-window -h \; \
-              send-keys 'nvtop' C-m \; \
-              split-window -v \; \
-              send-keys 'watch sensors' C-m \; \
-              rename-window 'performance' \; \
-            select-window -l"
-alias ydl="youtube-dl -f 140 --add-metadata --metadata-from-title \"%(artist)s - %(title)s\" -o \"%(title)s.%(ext)s\""
 alias cat="batcat -p"
