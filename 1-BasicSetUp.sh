@@ -57,13 +57,18 @@ sudo sed -i '/zsh/d' /etc/shells 2>/dev/null || true
 
 spatialPrint "Setting up Zsh + Zim now"
 execute sudo apt-get install zsh -y
-sudo mkdir -p /opt/.zsh/ && sudo chmod ugo+w /opt/.zsh/
+sudo mkdir -p /opt/.zsh/ && sudo chmod a+rw -R /opt/.zsh/
 export ZIM_HOME=/opt/.zsh/zim
+export ZIM_CONFIG_FILE=/opt/.zsh/zim/zimrc
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 # Change default shell to zsh
-command -v zsh | sudo tee -a /etc/shells
 sudo chsh -s "$(command -v zsh)" "${USER}"
 sudo useradd -D -s /bin/zsh
+
+
+# Append 'zmodule steeef' to the zimrc configuration file
+echo "zmodule steeef" | sudo tee -a /opt/.zsh/zim/zimrc >/dev/null
+sudo chmod -R a+rw /opt/.zsh/
 
 execute sudo apt-get install aria2 -y
 
@@ -72,14 +77,21 @@ cp ./config_files/bash_aliases /opt/.zsh/bash_aliases >/dev/null  # Suppress err
 rm -f ~/.bash_aliases
 ln -s /opt/.zsh/bash_aliases ~/.bash_aliases
 
+# Set ZIM_CONFIG_FILE at the start of ~/.zshrc, then append existing content, then the rest
+tmp_zshrc="$(mktemp)"
+echo "ZIM_CONFIG_FILE=/opt/.zsh/zim/zimrc" > "$tmp_zshrc"
+cat ~/.zshrc >> "$tmp_zshrc"
 {
+    echo ""
+    echo ""
     echo "if [ -f ~/.bash_aliases ]; then"
     echo "  source ~/.bash_aliases"
     echo "fi"
-
+    echo ""
     echo "# Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
     echo "export TERM=xterm-256color"
-} >> ~/.zshrc
+} >> "$tmp_zshrc"
+mv "$tmp_zshrc" ~/.zshrc
 
 # Now create shortcuts
 execute sudo apt-get install run-one xbindkeys wmctrl xdotool -y
@@ -178,33 +190,50 @@ fi
 
 
 ## Install zellij
-wget https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-x86_64-unknown-linux-musl.tar.gz
-tar -xvf zellij-x86_64-unknown-linux-musl.tar.gz
-chmod +x zellij
-sudo mv zellij /usr/local/bin/
-rm -rf ./zellij*
+if [ -x "$(command -v zellij)" ]; then
+    echo "Zellij already installed, skipping it"
+else
+    wget https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-x86_64-unknown-linux-musl.tar.gz
+    tar -xvf zellij-x86_64-unknown-linux-musl.tar.gz
+    chmod +x zellij
+    sudo mv zellij /usr/local/bin/
+    rm -rf ./zellij*
+fi
 
 ## Install Neovim with all essential lazyvim plugins
-
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y build-essential "lua5.1" luarocks ripgrep fd-find fzf nodejs
-mkdir -p ~/.local/bin
-ln -s $(which fdfind) ~/.local/bin/fd
-rm -rf ~/.local/share/nvim/
-rm -rf ~/.config/nvim/
+if [ -x "$(command -v nvim)" ] && [ -d ~/.config/nvim ]; then
+    echo "Neovim and LazyVim already installed, skipping installation"
+else
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt install -y nodejs
+    sudo apt install -y build-essential "lua5.1" luarocks ripgrep fd-find fzf
+    
+    mkdir -p ~/.local/bin
+    if [ ! -L ~/.local/bin/fd ]; then
+        ln -s $(which fdfind) ~/.local/bin/fd
+    fi
+    
+    rm -rf ~/.local/share/nvim/
+    rm -rf ~/.config/nvim/
+        
+    sudo add-apt-repository ppa:neovim-ppa/unstable -y
+    sudo apt update
+    sudo apt install -y neovim
+    
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    rm -rf ~/.config/nvim/.git
+fi
 
 ## Install nerd fonts
-sudo mkdir -p /usr/local/share/fonts
-wget -O /tmp/VictorMono.zip \
-  https://github.com/ryanoasis/nerd-fonts/releases/latest/download/VictorMono.zip
-sudo unzip /tmp/VictorMono.zip -d /usr/local/share/fonts/VictorMono
-sudo fc-cache -fv
-
-sudo add-apt-repository ppa:neovim-ppa/unstable -y
-sudo apt update
-sudo apt install -y neovim
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
+if [ -d /usr/local/share/fonts/VictorMono ]; then
+    echo "Nerd fonts (VictorMono) already installed, skipping installation"
+else
+    sudo mkdir -p /usr/local/share/fonts
+    wget -O /tmp/VictorMono.zip \
+      https://github.com/ryanoasis/nerd-fonts/releases/latest/download/VictorMono.zip
+    sudo unzip /tmp/VictorMono.zip -d /usr/local/share/fonts/VictorMono
+    sudo fc-cache -fv
+fi
 
 
 # Force GDM to use Xorg (X11) instead of Wayland (skip in CI - no display manager)

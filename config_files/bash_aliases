@@ -8,4 +8,4 @@ alias glog="git log --graph --abbrev-commit --decorate --format=format:'%C(bold 
 alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 alias aria="aria2c --file-allocation=none -c -x 10 -s 10"
 alias cat="batcat -p"
-alias vi = "nvim"
+alias vi="nvim"
