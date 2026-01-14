@@ -2,6 +2,11 @@
 
 set -e
 
+# Detect if running in CI environment (GitHub Actions, etc.)
+is_ci() {
+    [[ -n "$CI" ]] || [[ -n "$GITHUB_ACTIONS" ]] || [[ -n "$RUNNER_OS" ]] || [[ -n "$CIINSTALL" ]]
+}
+
 spatialPrint() {
     echo ""
     echo ""
@@ -28,8 +33,11 @@ if [[ ! -n $CIINSTALL ]]; then
 fi
 
 # Choice for terminal that will be adopted: tmux & zellij
-execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta xrdp -y
-execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
+execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta -y
+if ! is_ci; then
+    execute sudo apt-get install xrdp -y
+    execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
+fi
 
 #Completely uninstall ZSH and Zim along with all z-config files
 spatialPrint "Removing existing Zsh and Zim installations"
@@ -199,14 +207,17 @@ git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
 
 
-
-
-# Force GDM to use Xorg (X11) instead of Wayland
-sudo sed -i 's/^#WaylandEnable=true/WaylandEnable=false/' /etc/gdm3/custom.conf
-# If the line does not exist in that form, ensure it is present:
-# Also check if gdm3 is the default display manager
-if ! grep -q '^WaylandEnable=' /etc/gdm3/custom.conf && [[ $(dpkg-query -W -f='${Status}' gdm3 2>/dev/null | grep -c "ok installed") -eq 1 ]]; then
-  echo 'WaylandEnable=false' | sudo tee -a /etc/gdm3/custom.conf
+# Force GDM to use Xorg (X11) instead of Wayland (skip in CI - no display manager)
+if ! is_ci; then
+    if [[ -f /etc/gdm3/custom.conf ]]; then
+        sudo sed -i 's/^#WaylandEnable=true/WaylandEnable=false/' /etc/gdm3/custom.conf
+        # If the line does not exist in that form, ensure it is present:
+        # Also check if gdm3 is the default display manager
+        if ! grep -q '^WaylandEnable=' /etc/gdm3/custom.conf && [[ $(dpkg-query -W -f='${Status}' gdm3 2>/dev/null | grep -c "ok installed") -eq 1 ]]; then
+          echo 'WaylandEnable=false' | sudo tee -a /etc/gdm3/custom.conf
+        fi
+    fi
+    spatialPrint "The script has finished. Please Reboot, you will be switching to X11"
+else
+    spatialPrint "The script has finished."
 fi
-
-spatialPrint "The script has finished. Please Reboot, you will be switching to X11"

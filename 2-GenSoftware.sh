@@ -2,6 +2,11 @@
 
 set -e
 
+# Detect if running in CI environment (GitHub Actions, etc.)
+is_ci() {
+    [[ -n "$CI" ]] || [[ -n "$GITHUB_ACTIONS" ]] || [[ -n "$RUNNER_OS" ]] || [[ -n "$CIINSTALL" ]]
+}
+
 execute () {
 	echo "$ $*"
 	OUTPUT=$($@ 2>&1)
@@ -41,10 +46,13 @@ get_os_lts_version () {
 
 OS_VERSION=$(get_os_lts_version)
 
-if [[ $XDG_CURRENT_DESKTOP = *"GNOME"* ]]; then
-    execute sudo apt install gnome-tweaks gnome-shell-extensions -y
-elif [[ $XDG_CURRENT_DESKTOP = *"MATE"* ]]; then
-    execute sudo apt install mate-tweak -y
+# Skip desktop environment tweaks in CI (no GUI)
+if ! is_ci; then
+    if [[ $XDG_CURRENT_DESKTOP = *"GNOME"* ]]; then
+        execute sudo apt install gnome-tweaks gnome-shell-extensions -y
+    elif [[ $XDG_CURRENT_DESKTOP = *"MATE"* ]]; then
+        execute sudo apt install mate-tweak -y
+    fi
 fi
 
 # Install VS Code and Cursor IDEs
@@ -74,46 +82,55 @@ fi
 sudo sed -i.bak "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
 execute sudo apt update
 
-# Install Brave browser
-sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-sudo curl -fsSLo /etc/apt/sources.list.d/brave-browser-release.sources https://brave-browser-apt-release.s3.brave.com/brave-browser.sources
-execute sudo apt update
-execute sudo apt install brave-browser -y
+### CI-Compatible Tools (work in both CI and desktop environments) ###
 
+# Google Chrome browser (can run headless in CI)
+if [ -x "$(command -v google-chrome-stable)" ]; then
+    echo "Google Chrome already installed, skipping it"
+else
+    echo "Installing Google Chrome..."
+    curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
+    execute sudo apt update
+    execute sudo apt install google-chrome-stable -y
+fi
 
-# System monitoring tools
-execute sudo apt install lm-sensors psensor -y
+### GUI-Only Tools (skip in CI environments) ###
+if ! is_ci; then
+    # Install Brave browser
+    sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    sudo curl -fsSLo /etc/apt/sources.list.d/brave-browser-release.sources https://brave-browser-apt-release.s3.brave.com/brave-browser.sources
+    execute sudo apt update
+    execute sudo apt install brave-browser -y
 
-# Flameshot - screenshot tool with annotation
-execute sudo apt install flameshot -y
+    # System monitoring tools
+    execute sudo apt install lm-sensors psensor -y
 
-# Disk management
-execute sudo apt install gparted -y
+    # Flameshot - screenshot tool with annotation
+    execute sudo apt install flameshot -y
 
-# Grub customization and image editor
-# Add PPA for grub-customizer (not available in default repos)
-execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
-execute sudo apt update
-execute sudo apt install grub-customizer gimp -y
+    # Disk management
+    execute sudo apt install gparted -y
 
-# Screen recorder
-execute sudo apt install kazam -y
+    # Grub customization and image editor
+    # Add PPA for grub-customizer (not available in default repos)
+    execute sudo add-apt-repository ppa:danielrichter2007/grub-customizer -y
+    execute sudo apt update
+    execute sudo apt install grub-customizer gimp -y
 
-# Password manager
-sudo snap install bitwarden
+    # Screen recorder
+    execute sudo apt install kazam -y
 
-# Media player
-execute sudo apt install vlc -y
-mkdir -p ~/.cache/vlc
+    # Password manager
+    sudo snap install bitwarden
 
-# Google Chrome browser
-curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
-execute sudo apt update
-execute sudo apt install google-chrome-stable -y
+    # Media player
+    execute sudo apt install vlc -y
+    mkdir -p ~/.cache/vlc
 
-# Remote desktop client
-sudo snap install remmina
+    # Remote desktop client
+    sudo snap install remmina
+fi
 
 ### AWS CLI
 if [ -x "$(command -v aws)" ]; then
