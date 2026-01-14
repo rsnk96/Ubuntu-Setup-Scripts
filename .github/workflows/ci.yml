@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  noble-basic:
+    name: Ubuntu Noble (24.04) - Basic Setup + GenSoftware
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure timezone
+        run: |
+          echo 'America/Los_Angeles' | sudo tee /etc/timezone
+          sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse" -y
+          sudo apt-get update -qq
+          sudo apt-get install -y software-properties-common
+          sudo apt-get install -qq build-essential curl g++ python3-dev python3-setuptools gdb
+
+      - name: Run BasicSetup and GenSoftware
+        run: |
+          ./1-BasicSetUp.sh
+          export PATH=/opt/anaconda3/bin:$PATH
+          hash -r
+          ./2-GenSoftware.sh
+
+  oracular-basic:
+    name: Ubuntu Oracular (26.04) - Basic Setup + GenSoftware
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure timezone
+        run: |
+          echo 'America/Los_Angeles' | sudo tee /etc/timezone
+          sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse" -y
+          sudo apt-get update -qq
+          sudo apt-get install -y software-properties-common
+          sudo apt-get install -qq build-essential curl g++ python3-dev python3-setuptools gdb
+
+      - name: Run BasicSetup and GenSoftware
+        run: |
+          ./1-BasicSetUp.sh
+          export PATH=/opt/anaconda3/bin:$PATH
+          hash -r
+          ./2-GenSoftware.sh
