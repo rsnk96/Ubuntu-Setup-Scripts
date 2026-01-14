@@ -39,23 +39,7 @@ Then execute them in the terminal in the sequence of filenames using `./1-BasicS
 <br>
 
 ## Notes
-* If you are using this script to set up a computer with many users,
-    * You need to run these scripts using **only one** user, say `first_user`. But make sure you have **logged in at least once** into the new user so that the home directory of the other user is instantiated.
-    * We need to copy the configuration files to the new user, say `new_user`. From `first_user`'s account, run the following after entering the username of the `new_user` in the second line of this snippet
-        ```bash
-        cd ~
-        export NEW_USER=<username_of_new_user>
-        sudo cp /opt/.zsh/bash_aliases /home/$NEW_USER/.bash_aliases
-        sudo cp -r ~/.zim/ /home/$NEW_USER/.zim
-        sudo cp ~/.zimrc /home/$NEW_USER/.zimrc
-        sudo cp ~/.zlogin /home/$NEW_USER/.zlogin
-        sudo cp ~/.zshrc /home/$NEW_USER/.zshrc
-        sudo cp ~/.zshenv /home/$NEW_USER/.zshenv
-
-        sudo cp ~/.xbindkeysrc /home/$NEW_USER
-        
-        sudo chown -R $NEW_USER: /home/$NEW_USER/.zim /home/$NEW_USER/.bash_aliases /home/$NEW_USER/.zimrc /home/$NEW_USER/.zlogin /home/$NEW_USER/.zshrc /home/$NEW_USER/.xbindkeysrc /home/$NEW_USER/.config/tilda /home/$NEW_USER/.tmux.conf*
-        ```
+* **Adding a new OS user:** If setting up multiple users on the OS, try to use the script `./add_new_user.sh` in this repo. It will set the correct settings for them to also benefit from zsh, conda, etc.
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
 * These scripts are written and tested on the following configurations:
   * Ubuntu 24.04 (Noble) and 26.04 (Oracular) LTS releases
