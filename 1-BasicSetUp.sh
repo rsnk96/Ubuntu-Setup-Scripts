@@ -68,12 +68,15 @@ sudo useradd -D -s /bin/zsh
 # Prevent Ubuntu's /etc/zsh/zshrc from calling compinit before zim's completion module
 echo "skip_global_compinit=1" | sudo tee -a /etc/zsh/zshenv
 
-
 # Append 'zmodule steeef' to the zimrc configuration file
 echo "zmodule steeef" | sudo tee -a /opt/.zsh/zim/zimrc >/dev/null
 sudo chmod -R a+rw /opt/.zsh/
 
 execute sudo apt-get install aria2 -y
+
+# Set default git diff to delta for a nicer UI
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
 
 # Create bash aliases
 cp ./config_files/bash_aliases /opt/.zsh/bash_aliases >/dev/null  # Suppress error messages in case the file already exists
@@ -93,6 +96,9 @@ cat ~/.zshrc >> "$tmp_zshrc"
     echo ""
     echo "# Switching to 256-bit colour by default so that zsh-autosuggestion's suggestions are not suggested in white, but in grey instead"
     echo "export TERM=xterm-256color"
+    echo ""
+    echo "# Add local user binaries"
+    echo 'export PATH="$HOME/.local/bin:$PATH"'
 } >> "$tmp_zshrc"
 mv "$tmp_zshrc" ~/.zshrc
 
@@ -125,11 +131,15 @@ else
 
     execute /opt/anaconda3/bin/conda install libgcc -y
     execute /opt/anaconda3/bin/pip install numpy scipy matplotlib scikit-learn scikit-image jupyter notebook pandas h5py cython jupyterlab
-    execute /opt/anaconda3/bin/pip install msgpack
+    execute /opt/anaconda3/bin/pip install msgpack transformers
     execute /opt/anaconda3/bin/conda install line_profiler -y
     sed -i.bak "/anaconda3/d" ~/.zshrc
 
     /opt/anaconda3/bin/conda info -a
+
+    sudo chmod -R ugo+rw /opt/anaconda3
+    # Set the sticky bit so new files inherit the group
+    sudo find /opt/anaconda3 -type d -exec chmod g+s {} +
 
     spatialPrint "Adding anaconda to path variables"
     {
@@ -181,26 +191,13 @@ else
     else
         echo "Nvidia Container Toolkit Keyring already present – not overwriting."
     fi
-    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
-    && \
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list |
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' |
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list &&
     sudo apt-get update
     sudo apt-get install -y nvidia-container-toolkit
     sudo nvidia-ctk runtime configure --runtime=docker
     sudo systemctl restart docker
-fi
-
-
-## Install zellij
-if [ -x "$(command -v zellij)" ]; then
-    echo "Zellij already installed, skipping it"
-else
-    wget https://github.com/zellij-org/zellij/releases/download/v0.43.1/zellij-x86_64-unknown-linux-musl.tar.gz
-    tar -xvf zellij-x86_64-unknown-linux-musl.tar.gz
-    chmod +x zellij
-    sudo mv zellij /usr/local/bin/
-    rm -rf ./zellij*
 fi
 
 ## Install Neovim with all essential lazyvim plugins
@@ -238,6 +235,13 @@ else
     sudo fc-cache -fv
 fi
 
+# Build a common shared huggingface cache for all users
+if [ ! -d "/opt/huggingface" ]; then
+    sudo mkdir -p /opt/huggingface
+    sudo chown -R root:dt_users /opt/huggingface
+    sudo chmod -R 775 /opt/huggingface
+    sudo find /opt/huggingface -type d -exec chmod g+s {} +
+fi
 
 # Force GDM to use Xorg (X11) instead of Wayland (skip in CI - no display manager)
 if ! is_ci; then
