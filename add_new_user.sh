@@ -2,15 +2,15 @@
 
 # Argument Data Validation
 if [[ $# -ne 1 ]]; then
-    echo "Please pass the username as an argument"
-    exit 1
+  echo "Please pass the username as an argument"
+  exit 1
 fi
 USERNAME=$1
 
 # Check if user already exists
 if id "$USERNAME" &>/dev/null; then
-    echo "User $USERNAME already exists"
-    exit 1
+  echo "User $USERNAME already exists"
+  exit 1
 fi
 
 # Create the user, and set the default password
@@ -36,9 +36,9 @@ sudo touch "$USER_HOMEDIR/.byobu/.screenrc"
 
 # Set huggingface cache to shared cache (if it exists)
 if [ -d "/opt/huggingface" ]; then
-    sudo mkdir -p "$USER_HOMEDIR/.cache"
-    sudo rm -rf "$USER_HOMEDIR/.cache/huggingface"
-    sudo ln -s /opt/huggingface "$USER_HOMEDIR/.cache/huggingface"
+  sudo mkdir -p "$USER_HOMEDIR/.cache"
+  sudo rm -rf "$USER_HOMEDIR/.cache/huggingface"
+  sudo ln -s /opt/huggingface "$USER_HOMEDIR/.cache/huggingface"
 fi
 
 # Change user folder permission, and disable others from reading it
