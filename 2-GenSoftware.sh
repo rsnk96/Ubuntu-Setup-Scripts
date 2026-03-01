@@ -72,8 +72,15 @@ if [ -x "$(command -v cursor)" ]; then
     echo "Cursor already installed, skipping it"
 else
     echo "Installing Cursor..."
-    # Use official install script (handles both .deb and AppImage)
-    curl -fsSL https://cursor.sh/linux/install.sh | sudo bash
+    # Add Cursor's GPG key
+    curl -fsSL https://downloads.cursor.com/keys/anysphere.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/cursor.gpg >/dev/null
+
+    # Add the Cursor repository
+    echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/cursor.gpg] https://downloads.cursor.com/aptrepo stable main" | sudo tee /etc/apt/sources.list.d/cursor.list >/dev/null
+
+    # Update and install
+    sudo apt update
+    sudo apt install cursor
 fi
 
 ### General Software from now on ###
