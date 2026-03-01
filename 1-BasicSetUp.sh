@@ -65,6 +65,9 @@ curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | 
 sudo chsh -s "$(command -v zsh)" "${USER}"
 sudo useradd -D -s /bin/zsh
 
+# Prevent Ubuntu's /etc/zsh/zshrc from calling compinit before zim's completion module
+echo "skip_global_compinit=1" | sudo tee -a /etc/zsh/zshenv
+
 
 # Append 'zmodule steeef' to the zimrc configuration file
 echo "zmodule steeef" | sudo tee -a /opt/.zsh/zim/zimrc >/dev/null
