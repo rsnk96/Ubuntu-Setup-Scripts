@@ -14,27 +14,52 @@ First download/clone this repository
 
 Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh` and `./2-GenSoftware.sh`.
 * `1-BasicSetUp.sh` - Sets up terminal configuration (Zsh + Zim), download accelerator (aria2), Anaconda Python, shell aliases, Docker, Nvidia drivers (if detected), Neovim with LazyVim, and other essential tools. **Note:** After running this script, you should reboot your PC if you have an Nvidia GPU so that the display driver loads properly.
-* `2-GenSoftware.sh` - Installs general purpose software including VS Code, Cursor IDE, browsers (Brave, Chrome), system monitoring tools, screenshot tools, media players, and other utilities.
+* `2-GenSoftware.sh` - Installs general purpose software including VS Code, Cursor IDE, browsers (Brave, Chrome), GitHub and GitLab CLIs, the AWS Session Manager plugin, xhisper, dltop, herdr, Snap VLC and Surfshark, Stremio, and other utilities.
 
+## After the scripts
+
+Log out and back in once both scripts finish. Reboot instead if an Nvidia driver was installed. That login is what picks up zsh as your shell, X11 instead of Wayland, the `docker` group, and the `input` group xhisper needs for its virtual keyboard.
+
+* **xhisper.** Transcription and auto-edit call Groq, and neither works until a key is exported from `~/.zshrc`. The auto-edit model to set is OpenAI's open-weight 120B:
+
+  ```sh
+  export GROQ_API_KEY=<your key from console.groq.com>
+  ```
+
+  Create `~/.config/xhisper/xhisperrc` and point auto-edit at that model. Without this line, auto-edit stays on the built-in default, `llama-3.3-70b-versatile`:
+
+  ```
+  llm-model : openai/gpt-oss-120b
+  ```
+
+  A GNOME keyboard shortcut does not read `~/.zshrc`. xhisper sources `~/.env` on every run, so put the same `export` there as well, otherwise dictation started from the shortcut has no key. Then add a custom shortcut in Settings → Keyboard → Keyboard Shortcuts → View and Customize Shortcuts → Custom Shortcuts. The command is `/usr/local/bin/xhisper`. Use a `Ctrl+Alt` or `Super` combo. A plain `Alt` letter is swallowed by application menus and never reaches xhisper. Optional words and names go in `~/.config/xhisper/dictionary.txt`, one per line.
+
+* **GitHub and GitLab.** `gh auth login` and `glab auth login`. The packages are installed, the accounts are not.
+
+* **AWS.** `aws configure`. The Session Manager plugin is installed beside the CLI and uses those credentials.
+
+* **dltop.** It runs against `nvidia-smi` immediately. The split between compute engines and NVENC/NVDEC needs DCGM, which a GeForce card does not provide.
+
+* **intel-turbo.** `intel-turbo off` holds the cores at their base clocks until the next reboot. `intel-turbo on` restores boost.
 
 ## Major Alterations
 * Default python will be changed to Anaconda (Miniconda), with the latest Python 3. Anaconda Python will be installed in `/opt/anaconda3/` so that it is accessible by multiple users
 * Default shell is changed to Zsh with Zim framework, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 * Docker and Docker Compose will be installed, along with Nvidia Container Toolkit if an Nvidia GPU is detected
 * Neovim will be installed with LazyVim configuration for a modern editor experience
-* Zellij terminal multiplexer will be installed as an alternative to tmux
 * Display manager will be configured to use X11 (Xorg) instead of Wayland for better compatibility
 
 ## Aliases that are added
 * `maxvol` : Will set your volume to 150%
 * `download <webpage-name>`: Download the webpage and all sub-directories linked to it
-* `file_server` : Sets up a server for file sharing in your local network. Whatever is in your current directory will be visible on the ip. It will also print the possible set of IP addresses. To access from another computer, shoot up a browser and simply hit `ip_add:port`
-* `gpom` : Alias for `git push origin master`. Will push your current directory
+* `file_server` : Serves the current directory on the local network with `python3 -m http.server`, and prints this machine's addresses with `ip -brief addr`. From another computer, open `ip_add:port`
+* `gpom` : Alias for `git push origin main`. Will push your current directory
 * `glog` : Shows a rich, annotated git log graph with commits from your current branch, main, and their remote counterparts. Commits show date, relative time, decorations (branches/tags), subject, and author, making it easy to visualize your branch's history in relation to main and remotes.
 * `jn` : Starts a jupyter notebook in that directory
 * `jl` : Starts a jupyter lab in that directory
 * `update`: Runs `sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y`
 * `aria`: For accelerated download of files using aria2c. Runs the following command: `aria2c --file-allocation=none -c -x 10 -s 10 -d aria2-downloads`
+* `intel-turbo off` / `intel-turbo on`: Disable or restore Intel turbo boost. `off` pins every core at its base clock until the next reboot.
 
 <br>
 

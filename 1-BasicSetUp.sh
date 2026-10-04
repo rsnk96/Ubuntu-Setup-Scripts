@@ -32,12 +32,17 @@ if [[ ! -n $CIINSTALL ]]; then
   sudo apt-get install ubuntu-restricted-extras -y
 fi
 
-# Choice for terminal that will be adopted: tmux & zellij
-execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta -y
+# Terminal multiplexer: byobu (tmux)
+execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta git-lfs -y
 if ! is_ci; then
   execute sudo apt-get install xrdp -y
   execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
 fi
+
+# Set up byobu config
+rm -rf ~/.byobu && mkdir -p ~/.byobu
+cp ./config_files/byobu_tmux.conf ~/.byobu/.tmux.conf
+touch ~/.byobu/.screenrc
 
 #Completely uninstall ZSH and Zim along with all z-config files
 spatialPrint "Removing existing Zsh and Zim installations"
@@ -233,14 +238,6 @@ else
     https://github.com/ryanoasis/nerd-fonts/releases/latest/download/VictorMono.zip
   sudo unzip /tmp/VictorMono.zip -d /usr/local/share/fonts/VictorMono
   sudo fc-cache -fv
-fi
-
-# Build a common shared huggingface cache for all users
-if [ ! -d "/opt/huggingface" ]; then
-  sudo mkdir -p /opt/huggingface
-  sudo chown -R root:dt_users /opt/huggingface
-  sudo chmod -R 775 /opt/huggingface
-  sudo find /opt/huggingface -type d -exec chmod g+s {} +
 fi
 
 # Force GDM to use Xorg (X11) instead of Wayland (skip in CI - no display manager)

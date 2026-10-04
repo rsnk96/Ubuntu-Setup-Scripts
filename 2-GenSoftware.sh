@@ -97,10 +97,6 @@ fi
 
 ### General Software from now on ###
 
-# Enable partner repositories if disabled
-sudo sed -i.bak "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
-execute sudo apt update
-
 ### CI-Compatible Tools (work in both CI and desktop environments) ###
 
 # Google Chrome browser (can run headless in CI)
@@ -140,18 +136,40 @@ if ! is_ci; then
   # Screen recorder
   execute sudo apt install kazam -y
 
-  # Password manager
-  sudo snap install bitwarden
+  # Media player and VPN, as snaps
+  sudo snap install vlc
+  sudo snap install surfshark
 
-  # Media player
-  execute sudo apt install vlc -y
-  mkdir -p ~/.cache/vlc
+  # Stremio from Flathub
+  execute sudo apt install flatpak -y
+  sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  sudo flatpak install -y flathub com.stremio.Stremio
 
   # Remote desktop client
   sudo snap install remmina
 fi
 
-### AWS CLI
+### GitHub and GitLab CLIs
+if [ -x "$(command -v gh)" ]; then
+  echo "GitHub CLI already installed, skipping it"
+else
+  execute sudo apt-get install gh -y
+fi
+
+if [ -x "$(command -v glab)" ]; then
+  echo "GitLab CLI already installed, skipping it"
+else
+  # Ubuntu's glab package lags the release used day to day. Take the latest .deb.
+  glab_deb_url="$(
+    curl -fsSL "https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/releases/permalink/latest" |
+      python3 -c 'import json,sys; rel=json.load(sys.stdin); print(next(a["direct_asset_url"] for a in rel["assets"]["links"] if a["name"].endswith("_linux_amd64.deb")))'
+  )"
+  curl -fsSL "$glab_deb_url" -o /tmp/glab.deb
+  sudo dpkg -i /tmp/glab.deb
+  rm -f /tmp/glab.deb
+fi
+
+### AWS CLI and Session Manager plugin
 if [ -x "$(command -v aws)" ]; then
   echo "AWS CLI already installed, skipping it"
 else
@@ -161,9 +179,50 @@ else
   rm -rf ./aws awscliv2.zip
 fi
 
+if [ -x "$(command -v session-manager-plugin)" ]; then
+  echo "AWS Session Manager plugin already installed, skipping it"
+else
+  curl -fsSL "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o /tmp/session-manager-plugin.deb
+  sudo dpkg -i /tmp/session-manager-plugin.deb
+  rm -f /tmp/session-manager-plugin.deb
+fi
+
+### dltop, herdr, and the xhisper fork
+if [ -x "$(command -v dltop)" ]; then
+  echo "dltop already installed, skipping it"
+else
+  execute sudo apt-get install pipx -y
+  pipx install dltop
+  pipx ensurepath
+fi
+
+if [ -x "$(command -v herdr)" ]; then
+  echo "herdr already installed, skipping it"
+else
+  curl -fsSL https://herdr.dev/install.sh | sh
+fi
+
+if [ -x "$(command -v xhisper)" ]; then
+  echo "xhisper already installed, skipping it"
+else
+  execute sudo apt-get install -y build-essential pipewire pipewire-utils jq ffmpeg wl-clipboard python3-gi gir1.2-gtk-3.0 bc
+  xhisper_src="$(mktemp -d)"
+  # This branch is the fork actually in use. abszar/main does not carry the conda and X11 fixes.
+  git clone --depth 1 --branch fix/conda-env-and-clipboard-detection https://github.com/rsnk96/xhisper-ubuntu-linux.git "$xhisper_src"
+  make -C "$xhisper_src"
+  sudo make -C "$xhisper_src" install
+  rm -rf "$xhisper_src"
+  sudo usermod -aG input "$USER"
+  echo 'KERNEL=="uinput", GROUP="input", MODE="0660"' | sudo tee /etc/udev/rules.d/99-uinput.rules >/dev/null
+  sudo udevadm control --reload-rules || true
+  if [[ -e /dev/uinput ]]; then
+    sudo udevadm trigger /dev/uinput || true
+  fi
+fi
+
 if [[ ! -n $CIINSTALL ]]; then
   echo ""
-  echo "Note: If you were added to the docker group, please log out and log back in for changes to take effect."
+  echo "Note: If you were added to the docker or input group, please log out and log back in for changes to take effect."
 fi
 
 echo "Script finished"

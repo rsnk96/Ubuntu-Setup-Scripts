@@ -2,10 +2,33 @@ alias jn="jupyter notebook"
 alias jl="jupyter lab"
 alias maxvol="pactl set-sink-volume @DEFAULT_SINK@ 150%"
 alias download="wget --random-wait -r -p --no-parent -e robots=off -U mozilla"
-alias file_server="ifconfig | grep inet && python3 -m http.server"
+alias file_server="ip -brief addr && python3 -m http.server"
 alias gpom="git push origin main"
 alias glog="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''%C(white)%s%C(reset) %C(dim white)- %an%C(reset)' HEAD main origin/main origin/\$(git rev-parse --abbrev-ref HEAD) \$@"
 alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 alias aria="aria2c --file-allocation=none -c -x 10 -s 10"
 alias cat="batcat -p"
 alias vi="nvim"
+
+# `off` writes 1 to no_turbo (boost disabled); `on` writes 0. Cleared on reboot.
+intel-turbo() {
+  local knob=/sys/devices/system/cpu/intel_pstate/no_turbo
+  if [[ ! -e $knob ]]; then
+    echo "intel-turbo: Intel P-state turbo control is not available on this machine" >&2
+    return 1
+  fi
+  case ${1:-} in
+    off)
+      echo 1 | sudo tee "$knob" >/dev/null || return 1
+      echo "intel turbo off (base clocks until reboot)"
+      ;;
+    on)
+      echo 0 | sudo tee "$knob" >/dev/null || return 1
+      echo "intel turbo on"
+      ;;
+    *)
+      echo "usage: intel-turbo on|off" >&2
+      return 1
+      ;;
+  esac
+}
