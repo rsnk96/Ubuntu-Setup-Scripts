@@ -14,7 +14,7 @@ First download/clone this repository
 
 Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh` and `./2-GenSoftware.sh`.
 * `1-BasicSetUp.sh` - Sets up terminal configuration (Zsh + Zim), download accelerator (aria2), Anaconda Python, shell aliases, Docker, Nvidia drivers (if detected), Neovim with LazyVim, and other essential tools. **Note:** After running this script, you should reboot your PC if you have an Nvidia GPU so that the display driver loads properly.
-* `2-GenSoftware.sh` - Installs general purpose software including VS Code, Cursor IDE, browsers (Brave, Chrome), system monitoring tools, screenshot tools, media players, and other utilities.
+* `2-GenSoftware.sh` - Installs general purpose software including VS Code, Cursor IDE, browsers (Brave, Chrome), GitHub and GitLab CLIs, the AWS Session Manager plugin, xhisper, dltop, herdr, Snap VLC and Surfshark, Stremio, and other utilities.
 
 
 ## Major Alterations
@@ -22,19 +22,19 @@ Then execute them in the terminal in the sequence of filenames using `./1-BasicS
 * Default shell is changed to Zsh with Zim framework, instead of bash. Why zsh? Because it simply has a much better autocomplete. And why zim? Because it's much faster than Oh My Zsh and Prezto
 * Docker and Docker Compose will be installed, along with Nvidia Container Toolkit if an Nvidia GPU is detected
 * Neovim will be installed with LazyVim configuration for a modern editor experience
-* Zellij terminal multiplexer will be installed as an alternative to tmux
 * Display manager will be configured to use X11 (Xorg) instead of Wayland for better compatibility
 
 ## Aliases that are added
 * `maxvol` : Will set your volume to 150%
 * `download <webpage-name>`: Download the webpage and all sub-directories linked to it
-* `file_server` : Sets up a server for file sharing in your local network. Whatever is in your current directory will be visible on the ip. It will also print the possible set of IP addresses. To access from another computer, shoot up a browser and simply hit `ip_add:port`
+* `file_server` : Serves the current directory on the local network with `python3 -m http.server`, and prints this machine's addresses with `ip -brief addr`. From another computer, open `ip_add:port`
 * `gpom` : Alias for `git push origin master`. Will push your current directory
 * `glog` : Shows a rich, annotated git log graph with commits from your current branch, main, and their remote counterparts. Commits show date, relative time, decorations (branches/tags), subject, and author, making it easy to visualize your branch's history in relation to main and remotes.
 * `jn` : Starts a jupyter notebook in that directory
 * `jl` : Starts a jupyter lab in that directory
 * `update`: Runs `sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove -y`
 * `aria`: For accelerated download of files using aria2c. Runs the following command: `aria2c --file-allocation=none -c -x 10 -s 10 -d aria2-downloads`
+* `intel-turbo off` / `intel-turbo on`: Disable or restore Intel turbo boost. `off` pins every core at its base clock until the next reboot.
 
 <br>
 
