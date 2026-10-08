@@ -1,0 +1,16 @@
+[Unit]
+Description=Local CLIProxy quota console
+After=cli-proxy-api.service
+
+[Service]
+# install.sh replaces @NODE@ with the absolute path of a Node that can import
+# node:sqlite. systemd user services do not see nvm, so a bare `node` is not an option.
+WorkingDirectory=%h/.local/share/cliproxy-console
+ExecStartPre=@NODE@ -e "import('node:sqlite')"
+ExecStart=@NODE@ server.mjs
+Environment=PORT=8787
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

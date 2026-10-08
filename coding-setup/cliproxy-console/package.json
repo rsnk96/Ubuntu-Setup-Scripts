@@ -1,0 +1,10 @@
+{
+  "name": "cliproxy-console",
+  "private": true,
+  "type": "module",
+  "description": "Local quota board for CLIProxyAPI, matching the account windows from Theo's coding-setup video.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test"
+  }
+}

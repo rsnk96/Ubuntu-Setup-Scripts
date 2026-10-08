@@ -1,0 +1,36 @@
+# Fresh-install config for CLIProxyAPI 8.x.
+# Copy to ~/.config/cli-proxy-api/config.yaml and replace both placeholders
+# before the first start. CLIProxy bcrypt-hashes management.secret-key on
+# startup and rewrites this file. Keep the plaintext somewhere private
+# (console settings and T3). Do not commit the filled-in file.
+#
+# The laptop this was taken from still has a legacy top-level `request-retry`.
+# A new install should use the v8 spelling under `routing.retry`, which is
+# what a management-API write expects.
+
+config-version: 8
+server:
+  host: "127.0.0.1"
+  port: 8317
+management:
+  allow-remote: false
+  secret-key: "REPLACE_WITH_MANAGEMENT_KEY"
+  disable-control-panel: false
+access:
+  api-keys:
+    - "REPLACE_WITH_CLIENT_API_KEY"
+routing:
+  # round-robin spreads new sessions. fill-first plus per-account priority
+  # burns the account whose weekly window resets soonest. The console's
+  # Quota page can switch this later. Session affinity stays on either way,
+  # so a thread that already started keeps its account until that account
+  # returns 429 (or another retryable failure) and request-retry moves it.
+  strategy: "round-robin"
+  session-affinity: true
+  session-affinity-ttl: "1h"
+  session-affinity-subagents: true
+  retry:
+    request-retry: 3
+    max-retry-credentials: 0
+oauth:
+  auth-dir: "~/.cli-proxy-api"

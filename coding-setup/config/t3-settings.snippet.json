@@ -1,0 +1,21 @@
+{
+  "defaultThreadEnvMode": "worktree",
+  "sidebarAutoSettleAfterDays": 14,
+  "enableDeviceSupport": true,
+  "continueThreadsAfterServerUpdate": true,
+  "autoResumeLimitedThreads": true,
+  "providers": {
+    "claudeAgent": {
+      "homePath": "REPLACE_WITH_HOME/.claude-cliproxy"
+    }
+  },
+  "usageLimitSources": {
+    "cliproxy-local": {
+      "kind": "cliproxy",
+      "label": "Local CLIProxy",
+      "url": "http://127.0.0.1:8317",
+      "managementKey": "REPLACE_WITH_MANAGEMENT_KEY",
+      "enabled": true
+    }
+  }
+}

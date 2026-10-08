@@ -33,7 +33,13 @@ if [[ ! -n $CIINSTALL ]]; then
 fi
 
 # Terminal multiplexer: byobu (tmux)
-execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta git-lfs -y
+execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect ffmpeg software-properties-common git-delta git-lfs -y
+# neofetch is gone from Ubuntu 26.04; fastfetch is its successor
+if apt-cache show neofetch >/dev/null 2>&1; then
+  execute sudo apt-get install neofetch -y
+else
+  execute sudo apt-get install fastfetch -y
+fi
 if ! is_ci; then
   execute sudo apt-get install xrdp -y
   execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
@@ -205,12 +211,19 @@ else
   sudo systemctl restart docker
 fi
 
+## Install Node.js 24 (LazyVim plugins, the coding-setup console and the agent CLIs need it)
+node_major="$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
+if [ "$node_major" -ge 24 ]; then
+  echo "Node.js $(node -v) already installed, skipping installation"
+else
+  curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+  sudo apt install -y nodejs
+fi
+
 ## Install Neovim with all essential lazyvim plugins
 if [ -x "$(command -v nvim)" ] && [ -d ~/.config/nvim ]; then
   echo "Neovim and LazyVim already installed, skipping installation"
 else
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt install -y nodejs
   sudo apt install -y build-essential "lua5.1" luarocks ripgrep fd-find fzf
 
   mkdir -p ~/.local/bin
@@ -221,8 +234,12 @@ else
   rm -rf ~/.local/share/nvim/
   rm -rf ~/.config/nvim/
 
-  sudo add-apt-repository ppa:neovim-ppa/unstable -y
-  sudo apt update
+  # LazyVim needs Neovim 0.11.2 or newer. Releases whose archive ships less get the unstable PPA.
+  nvim_candidate="$(apt-cache policy neovim | awk '/Candidate:/ {print $2}')"
+  if [ -z "$nvim_candidate" ] || [ "$nvim_candidate" = "(none)" ] || dpkg --compare-versions "$nvim_candidate" lt 0.11.2; then
+    sudo add-apt-repository ppa:neovim-ppa/unstable -y
+    sudo apt update
+  fi
   sudo apt install -y neovim
 
   git clone https://github.com/LazyVim/starter ~/.config/nvim

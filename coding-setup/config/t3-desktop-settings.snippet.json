@@ -1,0 +1,5 @@
+{
+  "serverExposureMode": "local-only",
+  "tailscaleServeEnabled": true,
+  "tailscaleServePort": 443
+}

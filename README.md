@@ -5,7 +5,7 @@ These are the scripts that I use to set my Ubuntu up as quick as possible. Feel 
 
 ## Build Status:
 
-Every script is stable and validates with [CI](https://github.com/features/actions) to make sure everything works as expected. The scripts are tested on Ubuntu 24.04 (Noble) and 26.04 (Oracular) LTS releases.
+Every script is stable and validates with [CI](https://github.com/features/actions) to make sure everything works as expected. The scripts are tested on Ubuntu 24.04 (Noble) and 26.04 (Resolute Raccoon) LTS releases.
 
 You can see the build results in the [Actions tab](https://github.com/rsnk96/Ubuntu-Setup-Scripts/actions) of this repository.
 
@@ -13,6 +13,8 @@ You can see the build results in the [Actions tab](https://github.com/rsnk96/Ubu
 First download/clone this repository
 
 Then execute them in the terminal in the sequence of filenames using `./1-BasicSetUp.sh` and `./2-GenSoftware.sh`.
+
+The agent workstation (CLIProxy, the quota console, T3 Code, and Tailscale) is a separate layer. After the two scripts, `cd coding-setup && ./install.sh` builds it and `./check.sh` verifies it. Its source, sanitized configs, and notes live in [`coding-setup/`](coding-setup/README.md). An agent rebuilding that stack should start at [`coding-setup/AGENTS.md`](coding-setup/AGENTS.md).
 * `1-BasicSetUp.sh` - Sets up terminal configuration (Zsh + Zim), download accelerator (aria2), Anaconda Python, shell aliases, Docker, Nvidia drivers (if detected), Neovim with LazyVim, and other essential tools. **Note:** After running this script, you should reboot your PC if you have an Nvidia GPU so that the display driver loads properly.
 * `2-GenSoftware.sh` - Installs general purpose software including VS Code, Cursor IDE, browsers (Brave, Chrome), GitHub and GitLab CLIs, the AWS Session Manager plugin, xhisper, dltop, herdr, Snap VLC and Surfshark, Stremio, and other utilities.
 
@@ -67,7 +69,7 @@ Log out and back in once both scripts finish. Reboot instead if an Nvidia driver
 * **Adding a new OS user:** If setting up multiple users on the OS, try to use the script `./add_new_user.sh` in this repo. It will set the correct settings for them to also benefit from zsh, conda, etc.
 * Make sure that your system time and date is correct and synchronized before running the scripts, otherwise this will cause failure while trying to download the packages.
 * These scripts are written and tested on the following configurations:
-  * Ubuntu 24.04 (Noble) and 26.04 (Oracular) LTS releases
+  * Ubuntu 24.04 (Noble) and 26.04 (Resolute Raccoon) LTS releases
   * 64-bit Intel/AMD Processors
   * NVIDIA GPUs (drivers will be automatically installed if detected)
 
