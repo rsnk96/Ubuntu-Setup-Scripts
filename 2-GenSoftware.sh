@@ -205,7 +205,10 @@ fi
 if [ -x "$(command -v xhisper)" ]; then
   echo "xhisper already installed, skipping it"
 else
-  execute sudo apt-get install -y build-essential pipewire pipewire-utils jq ffmpeg wl-clipboard python3-gi gir1.2-gtk-3.0 bc
+  # The pipewire tools package is named pipewire-bin or pipewire-utils depending on the release.
+  pipewire_tools=pipewire-bin
+  if apt-cache show pipewire-utils >/dev/null 2>&1; then pipewire_tools=pipewire-utils; fi
+  execute sudo apt-get install -y build-essential pipewire "$pipewire_tools" jq ffmpeg wl-clipboard python3-gi gir1.2-gtk-3.0 bc
   xhisper_src="$(mktemp -d)"
   # This branch is the fork actually in use. abszar/main does not carry the conda and X11 fixes.
   git clone --depth 1 --branch fix/conda-env-and-clipboard-detection https://github.com/rsnk96/xhisper-ubuntu-linux.git "$xhisper_src"

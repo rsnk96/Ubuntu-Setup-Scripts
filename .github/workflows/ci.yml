@@ -40,7 +40,7 @@ jobs:
 
   resolute-basic:
     name: Ubuntu Resolute Raccoon (26.04) - Basic Setup + GenSoftware
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

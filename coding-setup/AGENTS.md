@@ -7,7 +7,7 @@ This directory is the source of truth and can stand alone as its own repository.
 ## Do this
 
 - On a blank Ubuntu machine, run the parent `1-BasicSetUp.sh` and `2-GenSoftware.sh` first, when those scripts are present.
-- Run `./install.sh`, then `./install.sh login claude` once per subscription in a browser on that machine (`codex` only if the user asks), then `./check.sh`. Report the real output of `check.sh`; a WARN is not a pass.
+- Run `./install.sh`. On a terminal it pauses to offer the Claude login (a browser on that machine, once per subscription). Where it could not, run `./install.sh login claude` per subscription (`codex` only if the user asks), then `./check.sh`. Report the real output of `check.sh`; a WARN is not a pass.
 - Prefer re-running one phase to editing a deployed file by hand. Phases are idempotent and merge into existing settings.
 - Keep the proxy on `127.0.0.1:8317` with `management.allow-remote: false`, and T3 on loopback (`serverExposureMode: "local-only"`). Tailscale Serve is published by T3 itself.
 - Leave `CLAUDE_CONFIG_DIR` pointed at `~/.claude-cliproxy` for the login session. `install.sh` writes `~/.config/environment.d/claude-cliproxy.conf`. It is read at login, and T3's history lookup uses it instead of `providers.claudeAgent.homePath`.

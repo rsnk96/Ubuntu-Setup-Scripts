@@ -20,9 +20,9 @@ Recorded from the working laptop on 2026-10-04: CLIProxyAPI 8.0.13 (new installs
 
 # 2. Everything in this directory
 cd coding-setup
-./install.sh                                    # asks for sudo where needed
+./install.sh                                    # asks for sudo where needed; at the end it offers the Claude login
 
-# 3. One browser login per Claude subscription
+# 3. One browser login per Claude subscription (skip if install.sh already did it)
 ./install.sh login claude                       # repeat per account
 ./install.sh login codex                        # optional
 
@@ -43,7 +43,7 @@ cd coding-setup
 | `autostart` | Installs `~/.config/autostart/t3code.desktop`. |
 | `tailscale` | Installs Tailscale and joins your tailnet with `--operator="$USER" --accept-routes=false`, then reminds you to delete the older devices in the admin console. |
 | `power` | Opt-in. Never suspend on AC, ignore the lid switch. For a box that stays closed on a desk. |
-| `check` | Runs `check.sh`. |
+| `check` | Runs `check.sh`. A failing check does not stop the run: the next steps always print and the script exits with the check's status. |
 
 T3 Code has to come from the releases page. Nightly builds are prereleases there, so the "Latest" badge points at an older stable build; take the newest `T3-Code-<version>-nightly.<date>.<n>-<arch>.deb`. Do not use the t3.codes install script. To install by hand, download that `.deb` and run `sudo apt install ./T3-Code-*.deb`, then `./install.sh t3` for the settings.
 

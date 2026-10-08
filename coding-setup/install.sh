@@ -374,26 +374,64 @@ phase_login() {
 
 phase_check() { "$HERE/check.sh"; }
 
+claude_logins() { find "$HOME/.cli-proxy-api" -maxdepth 1 -name 'claude-*.json' 2>/dev/null | wc -l; }
+
+# Waits for the browser login to finish before the run goes on. Answering no,
+# or running without a terminal, skips it and the next steps say what is left.
+offer_claude_login() {
+  if ! [ -t 0 ] || ! [ -t 1 ]; then
+    echo "No terminal here, so the Claude login prompt is skipped."
+    return 0
+  fi
+  local answer
+  while :; do
+    if [ "$(claude_logins)" -eq 0 ]; then
+      read -r -p "No Claude login yet. Log in now (a browser opens on this machine)? [Y/n] " answer || answer=n
+      answer="${answer:-y}"
+    else
+      read -r -p "$(claude_logins) Claude login(s) found. Add another subscription? [y/N] " answer || answer=n
+      answer="${answer:-n}"
+    fi
+    case "$answer" in [Yy]*) ;; *) return 0 ;; esac
+    phase_login claude || echo "The Claude login did not complete."
+  done
+}
+
+print_next_steps() {
+  echo
+  if [ "$(claude_logins)" -eq 0 ]; then
+    echo "Next, once per subscription (browser on this machine):"
+    echo "  ./install.sh login claude"
+  fi
+  echo "Then log out and back in once. That loads CLAUDE_CONFIG_DIR for T3, which starts on its own at login."
+  echo "Opening T3 before that breaks session history."
+}
+
 main() {
-  local phases=("$@")
-  [ "${#phases[@]}" -gt 0 ] || phases=(node agents proxy claude console t3 autostart tailscale check)
+  local phases=("$@") full_run=0 check_status=0 phase
+  if [ "${#phases[@]}" -eq 0 ]; then
+    phases=(node agents proxy claude console t3 autostart tailscale)
+    full_run=1
+  fi
   if [ "${phases[0]}" = "login" ]; then
     phase_login "${phases[1]:-claude}"
     return
   fi
-  local phase
   for phase in "${phases[@]}"; do
     case "$phase" in
-      node | agents | proxy | claude | console | t3 | autostart | tailscale | power | check) "phase_$phase" ;;
+      node | agents | proxy | claude | console | t3 | autostart | tailscale | power) "phase_$phase" ;;
+      check) phase_check || check_status=$? ;;
       *) die "unknown phase '$phase'" ;;
     esac
   done
-  cat <<'EOF'
-
-Next, once per subscription (browser on this machine):
-  ./install.sh login claude
-Then open T3 from the application menu, or log out and in to see it start on its own.
-EOF
+  if [ "$full_run" -eq 1 ]; then
+    offer_claude_login
+    phase_check || check_status=$?
+  fi
+  print_next_steps
+  return "$check_status"
 }
 
-main "$@"
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  main "$@"
+fi
