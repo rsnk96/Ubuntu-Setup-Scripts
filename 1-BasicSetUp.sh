@@ -33,7 +33,13 @@ if [[ ! -n $CIINSTALL ]]; then
 fi
 
 # Terminal multiplexer: byobu (tmux)
-execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect neofetch ffmpeg software-properties-common git-delta git-lfs -y
+execute sudo apt-get install unzip git byobu magic-wormhole openssh-server python3-pip htop curl expect ffmpeg software-properties-common git-delta git-lfs -y
+# neofetch is gone from Ubuntu 26.04; fastfetch is its successor
+if apt-cache show neofetch >/dev/null 2>&1; then
+  execute sudo apt-get install neofetch -y
+else
+  execute sudo apt-get install fastfetch -y
+fi
 if ! is_ci; then
   execute sudo apt-get install xrdp -y
   execute sudo apt-get install xclip xsel -y # this is used for the copying tmux buffer to clipboard buffer
