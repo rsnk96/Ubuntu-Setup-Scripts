@@ -234,8 +234,12 @@ else
   rm -rf ~/.local/share/nvim/
   rm -rf ~/.config/nvim/
 
-  sudo add-apt-repository ppa:neovim-ppa/unstable -y
-  sudo apt update
+  # LazyVim needs Neovim 0.11.2 or newer. Releases whose archive ships less get the unstable PPA.
+  nvim_candidate="$(apt-cache policy neovim | awk '/Candidate:/ {print $2}')"
+  if [ -z "$nvim_candidate" ] || [ "$nvim_candidate" = "(none)" ] || dpkg --compare-versions "$nvim_candidate" lt 0.11.2; then
+    sudo add-apt-repository ppa:neovim-ppa/unstable -y
+    sudo apt update
+  fi
   sudo apt install -y neovim
 
   git clone https://github.com/LazyVim/starter ~/.config/nvim
