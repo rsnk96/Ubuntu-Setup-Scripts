@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CLIProxy console</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="nav">
+      <div class="brand">
+        <span class="mark">CP</span>
+        <div>
+          <strong>CLIProxy</strong>
+          <em>local console</em>
+        </div>
+      </div>
+      <button class="nav-btn" data-page="quota">Quota</button>
+      <button class="nav-btn" data-page="routing">Routing</button>
+      <button class="nav-btn" data-page="clients">Clients</button>
+      <button class="nav-btn" data-page="logs">Logs</button>
+      <button class="nav-btn" data-page="proxy">Proxy</button>
+      <p class="nav-note">One proxy. A thread stays on one Claude account until that account hits quota, then it moves to the other.</p>
+    </aside>
+    <main id="main"></main>
+  </div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

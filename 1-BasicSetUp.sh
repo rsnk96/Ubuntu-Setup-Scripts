@@ -205,12 +205,19 @@ else
   sudo systemctl restart docker
 fi
 
+## Install Node.js 24 (LazyVim plugins, the coding-setup console and the agent CLIs need it)
+node_major="$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
+if [ "$node_major" -ge 24 ]; then
+  echo "Node.js $(node -v) already installed, skipping installation"
+else
+  curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+  sudo apt install -y nodejs
+fi
+
 ## Install Neovim with all essential lazyvim plugins
 if [ -x "$(command -v nvim)" ] && [ -d ~/.config/nvim ]; then
   echo "Neovim and LazyVim already installed, skipping installation"
 else
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-  sudo apt install -y nodejs
   sudo apt install -y build-essential "lua5.1" luarocks ripgrep fd-find fzf
 
   mkdir -p ~/.local/bin

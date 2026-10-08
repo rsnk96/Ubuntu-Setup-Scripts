@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=T3 Code (Nightly)
+Exec="/opt/T3 Code (Nightly)/t3code"
+Icon=t3code
+Terminal=false
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=10

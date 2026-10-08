@@ -38,8 +38,8 @@ jobs:
           hash -r
           ./2-GenSoftware.sh
 
-  oracular-basic:
-    name: Ubuntu Oracular (26.04) - Basic Setup + GenSoftware
+  resolute-basic:
+    name: Ubuntu Resolute Raccoon (26.04) - Basic Setup + GenSoftware
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

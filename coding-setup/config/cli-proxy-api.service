@@ -1,0 +1,11 @@
+[Unit]
+Description=CLIProxyAPI local account router
+After=network-online.target
+
+[Service]
+ExecStart=%h/.local/bin/cli-proxy-api --config %h/.config/cli-proxy-api/config.yaml
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
