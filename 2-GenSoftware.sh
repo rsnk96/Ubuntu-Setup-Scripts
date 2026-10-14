@@ -124,6 +124,75 @@ if ! is_ci; then
   # Flameshot - screenshot tool with annotation
   execute sudo apt install flameshot -y
 
+  # GNOME/Wayland support: native Wayland mode, portal permission, and Super+Shift+S
+  if [[ "${XDG_CURRENT_DESKTOP:-}" == *GNOME* ]] && [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
+    mkdir -p "$HOME/.local/share/applications"
+    if [[ -f /usr/share/applications/org.flameshot.Flameshot.desktop ]]; then
+      sed 's|^Exec=|Exec=env QT_QPA_PLATFORM=wayland |' /usr/share/applications/org.flameshot.Flameshot.desktop > "$HOME/.local/share/applications/org.flameshot.Flameshot.desktop"
+    elif [[ -f ./config_files/org.flameshot.Flameshot.desktop ]]; then
+      cp ./config_files/org.flameshot.Flameshot.desktop "$HOME/.local/share/applications/org.flameshot.Flameshot.desktop"
+    fi
+
+    # Pre-grant the GNOME screenshot portal permission (works around the denied/unasked state)
+    if command -v dbus-send >/dev/null 2>&1; then
+      dbus-send --session --print-reply=literal --dest=org.freedesktop.impl.portal.PermissionStore /org/freedesktop/impl/portal/PermissionStore org.freedesktop.impl.portal.PermissionStore.SetPermission string:'screenshot' boolean:true string:'screenshot' string:'org.flameshot.Flameshot' array:string:'yes' >/dev/null 2>&1 || true
+    fi
+
+    # Add a GNOME custom shortcut: Super+Shift+S -> Flameshot
+    if command -v dconf >/dev/null 2>&1 && command -v python3 >/dev/null 2>&1; then
+      python3 - <<'PYINNER'
+import re
+import shutil
+import subprocess
+
+
+def run(cmd):
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        return r.stdout.strip(), r.returncode
+    except FileNotFoundError:
+        return "", 127
+
+
+if not shutil.which("dconf"):
+    raise SystemExit(0)
+
+list_path = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/"
+base = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+
+out, rc = run(["dconf", "read", list_path])
+current = out if out else "[]"
+paths = re.findall(r"'([^']+)'", current)
+
+target = None
+for p in paths:
+    name, _ = run(["dconf", "read", p + "/name"])
+    command, _ = run(["dconf", "read", p + "/command"])
+    if "Flameshot" in name or "flameshot" in command:
+        target = p
+        break
+
+if target is None:
+    used = set()
+    for p in paths:
+        match = re.search(r"/custom(\d+)/$", p)
+        if match:
+            used.add(int(match.group(1)))
+    index = 0
+    while index in used:
+        index += 1
+    target = f"{base}/custom{index}/"
+    paths.append(target)
+    body = "[" + ", ".join(f"'{p}'" for p in paths) + "]"
+    run(["dconf", "write", list_path, body])
+
+run(["dconf", "write", target + "/name", "'Flameshot'"])
+run(["dconf", "write", target + "/command", "'sh -c -- \"QT_QPA_PLATFORM=wayland flameshot gui\"'"])
+run(["dconf", "write", target + "/binding", "'<Super><Shift>s'"])
+PYINNER
+    fi
+  fi
+
   # Disk management
   execute sudo apt install gparted -y
 
