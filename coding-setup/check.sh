@@ -82,7 +82,7 @@ else
 fi
 
 echo "-- agent CLIs"
-for tool in claude cursor-agent opencode2; do
+for tool in claude cursor-agent opencode; do
   if PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH" command -v "$tool" >/dev/null; then pass "$tool installed"; else fail "$tool missing: run ./install.sh agents"; fi
 done
 

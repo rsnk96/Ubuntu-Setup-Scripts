@@ -160,17 +160,17 @@ install_session_claude_home() {
 }
 
 phase_agents() {
-  log "Agent CLIs: Claude Code, Cursor Agent, OpenCode 2"
+  log "Agent CLIs: Claude Code, Cursor Agent, OpenCode"
   export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
   command -v claude >/dev/null || curl -fsSL https://claude.ai/install.sh | bash
   command -v cursor-agent >/dev/null || curl -fsS https://cursor.com/install | bash
-  if ! command -v opencode2 >/dev/null; then
+  if ! command -v opencode >/dev/null; then
     command -v unzip >/dev/null || sudo apt-get install -y unzip
     command -v bun >/dev/null || curl -fsSL https://bun.sh/install | bash
     bun add -g @opencode/cli
   fi
   local tool
-  for tool in claude cursor-agent opencode2; do
+  for tool in claude cursor-agent opencode; do
     command -v "$tool" >/dev/null || die "$tool is not on PATH after its installer ran"
   done
 }

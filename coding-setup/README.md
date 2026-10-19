@@ -35,7 +35,7 @@ cd coding-setup
 | Phase | What it does |
 | --- | --- |
 | `node` | Finds a Node that imports `node:sqlite` (`$CLIPROXY_NODE`, `/usr/bin/node`, then `node` on `PATH`). If none works it installs NodeSource Node 24. |
-| `agents` | Installs the Claude Code CLI (`claude`), Cursor Agent (`cursor-agent`) and OpenCode 2 (`opencode2`, from `@opencode/cli` through Bun) when they are missing. |
+| `agents` | Installs the Claude Code CLI (`claude`), Cursor Agent (`cursor-agent`) and OpenCode (`opencode`, from `@opencode/cli` through Bun) when they are missing. |
 | `proxy` | Installs the newest CLIProxyAPI release (re-running upgrades it) with the sha256 GitHub publishes for the asset checked, generates the two keys into `~/.config/cli-proxy-api/keys.env`, renders `config.yaml`, enables `cli-proxy-api.service`. |
 | `claude` | Writes the proxy `env` into `~/.claude-cliproxy/settings.json` (other keys kept), links `CLAUDE.md`, `skills`, `plugins`, `hooks` from `~/.claude` when they exist, and installs `~/.config/environment.d/claude-cliproxy.conf`. |
 | `console` | Runs the console tests, symlinks the repo copy to `~/.local/share/cliproxy-console`, seeds `data/settings.json`, enables `cliproxy-console.service` pinned to the Node it found. |

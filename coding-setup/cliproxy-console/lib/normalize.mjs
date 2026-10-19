@@ -347,6 +347,8 @@ export const CLAUDE_TIERS = {
   default_claude_pro: { capacity: 1, label: "Pro" },
   default_claude_max_5x: { capacity: 5, label: "Max 5x" },
   default_claude_max_20x: { capacity: 20, label: "Max 20x" },
+  // Claude Team standard seat (org rate_limit_tier "default_raven"): 1.25x the Pro allowance, weekly cap.
+  default_raven: { capacity: 1.25, label: "Team Standard" },
 };
 
 /**
